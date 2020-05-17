@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Вхід</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        .centered {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 500px;
+    height:650px;
+    margin: -325px 0 0 -250px;
+    background-color:#1C1C1C;
+            }
+    </style>
+</head>
+<body style="background:#121212">
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+<div align="center" class="centered">
+    <form action="/login" method="post" style="padding-top:70px;">
+        <label class="navbar-brand" style="color:white;font-size:30px;">
+            <img src="/image/tree_icon.png" alt="Tree" width="40" height="40">
+            Wooden products</label><br>
+        <label style="color:white;font-size:30px;"> Вхід</label>
+        <div class="form-group col-md-10" align="left">
+            <label style="color:#696969"> Електронна пошта</label>
+            <input type="email" class="form-control" placeholder="example@gmail.com" name="username"/>
+        </div>
+        <div class="form-group col-md-10" align="left">
+                <label style="color:#696969"> Пароль</label>
+                <input type="password" class="form-control" placeholder="Введіть пароль" name="password"/>
+        </div>
+        <div class="form-group">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox">
+                <label class="form-check-label" style="color:#696969;margin-right:115px;"> Запам'ятати мене</label>
+                <a href="#" >Забули пароль?</a>
+            </div>
+        </div>
+        <div>
+            <input type="submit" class="btn btn-outline-light ml-3" value="Ввійти прямо зараз"/><br><br>
+            <label style="color:#696969">Немає облікового запису в Wooden products?</label><br>
+            <a href="/registration">Зареєструватись</a>
+        </div>
+        <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
+    </form>
+</div>
+</body>
+</html>

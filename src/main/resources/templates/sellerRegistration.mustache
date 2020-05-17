@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Spring Security Example </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        .centered {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 500px;
+    height:950px;
+    margin: -475px 0 0 -250px;
+    background-color:#1C1C1C;
+            }
+        ::-webkit-scrollbar{
+    width:8px;
+            }
+        ::-webkit-scrollbar-track{
+    background:#1C1C1C;
+            }
+        ::-webkit-scrollbar-thumb{
+    background:#C0C0C0;
+    border-radius:8px;
+            }
+    </style>
+</head>
+<body style="background:#121212">
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+<div align="center" class="centered">
+<form action="/registration/seller" method="post" style="padding-top:200px;">
+    <label class="navbar-brand" style="color:white;font-size:30px;">
+        <img src="/image/tree_icon.png" alt="Tree" width="40" height="40">
+        Wooden products</label><br>
+    <label style="color:white;font-size:30px;"> Реєстрація</label>
+    <div class="form-group col-md-10" align="left">
+        <label style="color:#696969"> Електронна пошта</label>
+        <input type="email" name="username" class="form-control" placeholder="example@gmail.com"/>
+    </div>
+    {{#message}}
+        <div class="alert alert-danger" role="alert" style="width:77%;">
+            {{message}}
+        </div>
+    {{/message}}
+    <div class="form-group col-md-10" align="left">
+        <label style="color:#696969"> Пароль</label>
+        <input type="password" name="password" class="form-control" placeholder="Введіть пароль"/>
+    </div>
+    <div>
+       <input type="hidden" value="Продавець" name="roles"/>
+    </div>
+    <div class="form-group col-md-10" align="left">
+        <label style="color:#696969">Назва компанії</label>
+        <input type="text" name="name" class="form-control" placeholder="Введіть назву компанії"/>
+    </div>
+    <div class="form-group col-md-10" align="left">
+        <label style="color:#696969">Адресса</label>
+        <input type="text" name="address" class="form-control" placeholder="Введіть адресу компанії"/>
+    </div>
+    <div class="form-group col-md-10" align="left">
+        <label style="color:#696969">Номер телефону</label>
+        <input type="text" name="phoneNumber" class="form-control" placeholder="Введіть номер телефону"/>
+    </div>
+    <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
+    <div><input type="submit" value="Зареєструватись" class="btn btn-outline-light ml-3"/></div><br>
+    <label style="color:#696969">Вже існує обліковий запис в Wooden products?
+        <a href="/login">Увійти</a>
+    </label>
+</form>
+</div>
+</body>
+</html>
