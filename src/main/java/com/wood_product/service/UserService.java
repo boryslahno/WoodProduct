@@ -65,4 +65,9 @@ public class UserService implements UserDetailsService {
         }
         return userrole;
     }
+
+    public Iterable<Users> loadAllUsers(){
+        Iterable<Users> users=userRepository.findAll();
+        return users;
+    }
 }
