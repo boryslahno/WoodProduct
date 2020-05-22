@@ -19,17 +19,31 @@ public class MainController {
     @Autowired
     UserService userService;
 
-    @GetMapping("/")
-    public String greeting(Model model) {
-        model.addAttribute("nameUser",userService.GetUserName());
-        return "greeting";
-    }
 
-    @GetMapping("/main")
+    @GetMapping("/")
     public String main(Model model){
         model.addAttribute("nameUser",userService.GetUserName());
+        boolean admin=false,seller=false,shoper=false,unknown=false;
+        if(userService.GetUserRole()=="Адміністратор"){
+            admin=true;
+        }else if(userService.GetUserRole()=="Покупець"){
+            shoper=true;
+        }else if(userService.GetUserRole()=="Продавець"){
+            seller=true;
+        }else
+        {
+           unknown=true;
+        }
+        model.addAttribute("isAdmin",admin);
+        model.addAttribute("isSeller",seller);
+        model.addAttribute("isShoper",shoper);
+        model.addAttribute("isUnknown",unknown);
         return "main";
     }
+    @GetMapping("/adminUserList")
+    public String adminUserList(Model model){
+        model.addAttribute("nameUser",userService.GetUserName());
 
-
+        return "adminUserList";
+    }
 }

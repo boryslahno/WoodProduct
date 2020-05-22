@@ -51,4 +51,18 @@ public class UserService implements UserDetailsService {
         }
         return username;
     }
+
+    public String GetUserRole(){
+        String userrole;
+        Users user;
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            user =userRepository.findByUsername(((UserDetails)principal).getUsername());
+            userrole=user.getRoles().iterator().next().toString();
+        } else {
+            //username = principal.toString();
+            userrole=null;
+        }
+        return userrole;
+    }
 }
