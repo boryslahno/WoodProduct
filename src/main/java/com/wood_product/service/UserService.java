@@ -13,7 +13,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
+import java.util.Optional;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -66,8 +66,23 @@ public class UserService implements UserDetailsService {
         return userrole;
     }
 
+    public String GetUserRole(Long id){
+        Optional<Users> users=userRepository.findById(id);
+        Users user=users.get();
+        String role=user.getRoles().iterator().next().toString();
+        return role;
+    }
+
     public Iterable<Users> loadAllUsers(){
         Iterable<Users> users=userRepository.findAll();
         return users;
+    }
+
+    public PersonalInformation loadPersonalInfo(Long id){
+        return personalInformationRepository.findByUserId(id);
+    }
+    public Company loadCompanyInfo(Long id){
+        Company company=companyRepository.findByUserId(id);
+        return company;
     }
 }

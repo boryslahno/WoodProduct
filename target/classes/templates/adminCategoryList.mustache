@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Користувачі</title>
+    <title>Категорії</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
@@ -141,7 +141,7 @@
         background-color: #eaedf0 !important;
         border-color: #eaedf0 !important;
     }
-    .addAdmin{
+    .addCategory{
     margin-top:20px;
     margin-left:20px;
     margin-bottom:20px;
@@ -153,13 +153,13 @@
     height:40px;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 3px 10px 0 rgba(0,0,0,0.19);
     }
-    .addAdmin:hover{
+    .addCategory:hover{
     background:#f9345e;
     }
-    .addAdmin:active,{
+    .addCategory:active,{
     outline-color:#fa5c7d;
     }
-    .addAdmin:focus{
+    .addCategory:focus{
     outline-color:#fa5c7d;
     }
 
@@ -197,30 +197,30 @@
                                                 class="d-inline-block align-top" alt="Tree" style="float:left;">
                 Wooden products</label>
         </div>
-            <ul class="list-unstyled components">
-                <p>НАВІГАЦІЯ</p>
-                <li>
-                    <a href="#">Особисті дані</a>
-                </li>
-                <li>
-                    <a href="/adminUserList">Користувачі</a>
-                </li>
-                <li>
-                    <a href="/adminCategoryList">Категорії товарів</a>
-                </li>
-                <li>
-                    <a href="#">Фільтри товарів</a>
-                </li>
-                <li>
-                    <a href="#">Товари</a>
-                </li>
-                <li>
-                    <a href="#">Покупки</a>
-                </li>
-                <li>
-                    <a href="#">Індивідуальні замволення</a>
-                </li>
-            </ul>
+        <ul class="list-unstyled components">
+            <p>НАВІГАЦІЯ</p>
+            <li>
+                <a href="#">Особисті дані</a>
+            </li>
+            <li>
+                <a href="/adminUserList">Користувачі</a>
+            </li>
+            <li>
+                <a href="/adminCategoryList">Категорії товарів</a>
+            </li>
+            <li>
+                <a href="#">Фільтри товарів</a>
+            </li>
+            <li>
+                <a href="#">Товари</a>
+            </li>
+            <li>
+                <a href="#">Покупки</a>
+            </li>
+            <li>
+                <a href="#">Індивідуальні замволення</a>
+            </li>
+        </ul>
     </nav>
     <!--Navbar-->
     <nav class="navbar navbar-expand-lg navbar-light navbar-custom">
@@ -255,176 +255,105 @@
     <!--Content-->
     <div class="content">
         <div style="height:40px;">
-            <div style="float:left;"><b style="color:#7b7b7f;font-size:18px;">Користувачі</b></div>
+            <div style="float:left;"><b style="color:#7b7b7f;font-size:18px;">Категорії</b></div>
             <div style="float:right;"><nav aria-label="breadcrumb">
-            <ol class="breadcrumb mb-0">
-                <li class="breadcrumb-item"><a href="#">Wodden products</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Користувачі</li>
-            </ol>
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="#">Wodden products</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Категорії</li>
+                </ol>
             </nav></div>
         </div>
         <div style="background-color:white;max-width:1030px;margin-top:15px;">
-            <button class="addAdmin"
+            <button class="addCategory"
                     data-toggle="popover" data-trigger="hover" title=""
-                    data-content="Натисніть щоб додати нового адміністратора">
-                <img src="/image/plus.png" style="width:14px;height:14px;margin-right:5px;margin-bottom:2px;"/>Адміністратор</button>
+                    data-content="Натисніть щоб додати нову категорію товару">
+                <img src="/image/plus.png" style="width:14px;height:14px;margin-right:5px;margin-bottom:2px;"/>Категорія</button>
             <!--Modal-->
-            <div id="addAdmin-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
+            <div id="addCategory-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h4 class="modal-title" id="standard-modalLabel">Додавання адміністратора</h4>
+                            <h4 class="modal-title" id="standard-modalLabel">Додавання категорії</h4>
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                         </div>
-                        <form action="/adminUserList" method="post">
-                        <div class="modal-body">
-                            <div class="form-group col-md-10" align="left">
-                                <label style="color:#696969"> Електронна пошта</label>
-                                <input type="email" name="username" class="form-control" placeholder="example@gmail.com"/>
-                            </div>
-                            <div class="form-group col-md-10" align="left">
-                                <label style="color:#696969"> Пароль</label>
-                                <input type="password" name="password" class="form-control" placeholder="Введіть пароль"/>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" id="ex" class="btn btn-light" data-dismiss="modal">Закрити</button>
-                            <input id="createAdmin" type="submit" class="btn btn-primary" value="Додати"/>
-                            <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
-                        </div>
-                        </form>
-                    </div><!-- /.modal-content -->
-                </div><!-- /.modal-dialog -->
-            </div><!-- /.modal -->
-            {{#sellerPerInfo}}
-                <div id="userManipulate-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title" id="standard-modalLabel">Особиста інформація</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        </div>
-                        <form action="/adminUserList/seller/edit" method="post">
+                        <form action="/adminCategoryList" method="post">
                             <div class="modal-body">
                                 <div class="form-group col-md-10" align="left">
-                                    <label style="color:#696969"> Назва компанії</label>
-                                    <input type="text" class="form-control" name="name" value="{{name}}">
-                                </div>
-                                <div class="form-group col-md-10" align="left">
-                                    <label style="color:#696969"> Адресса компанії</label>
-                                    <input type="text" class="form-control" name="address" value="{{address}}">
-                                </div>
-                                <div class="form-group col-md-10" align="left">
-                                    <label style="color:#696969"> Номер телефону</label>
-                                    <input type="text" class="form-control" name="phoneNumber" value="{{phoneNumber}}">
+                                    <label style="color:#696969">Назва категорії</label>
+                                    <input type="text" name="name" class="form-control" placeholder="Введіть назву категорії"/>
                                 </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" id="ex" class="btn btn-light" data-dismiss="modal">Закрити</button>
-                                <input id="createAdmin" type="submit" class="btn btn-primary" value="Змінити"/>
+                                <input id="createCategory" type="submit" class="btn btn-primary" value="Додати"/>
                                 <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
                             </div>
                         </form>
                     </div><!-- /.modal-content -->
                 </div><!-- /.modal-dialog -->
             </div><!-- /.modal -->
-                        {{/sellerPerInfo}}
-            {{#shopperPerInf}}
-                <div id="userManipulate-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
+            {{#categoryEdit}}
+                <div id="categoryManipulate-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h4 class="modal-title" id="standard-modalLabel">Особиста інформація</h4>
+                                <h4 class="modal-title" id="standard-modalLabel">Категорія</h4>
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                             </div>
-                            <form action="/adminUserList/shopper/edit" method="post">
-                            <div class="modal-body">
-                                <div class="form-group col-md-10" align="left">
-                                    <label style="color:#696969"> Ім'я</label>
-                                    <input type="text" class="form-control" name="name" value="{{name}}">
-                                </div>
-                                <div class="form-group col-md-10" align="left">
-                                    <label style="color:#696969"> Прізвище</label>
-                                    <input type="text" class="form-control" name="surname" value="{{surname}}">
-                                </div>
-                                <div class="form-group col-md-10" align="left">
-                                    <label style="color:#696969"> Адресса</label>
-                                    <input type="text" class="form-control" name="address" value="{{address}}">
-                                </div>
-                                <div class="form-group col-md-10" align="left">
-                                    <label style="color:#696969"> Номер телефону</label>
-                                    <input type="text" class="form-control" name="phoneNumber" value="{{phoneNumber}}">
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" id="ex" class="btn btn-light" data-dismiss="modal">Закрити</button>
-                                <input id="createAdmin" type="submit" class="btn btn-primary" value="Змінити"/>
-                                <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
-                            </div>
-                            </form>
-                        </div><!-- /.modal-content -->
-                    </div><!-- /.modal-dialog -->
-                </div><!-- /.modal -->
-            {{/shopperPerInf}}
-            {{#adminPerInfo}}
-                <div id="userManipulate-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h4 class="modal-title" id="standard-modalLabel">Особиста інформація</h4>
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                            </div>
-                            <form action="#" method="post">
-                            <div class="modal-body">
-                                <div class="form-group col-md-10" align="center">
-                                    <label style="color:#696969">{{adminPerInfo}}</label>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" id="ex" class="btn btn-light" data-dismiss="modal">Закрити</button>
-                            </div>
-                            </form>
-                        </div><!-- /.modal-content -->
-                    </div><!-- /.modal-dialog -->
-                </div><!-- /.modal -->
-            {{/adminPerInfo}}
-            {{#deleteUser}}
-                <div id="userManipulate-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h4 class="modal-title" id="standard-modalLabel">Видалення користувача</h4>
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                            </div>
-                            <form action="/adminUserList/delete/user" method="post">
+                            <form action="/adminCategoryList/edit" method="post">
                                 <div class="modal-body">
-                                    <label style="color:#696969">{{deleteUser}}</label>
+                                    <div class="form-group col-md-10" align="left">
+                                        <label style="color:#696969"> Назва категорії</label>
+                                        <input type="text" class="form-control" name="name" value="{{name}}">
+                                    </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" id="ex" class="btn btn-light" data-dismiss="modal">Відмінити</button>
-                                    <input id="createAdmin" type="submit" class="btn btn-primary" value="Видалити"/>
+                                    <button type="button" id="ex" class="btn btn-light" data-dismiss="modal">Закрити</button>
+                                    <input type="submit" class="btn btn-primary" value="Змінити"/>
                                     <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
                                 </div>
                             </form>
                         </div><!-- /.modal-content -->
                     </div><!-- /.modal-dialog -->
                 </div><!-- /.modal -->
-            {{/deleteUser}}
+            {{/categoryEdit}}
+            {{#deleteCategory}}
+                <div id="categoryManipulate-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="standard-modalLabel">Видалення категорії</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            </div>
+                            <form action="/adminCategoryList/delete/category" method="post">
+                                <div class="modal-body">
+                                    <label style="color:#696969">{{deleteCategory}}</label>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" id="ex" class="btn btn-light" data-dismiss="modal">Відмінити</button>
+                                    <input  type="submit" class="btn btn-primary" value="Видалити"/>
+                                    <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
+                                </div>
+                            </form>
+                        </div><!-- /.modal-content -->
+                    </div><!-- /.modal-dialog -->
+                </div><!-- /.modal -->
+            {{/deleteCategory}}
             <!--Notification-->
-            {{#addAdmin}}
-            <div class="toast"style="position: absolute; top: 20px; right: 20px;min-width:200px;background-color:#02d098;">
-                <div class="toast-header" style="background-color:#02d098;">
-                    <img src="/image/tree_icon.png" class="rounded mr-2" alt="Tree"style="width:20px;height:20px;">
-                    <strong class="mr-auto" style="color:white;">Wodden products</strong>
-                    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+            {{#addCategory}}
+                <div class="toast"style="position: absolute; top: 20px; right: 20px;min-width:200px;background-color:#02d098;">
+                    <div class="toast-header" style="background-color:#02d098;">
+                        <img src="/image/tree_icon.png" class="rounded mr-2" alt="Tree"style="width:20px;height:20px;">
+                        <strong class="mr-auto" style="color:white;">Wodden products</strong>
+                        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="toast-body" style="color:white;">
+                        {{addCategory}}
+                    </div>
                 </div>
-                <div class="toast-body" style="color:white;">
-                    {{addAdmin}}
-                </div>
-            </div>
-           {{/addAdmin}}
+            {{/addCategory}}
             {{#exists}}
                 <div class="toast"style="position: absolute; top: 20px; right: 20px;min-width:200px;background-color:#fa5c7d;">
                     <div class="toast-header" style="background-color:#fa5c7d;">
@@ -439,21 +368,7 @@
                     </div>
                 </div>
             {{/exists}}
-            {{#updateSeller}}
-            <div class="toast"style="position: absolute; top: 20px; right: 20px;min-width:200px;background-color:#02d098;">
-                <div class="toast-header" style="background-color:#02d098;">
-                    <img src="/image/tree_icon.png" class="rounded mr-2" alt="Tree"style="width:20px;height:20px;">
-                    <strong class="mr-auto" style="color:white;">Wodden products</strong>
-                    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="toast-body" style="color:white;">
-                    {{updateSeller}}
-                </div>
-            </div>
-            {{/updateSeller}}
-            {{#updateShopper}}
+            {{#updateCategory}}
                 <div class="toast"style="position: absolute; top: 20px; right: 20px;min-width:200px;background-color:#02d098;">
                     <div class="toast-header" style="background-color:#02d098;">
                         <img src="/image/tree_icon.png" class="rounded mr-2" alt="Tree"style="width:20px;height:20px;">
@@ -463,10 +378,10 @@
                         </button>
                     </div>
                     <div class="toast-body" style="color:white;">
-                        {{updateShopper}}
+                        {{updateCategory}}
                     </div>
                 </div>
-            {{/updateShopper}}
+            {{/updateCategory}}
             {{#deleteSuccess}}
                 <div class="toast"style="position: absolute; top: 20px; right: 20px;min-width:200px;background-color:#02d098;">
                     <div class="toast-header" style="background-color:#02d098;">
@@ -483,43 +398,39 @@
             {{/deleteSuccess}}
             <!--Table-->
             <div style="margin-left:20px;margin-right:20px;color:#7b7b7f;">
-            <table id="users" class="table dt-responsive nowrap w-100" style="width:100%;color:#7b7b7f;">
-                <thead style="background:#f1f3fa;">
-                <tr>
-                    <th style="display:none;">ID</th>
-                    <th>Електронна пошта</th>
-                    <th>Роль</th>
-                    <th>Дата реєстрації</th>
-                    <th>Дії</th>
-                </tr>
-                </thead>
-                <tbody>
-                {{#users}}
-                <tr>
-                    <td style="display:none;">{{id}}</td>
-                    <td>{{username}}</td>
-                    <td>{{roles}}</td>
-                    <td>++</td>
-                    <td >
-                        <form action="/adminUserList/users" method="get">
-                            <input id="userId" type="hidden" name="userID" value="{{id}}">
-                        <button type="submit" class="icon-button"><img src="/image/pen.png"
-                                                         style="height:21px;width:21px;"
-                                                         onmouseover="editHover(this);"
-                                                         onmouseout="editNotHover(this);"></button>
-                        </form>
-                        <form action="/adminUserList/delete/user" method="get">
-                            <input id="userId" type="hidden" name="userID" value="{{id}}">
-                        <button type="submit" class="icon-button"><img src="/image/trash.png"
-                                                         style="height:21px;width:21px;"
-                                                         onmouseover="deleteHover(this);"
-                                                         onmouseout="deleteNotHover(this);"></button>
-                        </form>
-                    </td>
-                </tr>
-                {{/users}}
-                </tbody>
-            </table>
+                <table id="categories" class="table dt-responsive nowrap w-100" style="width:100%;color:#7b7b7f;">
+                    <thead style="background:#f1f3fa;">
+                    <tr>
+                        <th style="display:none;">ID</th>
+                        <th>Назва категорії</th>
+                        <th>Дії</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#categories}}
+                        <tr>
+                            <td style="display:none;">{{id}}</td>
+                            <td>{{name}}</td>
+                            <td >
+                                <form action="/adminCategoryList/categorie" method="get">
+                                    <input id="categoryId" type="hidden" name="categoryID" value="{{id}}">
+                                    <button type="submit" class="icon-button"><img src="/image/pen.png"
+                                                                                   style="height:21px;width:21px;"
+                                                                                   onmouseover="editHover(this);"
+                                                                                   onmouseout="editNotHover(this);"></button>
+                                </form>
+                                <form action="/adminCategoryList/delete/category" method="get">
+                                    <input id="categoryId" type="hidden" name="categoryID" value="{{id}}">
+                                    <button type="submit" class="icon-button"><img src="/image/trash.png"
+                                                                                   style="height:21px;width:21px;"
+                                                                                   onmouseover="deleteHover(this);"
+                                                                                   onmouseout="deleteNotHover(this);"></button>
+                                </form>
+                            </td>
+                        </tr>
+                    {{/categories}}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -586,13 +497,13 @@ el.src="/image/pen.png";
 <!--View edit modal-->
 <script>
 $(document).ready(function () {
-    $('#userManipulate-modal').modal('show');
+    $('#categoryManipulate-modal').modal('show');
 });
 </script>
 <!--View modal and popover-->
 <script>
-    $('.addAdmin').click(function () {
-     $('#addAdmin-modal').modal('show');
+    $('.addCategory').click(function () {
+     $('#addCategory-modal').modal('show');
      $('[data-toggle="popover"]').popover('hide');
 });
 </script>
@@ -605,7 +516,7 @@ $(document).ready(function () {
 <!--View datatables-->
 <script>
     $(document).ready(function() {
-    $('#users').DataTable( {
+    $('#categories').DataTable( {
         "language": {
             "lengthMenu": "Відобразити _MENU_ записів на сторінці",
             "zeroRecords": "Немає записів",

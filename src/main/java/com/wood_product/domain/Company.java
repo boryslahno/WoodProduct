@@ -17,8 +17,6 @@ public class Company {
     private String address;
     @NotNull
     private String phoneNumber;
-    @Size(max = 5000)
-    private String about;
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
@@ -54,14 +52,6 @@ public class Company {
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public String getAbout() {
-        return about;
-    }
-
-    public void setAbout(String about) {
-        this.about = about;
     }
 
     public Users getUser() {

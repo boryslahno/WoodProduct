@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Вхід</title>
+    <title>Користувачі</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
@@ -178,7 +178,13 @@
     .breadcrumb-item>a:hover {
     color: blue;
     }
-
+    .icon-button,
+    .icon-button:active,
+    .icon-button:focus{
+    outline:none;
+    border:none;
+    background-color:white;
+    }
     </style>
 </head>
 <body>
@@ -200,7 +206,7 @@
                     <a href="/adminUserList">Користувачі</a>
                 </li>
                 <li>
-                    <a href="#">Категорії товарів</a>
+                    <a href="/adminCategoryList">Категорії товарів</a>
                 </li>
                 <li>
                     <a href="#">Фільтри товарів</a>
@@ -262,9 +268,8 @@
                     data-toggle="popover" data-trigger="hover" title=""
                     data-content="Натисніть щоб додати нового адміністратора">
                 <img src="/image/plus.png" style="width:14px;height:14px;margin-right:5px;margin-bottom:2px;"/>Адміністратор</button>
-            <!--<input id="userId" type="text"/>-->
             <!--Modal-->
-            <div id="standard-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
+            <div id="addAdmin-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -291,6 +296,120 @@
                     </div><!-- /.modal-content -->
                 </div><!-- /.modal-dialog -->
             </div><!-- /.modal -->
+            {{#sellerPerInfo}}
+                <div id="userManipulate-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="standard-modalLabel">Особиста інформація</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        </div>
+                        <form action="/adminUserList/seller/edit" method="post">
+                            <div class="modal-body">
+                                <div class="form-group col-md-10" align="left">
+                                    <label style="color:#696969"> Назва компанії</label>
+                                    <input type="text" class="form-control" name="name" value="{{name}}">
+                                </div>
+                                <div class="form-group col-md-10" align="left">
+                                    <label style="color:#696969"> Адресса компанії</label>
+                                    <input type="text" class="form-control" name="address" value="{{address}}">
+                                </div>
+                                <div class="form-group col-md-10" align="left">
+                                    <label style="color:#696969"> Номер телефону</label>
+                                    <input type="text" class="form-control" name="phoneNumber" value="{{phoneNumber}}">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" id="ex" class="btn btn-light" data-dismiss="modal">Закрити</button>
+                                <input id="createAdmin" type="submit" class="btn btn-primary" value="Змінити"/>
+                                <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
+                            </div>
+                        </form>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+                        {{/sellerPerInfo}}
+            {{#shopperPerInf}}
+                <div id="userManipulate-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="standard-modalLabel">Особиста інформація</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            </div>
+                            <form action="/adminUserList/shopper/edit" method="post">
+                            <div class="modal-body">
+                                <div class="form-group col-md-10" align="left">
+                                    <label style="color:#696969"> Ім'я</label>
+                                    <input type="text" class="form-control" name="name" value="{{name}}">
+                                </div>
+                                <div class="form-group col-md-10" align="left">
+                                    <label style="color:#696969"> Прізвище</label>
+                                    <input type="text" class="form-control" name="surname" value="{{surname}}">
+                                </div>
+                                <div class="form-group col-md-10" align="left">
+                                    <label style="color:#696969"> Адресса</label>
+                                    <input type="text" class="form-control" name="address" value="{{address}}">
+                                </div>
+                                <div class="form-group col-md-10" align="left">
+                                    <label style="color:#696969"> Номер телефону</label>
+                                    <input type="text" class="form-control" name="phoneNumber" value="{{phoneNumber}}">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" id="ex" class="btn btn-light" data-dismiss="modal">Закрити</button>
+                                <input id="createAdmin" type="submit" class="btn btn-primary" value="Змінити"/>
+                                <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
+                            </div>
+                            </form>
+                        </div><!-- /.modal-content -->
+                    </div><!-- /.modal-dialog -->
+                </div><!-- /.modal -->
+            {{/shopperPerInf}}
+            {{#adminPerInfo}}
+                <div id="userManipulate-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="standard-modalLabel">Особиста інформація</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            </div>
+                            <form action="#" method="post">
+                            <div class="modal-body">
+                                <div class="form-group col-md-10" align="center">
+                                    <label style="color:#696969">{{adminPerInfo}}</label>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" id="ex" class="btn btn-light" data-dismiss="modal">Закрити</button>
+                            </div>
+                            </form>
+                        </div><!-- /.modal-content -->
+                    </div><!-- /.modal-dialog -->
+                </div><!-- /.modal -->
+            {{/adminPerInfo}}
+            {{#deleteUser}}
+                <div id="userManipulate-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="standard-modalLabel">Видалення користувача</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            </div>
+                            <form action="/adminUserList/delete/user" method="post">
+                                <div class="modal-body">
+                                    <label style="color:#696969">{{deleteUser}}</label>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" id="ex" class="btn btn-light" data-dismiss="modal">Відмінити</button>
+                                    <input id="createAdmin" type="submit" class="btn btn-primary" value="Видалити"/>
+                                    <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
+                                </div>
+                            </form>
+                        </div><!-- /.modal-content -->
+                    </div><!-- /.modal-dialog -->
+                </div><!-- /.modal -->
+            {{/deleteUser}}
             <!--Notification-->
             {{#addAdmin}}
             <div class="toast"style="position: absolute; top: 20px; right: 20px;min-width:200px;background-color:#02d098;">
@@ -320,6 +439,48 @@
                     </div>
                 </div>
             {{/exists}}
+            {{#updateSeller}}
+            <div class="toast"style="position: absolute; top: 20px; right: 20px;min-width:200px;background-color:#02d098;">
+                <div class="toast-header" style="background-color:#02d098;">
+                    <img src="/image/tree_icon.png" class="rounded mr-2" alt="Tree"style="width:20px;height:20px;">
+                    <strong class="mr-auto" style="color:white;">Wodden products</strong>
+                    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="toast-body" style="color:white;">
+                    {{updateSeller}}
+                </div>
+            </div>
+            {{/updateSeller}}
+            {{#updateShopper}}
+                <div class="toast"style="position: absolute; top: 20px; right: 20px;min-width:200px;background-color:#02d098;">
+                    <div class="toast-header" style="background-color:#02d098;">
+                        <img src="/image/tree_icon.png" class="rounded mr-2" alt="Tree"style="width:20px;height:20px;">
+                        <strong class="mr-auto" style="color:white;">Wodden products</strong>
+                        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="toast-body" style="color:white;">
+                        {{updateShopper}}
+                    </div>
+                </div>
+            {{/updateShopper}}
+            {{#deleteSuccess}}
+                <div class="toast"style="position: absolute; top: 20px; right: 20px;min-width:200px;background-color:#02d098;">
+                    <div class="toast-header" style="background-color:#02d098;">
+                        <img src="/image/tree_icon.png" class="rounded mr-2" alt="Tree"style="width:20px;height:20px;">
+                        <strong class="mr-auto" style="color:white;">Wodden products</strong>
+                        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="toast-body" style="color:white;">
+                        {{deleteSuccess}}
+                    </div>
+                </div>
+            {{/deleteSuccess}}
             <!--Table-->
             <div style="margin-left:20px;margin-right:20px;color:#7b7b7f;">
             <table id="users" class="table dt-responsive nowrap w-100" style="width:100%;color:#7b7b7f;">
@@ -340,9 +501,20 @@
                     <td>{{roles}}</td>
                     <td>++</td>
                     <td >
-                        <button><img src="/image/pencil.svg"></button>
-                        <button><img src="/image/trashcan.svg"></button>
-                        <button><img src="/image/eye.svg"></button>
+                        <form action="/adminUserList/users" method="get">
+                            <input id="userId" type="hidden" name="userID" value="{{id}}">
+                        <button type="submit" class="icon-button"><img src="/image/pen.png"
+                                                         style="height:21px;width:21px;"
+                                                         onmouseover="editHover(this);"
+                                                         onmouseout="editNotHover(this);"></button>
+                        </form>
+                        <form action="/adminUserList/delete/user" method="get">
+                            <input id="userId" type="hidden" name="userID" value="{{id}}">
+                        <button type="submit" class="icon-button"><img src="/image/trash.png"
+                                                         style="height:21px;width:21px;"
+                                                         onmouseover="deleteHover(this);"
+                                                         onmouseout="deleteNotHover(this);"></button>
+                        </form>
                     </td>
                 </tr>
                 {{/users}}
@@ -369,7 +541,24 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
+<!--Change icons-->
 <script>
+function deleteHover(el){
+el.src="/image/trash-hover.png";
+}
+function deleteNotHover(el){
+el.src="/image/trash.png";
+}
+
+function editHover(el){
+el.src="/image/pen-hover.png";
+}
+function editNotHover(el){
+el.src="/image/pen.png";
+}
+</script>
+<!--Get id with tables-->
+<!--<script>
     var table=document.getElementById("users"),rIndex,cIndex,value;
 
     for(var i=0;i<table.rows.length;i++)
@@ -384,7 +573,8 @@
             }
         }
     }
-</script>
+</script>-->
+<!--Setting toast-->
 <script>
    $(document).ready(function () {
             $('.toast').toast({
@@ -393,17 +583,26 @@
             $('.toast').toast('show');
         });
 </script>
+<!--View edit modal-->
+<script>
+$(document).ready(function () {
+    $('#userManipulate-modal').modal('show');
+});
+</script>
+<!--View modal and popover-->
 <script>
     $('.addAdmin').click(function () {
-     $('#standard-modal').modal('show');
+     $('#addAdmin-modal').modal('show');
      $('[data-toggle="popover"]').popover('hide');
 });
 </script>
+<!--View popover-->
 <script>
 $(document).ready(function () {
             $('[data-toggle="popover"]').popover();
         });
 </script>
+<!--View datatables-->
 <script>
     $(document).ready(function() {
     $('#users').DataTable( {
