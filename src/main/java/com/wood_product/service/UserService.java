@@ -23,66 +23,88 @@ public class UserService implements UserDetailsService {
     PersonalInformationRepository personalInformationRepository;
     @Autowired
     CompanyRepository companyRepository;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username);
     }
-    public String GetUserName(){
+
+    public String GetUserName() {
         String username;
         Users user;
         PersonalInformation personalInformation;
         Company company;
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof UserDetails) {
-            user =userRepository.findByUsername(((UserDetails)principal).getUsername());
-            if(user.getRoles().iterator().next().toString() =="Покупець"){
-                personalInformation=personalInformationRepository.findByUserId(user.getId());
-                username=personalInformation.getName()+" "+personalInformation.getSurname();
-            }else if(user.getRoles().iterator().next().toString() =="Продавець")
-            {
-                company=companyRepository.findByUserId(user.getId());
-                username=company.getName();
-            }else{
-                username="Адміністратор";
+            user = userRepository.findByUsername(((UserDetails) principal).getUsername());
+            if (user.getRoles().iterator().next().toString() == "Покупець") {
+                personalInformation = personalInformationRepository.findByUserId(user.getId());
+                username = personalInformation.getName() + " " + personalInformation.getSurname();
+            } else if (user.getRoles().iterator().next().toString() == "Продавець") {
+                company = companyRepository.findByUserId(user.getId());
+                username = company.getName();
+            } else {
+                username = "Адміністратор";
             }
         } else {
             //username = principal.toString();
-            username=null;
+            username = null;
         }
         return username;
     }
 
-    public String GetUserRole(){
+    public Users GetUserSecurityInfo() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            return userRepository.findByUsername(((UserDetails) principal).getUsername());
+        } else {
+            return null;
+        }
+    }
+
+    public String GetUserRole() {
         String userrole;
         Users user;
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof UserDetails) {
-            user =userRepository.findByUsername(((UserDetails)principal).getUsername());
-            userrole=user.getRoles().iterator().next().toString();
+            user = userRepository.findByUsername(((UserDetails) principal).getUsername());
+            userrole = user.getRoles().iterator().next().toString();
         } else {
             //username = principal.toString();
-            userrole=null;
+            userrole = null;
         }
         return userrole;
     }
 
-    public String GetUserRole(Long id){
-        Optional<Users> users=userRepository.findById(id);
-        Users user=users.get();
-        String role=user.getRoles().iterator().next().toString();
+    public String GetUserRole(Long id) {
+        Optional<Users> users = userRepository.findById(id);
+        Users user = users.get();
+        String role = user.getRoles().iterator().next().toString();
         return role;
     }
 
-    public Iterable<Users> loadAllUsers(){
-        Iterable<Users> users=userRepository.findAll();
+    public Iterable<Users> loadAllUsers() {
+        Iterable<Users> users = userRepository.findAll();
         return users;
     }
 
-    public PersonalInformation loadPersonalInfo(Long id){
+    public PersonalInformation loadPersonalInfo(Long id) {
         return personalInformationRepository.findByUserId(id);
     }
-    public Company loadCompanyInfo(Long id){
-        Company company=companyRepository.findByUserId(id);
+
+    public Company loadCompanyInfo(Long id) {
+        Company company = companyRepository.findByUserId(id);
         return company;
+    }
+
+    public Company loadCompanyInfo(){
+        Company company;
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            Users user=userRepository.findByUsername(((UserDetails) principal).getUsername());
+            return companyRepository.findByUserId(user.getId());
+        } else {
+            return null;
+        }
     }
 }

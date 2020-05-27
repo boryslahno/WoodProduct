@@ -193,23 +193,23 @@
     <!--SideBar-->
     <nav id="sidebar">
         <div class="sidebar-header">
-            <label style="font-size:18px;"><img src="/image/tree_icon.png" width="50" height="50"
+            <label style="font-size:18px;"><a style="color:white;" href="/"><img src="/image/tree_icon.png" width="50" height="50"
                                                 class="d-inline-block align-top" alt="Tree" style="float:left;">
-                Wooden products</label>
+                Wooden products</a></label>
         </div>
             <ul class="list-unstyled components">
                 <p>НАВІГАЦІЯ</p>
                 <li>
-                    <a href="#">Особисті дані</a>
+                    <a href="/adminPersonalInformation">Особисті дані</a>
                 </li>
                 <li>
-                    <a href="/adminUserList">Користувачі</a>
+                    <a style="color:white;" href="/adminUserList">Користувачі</a>
                 </li>
                 <li>
                     <a href="/adminCategoryList">Категорії товарів</a>
                 </li>
                 <li>
-                    <a href="#">Фільтри товарів</a>
+                    <a href="/adminFilterList">Фільтри товарів</a>
                 </li>
                 <li>
                     <a href="#">Товари</a>
@@ -258,7 +258,7 @@
             <div style="float:left;"><b style="color:#7b7b7f;font-size:18px;">Користувачі</b></div>
             <div style="float:right;"><nav aria-label="breadcrumb">
             <ol class="breadcrumb mb-0">
-                <li class="breadcrumb-item"><a href="#">Wodden products</a></li>
+                <li class="breadcrumb-item"><a href="/">Wodden products</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Користувачі</li>
             </ol>
             </nav></div>
@@ -501,14 +501,14 @@
                     <td>{{roles}}</td>
                     <td>++</td>
                     <td >
-                        <form action="/adminUserList/users" method="get">
+                        <form action="/adminUserList/users" method="get" style="float:left;">
                             <input id="userId" type="hidden" name="userID" value="{{id}}">
                         <button type="submit" class="icon-button"><img src="/image/pen.png"
                                                          style="height:21px;width:21px;"
                                                          onmouseover="editHover(this);"
                                                          onmouseout="editNotHover(this);"></button>
                         </form>
-                        <form action="/adminUserList/delete/user" method="get">
+                        <form action="/adminUserList/delete/user" method="get" style="float:left;">
                             <input id="userId" type="hidden" name="userID" value="{{id}}">
                         <button type="submit" class="icon-button"><img src="/image/trash.png"
                                                          style="height:21px;width:21px;"

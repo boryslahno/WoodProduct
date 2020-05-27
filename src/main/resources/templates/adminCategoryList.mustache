@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Категорії</title>
+    <title>Категорії товарів</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
@@ -193,23 +193,23 @@
     <!--SideBar-->
     <nav id="sidebar">
         <div class="sidebar-header">
-            <label style="font-size:18px;"><img src="/image/tree_icon.png" width="50" height="50"
-                                                class="d-inline-block align-top" alt="Tree" style="float:left;">
-                Wooden products</label>
+            <label style="font-size:18px;"><a style="color:white;" href="/"><img src="/image/tree_icon.png" width="50" height="50"
+                                                                                 class="d-inline-block align-top" alt="Tree" style="float:left;">
+                Wooden products</a></label>
         </div>
         <ul class="list-unstyled components">
             <p>НАВІГАЦІЯ</p>
             <li>
-                <a href="#">Особисті дані</a>
+                <a href="/adminPersonalInformation">Особисті дані</a>
             </li>
             <li>
                 <a href="/adminUserList">Користувачі</a>
             </li>
             <li>
-                <a href="/adminCategoryList">Категорії товарів</a>
+                <a style="color:white;" href="/adminCategoryList">Категорії товарів</a>
             </li>
             <li>
-                <a href="#">Фільтри товарів</a>
+                <a href="/adminFilterList">Фільтри товарів</a>
             </li>
             <li>
                 <a href="#">Товари</a>
@@ -255,11 +255,11 @@
     <!--Content-->
     <div class="content">
         <div style="height:40px;">
-            <div style="float:left;"><b style="color:#7b7b7f;font-size:18px;">Категорії</b></div>
+            <div style="float:left;"><b style="color:#7b7b7f;font-size:18px;">Категорії товарів</b></div>
             <div style="float:right;"><nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0">
-                    <li class="breadcrumb-item"><a href="#">Wodden products</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Категорії</li>
+                    <li class="breadcrumb-item"><a href="/">Wodden products</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Категорії товарів</li>
                 </ol>
             </nav></div>
         </div>
@@ -300,7 +300,7 @@
                                 <h4 class="modal-title" id="standard-modalLabel">Категорія</h4>
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                             </div>
-                            <form action="/adminCategoryList/edit" method="post">
+                            <form action="/adminCategoryList/edit/category " method="post">
                                 <div class="modal-body">
                                     <div class="form-group col-md-10" align="left">
                                         <label style="color:#696969"> Назва категорії</label>
@@ -412,14 +412,14 @@
                             <td style="display:none;">{{id}}</td>
                             <td>{{name}}</td>
                             <td >
-                                <form action="/adminCategoryList/categorie" method="get">
+                                <form action="/adminCategoryList/edit/category " method="get" style="float:left;">
                                     <input id="categoryId" type="hidden" name="categoryID" value="{{id}}">
                                     <button type="submit" class="icon-button"><img src="/image/pen.png"
                                                                                    style="height:21px;width:21px;"
                                                                                    onmouseover="editHover(this);"
                                                                                    onmouseout="editNotHover(this);"></button>
                                 </form>
-                                <form action="/adminCategoryList/delete/category" method="get">
+                                <form action="/adminCategoryList/delete/category" method="get" style="float:left;">
                                     <input id="categoryId" type="hidden" name="categoryID" value="{{id}}">
                                     <button type="submit" class="icon-button"><img src="/image/trash.png"
                                                                                    style="height:21px;width:21px;"
