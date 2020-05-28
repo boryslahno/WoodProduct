@@ -18,7 +18,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Map;
 
 @Controller
@@ -29,6 +32,8 @@ public class RegistrationController {
     private PersonalInformationRepository personalInformationRepository;
     @Autowired
     private CompanyRepository companyRepository;
+
+    private static final DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
 
     @GetMapping("/registration")
     public String registration() {
@@ -48,6 +53,8 @@ public class RegistrationController {
             model.addAttribute("message","User exists!");
             return "shopperRegistration";
         }
+        Date currentDate=new Date();
+        user.setRegisterDate(currentDate);
         userRepository.save(user);
         personalInformation.setUser(user);
         personalInformationRepository.save(personalInformation);
@@ -66,6 +73,9 @@ public class RegistrationController {
             model.addAttribute("message","User exists!");
             return "sellerRegistration";
         }
+        Date currentDate=new Date();
+        user.setRegisterDate(currentDate);
+        userRepository.save(user);
         userRepository.save(user);
         company.setUser(user);
         companyRepository.save(company);
@@ -84,6 +94,9 @@ public class RegistrationController {
             model.addAttribute("message","User exists!");
             return "adminRegistration";
         }
+        Date currentDate=new Date();
+        user.setRegisterDate(currentDate);
+        userRepository.save(user);
         userRepository.save(user);;
         return "redirect:/login";
     }

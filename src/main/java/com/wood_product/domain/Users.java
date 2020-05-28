@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Set;
 
 @Entity
@@ -16,6 +17,8 @@ public class Users implements UserDetails {
 
     private String username;
     private String password;
+    @Temporal(TemporalType.DATE)
+    private Date registerDate;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
@@ -29,6 +32,9 @@ public class Users implements UserDetails {
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
     private Company company;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    private Set<Items> items;
 
     public Company getCompany() {
         return company;
@@ -103,5 +109,13 @@ public class Users implements UserDetails {
 
     public void setPersonalInformation(PersonalInformation personalInformation) {
         this.personalInformation = personalInformation;
+    }
+
+    public Date getRegisterDate() {
+        return registerDate;
+    }
+
+    public void setRegisterDate(Date registerDate) {
+        this.registerDate = registerDate;
     }
 }

@@ -107,4 +107,13 @@ public class UserService implements UserDetailsService {
             return null;
         }
     }
+
+    public Users currentUser(){
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            return userRepository.findByUsername(((UserDetails) principal).getUsername());
+        } else {
+            return null;
+        }
+    }
 }

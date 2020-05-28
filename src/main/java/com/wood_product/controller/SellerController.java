@@ -140,7 +140,7 @@ public class SellerController {
     @GetMapping("/sellerProductInStock")
     public String sellerItemInStockList(Model model) {
         model.addAttribute("nameUser", userService.GetUserName());
-        model.addAttribute("items", itemRepository.findAll());
+        model.addAttribute("items", itemRepository.findByUser(userService.currentUser()));
         model.addAttribute("categories", categoryRepository.findAll());
         return "sellerProductInStock";
     }
@@ -155,7 +155,7 @@ public class SellerController {
     @GetMapping("/addProduct")
     public String addItems(Model model) {
         model.addAttribute("nameUser", userService.GetUserName());
-        model.addAttribute("items", itemRepository.findAll());
+        model.addAttribute("items", itemRepository.findByUser(userService.currentUser()));
         model.addAttribute("categories", categoryRepository.findAll());
         return "sellerProductInStock";
     }
@@ -170,6 +170,7 @@ public class SellerController {
                            @RequestParam String description, @RequestParam Integer price,
                            @RequestParam String name) throws IOException {
         Items item = new Items();
+        item.setUser(userService.currentUser());
         item.setItemname(itemname);
         item.setCount(count);
         item.setDescription(description);
@@ -187,6 +188,8 @@ public class SellerController {
             item.setFileName(resultFilename);
         }
         Set<FilterOptions> filterOptions = new HashSet<FilterOptions>();
+        Date currentDate=new Date();
+        item.setAddDate(currentDate);
         itemRepository.save(item);
         for (int i = 0; i < filtersName.length; ++i) {
             FilterOptions filterOption = new FilterOptions(filters[i], item,

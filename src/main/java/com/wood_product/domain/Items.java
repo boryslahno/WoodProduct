@@ -4,6 +4,7 @@ import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Date;
 import java.util.Set;
 
 @Entity
@@ -20,8 +21,13 @@ public class Items {
     @NotNull
     @Size(max = 1000)
     private String description;
+    @Temporal(TemporalType.DATE)
+    private Date addDate;
     @NotNull
     private Integer price;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id",nullable = false)
+    private Users user;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id",nullable = false)
     private Categories category;
@@ -92,5 +98,21 @@ public class Items {
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
+    }
+
+    public Date getAddDate() {
+        return addDate;
+    }
+
+    public void setAddDate(Date addDate) {
+        this.addDate = addDate;
+    }
+
+    public Users getUser() {
+        return user;
+    }
+
+    public void setUser(Users user) {
+        this.user = user;
     }
 }
