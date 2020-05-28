@@ -311,7 +311,7 @@
                                 </div>
                                 <div class="form-group col-md-10" align="left">
                                     <label style="color:#696969">Категорія товару</label>
-                                    <input type="text" name="name" class="form-control"  value="{{addItem}}"/>
+                                    <input type="hidden" name="name" class="form-control"  value="{{addItem}}"/>
                                 </div>
                                 <div class="form-group col-md-10" align="left">
                                     <label style="color:#696969">Кількість одиниць товару</label>
@@ -344,41 +344,62 @@
             </div><!-- /.modal -->
             {{/addItem}}
             {{#categoryEdit}}
-                <div id="categoryManipulate-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h4 class="modal-title" id="standard-modalLabel">Категорія</h4>
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                            </div>
-                            <form action="/adminCategoryList/edit/category " method="post">
-                                <div class="modal-body">
-                                    <div class="form-group col-md-10" align="left">
-                                        <label style="color:#696969"> Назва категорії</label>
-                                        <input type="text" class="form-control" name="name" value="{{name}}">
+                    <div id="itemManipulate-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title" id="standard-modalLabel">Редагування товару</h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                </div>
+                                <form action="/editProduct" method="post">
+                                    {{#item}}
+                                    <div class="modal-body">
+                                        <div class="form-group col-md-10" align="left">
+                                            <label style="color:#696969">Назва товару</label>
+                                            <input type="text" name="itemname" class="form-control" placeholder="Введіть назву товару" value="{{itemname}}"/>
+                                        </div>
+                                        <div class="form-group col-md-10" align="left">
+                                            <label style="color:#696969">Кількість одиниць товару</label>
+                                            <input type="text" name="count" class="form-control" placeholder="Введіть кільксть товару" value="{{count}}"/>
+                                        </div>
+                                        <div class="form-group col-md-10" align="left">
+                                            <label style="color:#696969">Опис товару</label>
+                                            <textarea style="height:250px;" name="description" class="form-control" placeholder="Наведіть короткий опис товару" >{{description}}</textarea>
+                                        </div>
+                                        <div class="form-group col-md-10" align="left">
+                                            <label style="color:#696969">Ціна за одиницю товару</label>
+                                            <input type="text" name="price" class="form-control" placeholder="Введіть ціну за одиницю товару" value="{{price}}"/>
+                                        </div>
+                                        {{#filterOptions}}
+                                            <div class="form-group col-md-10" align="left">
+                                                <label style="color:#696969">{{#filter}}{{filtername}}{{/filter}}</label>
+                                                <input type="hidden" name="filtersOptionID[]" value="{{id}}">
+                                                <input type="text" name="filters[]" class="form-control" placeholder="Введіть {{#filter}}{{filtername}}{{/filter}} товару" value="{{value}}"/>
+                                            </div>
+                                        {{/filterOptions}}
+                                    {{/item}}
                                     </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" id="ex" class="btn btn-light" data-dismiss="modal">Закрити</button>
-                                    <input type="submit" class="btn btn-primary" value="Змінити"/>
-                                    <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
-                                </div>
-                            </form>
-                        </div><!-- /.modal-content -->
-                    </div><!-- /.modal-dialog -->
-                </div><!-- /.modal -->
+                                    <div class="modal-footer">
+                                        <button type="button" id="ex" class="btn btn-light" data-dismiss="modal">Закрити</button>
+                                        <input id="createCategory" type="submit" class="btn btn-primary" value="Редагувати"/>
+                                        <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
+                                    </div>
+                                </form>
+                            </div><!-- /.modal-content -->
+                        </div><!-- /.modal-dialog -->
+                    </div><!-- /.modal -->
             {{/categoryEdit}}
-            {{#deleteCategory}}
-                <div id="categoryManipulate-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
+            {{#deleteItem}}
+                <div id="itemManipulate-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h4 class="modal-title" id="standard-modalLabel">Видалення категорії</h4>
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                             </div>
-                            <form action="/adminCategoryList/delete/category" method="post">
+                            <form action="/deleteProduct" method="post">
                                 <div class="modal-body">
-                                    <label style="color:#696969">{{deleteCategory}}</label>
+                                    <label style="color:#696969">{{deleteItem}}</label>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" id="ex" class="btn btn-light" data-dismiss="modal">Відмінити</button>
@@ -389,9 +410,9 @@
                         </div><!-- /.modal-content -->
                     </div><!-- /.modal-dialog -->
                 </div><!-- /.modal -->
-            {{/deleteCategory}}
+            {{/deleteItem}}
             <!--Notification-->
-            {{#addCategory}}
+            {{#addItemSuccess}}
                 <div class="toast"style="position: absolute; top: 20px; right: 20px;min-width:200px;background-color:#02d098;">
                     <div class="toast-header" style="background-color:#02d098;">
                         <img src="/image/tree_icon.png" class="rounded mr-2" alt="Tree"style="width:20px;height:20px;">
@@ -401,25 +422,11 @@
                         </button>
                     </div>
                     <div class="toast-body" style="color:white;">
-                        {{addCategory}}
+                        {{addItemSuccess}}
                     </div>
                 </div>
-            {{/addCategory}}
-            {{#exists}}
-                <div class="toast"style="position: absolute; top: 20px; right: 20px;min-width:200px;background-color:#fa5c7d;">
-                    <div class="toast-header" style="background-color:#fa5c7d;">
-                        <img src="/image/tree_icon.png" class="rounded mr-2" alt="Tree"style="width:20px;height:20px;">
-                        <strong class="mr-auto" style="color:white;">Wodden products</strong>
-                        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="toast-body" style="color:white;">
-                        {{exists}}
-                    </div>
-                </div>
-            {{/exists}}
-            {{#updateCategory}}
+            {{/addItemSuccess}}
+            {{#updateSuccess}}
                 <div class="toast"style="position: absolute; top: 20px; right: 20px;min-width:200px;background-color:#02d098;">
                     <div class="toast-header" style="background-color:#02d098;">
                         <img src="/image/tree_icon.png" class="rounded mr-2" alt="Tree"style="width:20px;height:20px;">
@@ -429,10 +436,10 @@
                         </button>
                     </div>
                     <div class="toast-body" style="color:white;">
-                        {{updateCategory}}
+                        {{updateSuccess}}
                     </div>
                 </div>
-            {{/updateCategory}}
+            {{/updateSuccess}}
             {{#deleteSuccess}}
                 <div class="toast"style="position: absolute; top: 20px; right: 20px;min-width:200px;background-color:#02d098;">
                     <div class="toast-header" style="background-color:#02d098;">
@@ -453,6 +460,7 @@
                     <thead style="background:#f1f3fa;">
                     <tr>
                         <th style="display:none;">ID</th>
+                        <th>Фото</th>
                         <th>Назва</th>
                         <th>Кількість</th>
                         <th>Ціна</th>
@@ -462,26 +470,34 @@
                     </thead>
                     <tbody>
                     {{#items}}
-                        <tr>
+                        <tr >
                             <td style="display:none;">{{id}}</td>
-                            <td><img style="width:50px;height:50px;margin-right:20px;" src="/uploads/{{fileName}}">{{itemname}}</td>
-                            <td>{{count}}</td>
-                            <td>{{price}}</td>
-                            <td>{{#category}}{{name}}{{/category}}</td>
-                            <td >
-                                <form action="/adminCategoryList/edit/category " method="get" style="float:left;">
-                                    <input id="categoryId" type="hidden" name="categoryID" value="{{id}}">
+                            <td style="text-align:center;"><img style="height:5%;margin-right:10px;" src="/uploads/{{fileName}}"></td>
+                            <td style="vertical-align:middle;">{{itemname}}</td>
+                            <td style="vertical-align:middle;">{{count}}</td>
+                            <td style="vertical-align:middle;">₴{{price}}</td>
+                            <td style="vertical-align:middle;">{{#category}}{{name}}{{/category}}</td>
+                            <td style="vertical-align:middle;">
+                                <form action="/editProduct" method="get" style="float:left;">
+                                    <input id="categoryId" type="hidden" name="itemID" value="{{id}}">
                                     <button type="submit" class="icon-button"><img src="/image/pen.png"
                                                                                    style="height:21px;width:21px;"
                                                                                    onmouseover="editHover(this);"
                                                                                    onmouseout="editNotHover(this);"></button>
                                 </form>
-                                <form action="/adminCategoryList/delete/category" method="get" style="float:left;">
-                                    <input id="categoryId" type="hidden" name="categoryID" value="{{id}}">
+                                <form action="/deleteProduct" method="get" style="float:left;">
+                                    <input id="categoryId" type="hidden" name="itemID" value="{{id}}">
                                     <button type="submit" class="icon-button"><img src="/image/trash.png"
                                                                                    style="height:21px;width:21px;"
                                                                                    onmouseover="deleteHover(this);"
                                                                                    onmouseout="deleteNotHover(this);"></button>
+                                </form>
+                                <form action="/sellerViewProduct" method="get" style="float:left;">
+                                    <input id="categoryId" type="hidden" name="itemID" value="{{id}}">
+                                    <button type="submit" class="icon-button"><img src="/image/eye.png"
+                                                                                   style="height:21px;width:21px;"
+                                                                                   onmouseover="showHover(this);"
+                                                                                   onmouseout="showNotHover(this);"></button>
                                 </form>
                             </td>
                         </tr>
@@ -531,6 +547,13 @@ el.src="/image/pen-hover.png";
 function editNotHover(el){
 el.src="/image/pen.png";
 }
+
+function showHover(el){
+el.src="/image/eye-hover.png";
+}
+function showNotHover(el){
+el.src="/image/eye.png";
+}
 </script>
 <script>
    $(document).ready(function () {
@@ -541,6 +564,11 @@ el.src="/image/pen.png";
         });
 </script>
 <!--View edit modal-->
+<script>
+$(document).ready(function () {
+    $('#itemManipulate-modal').modal('show');
+});
+</script>
 <script>
 $(document).ready(function () {
     $('#addItem-modal').modal('show');

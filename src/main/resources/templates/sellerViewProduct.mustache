@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Категорії товарів</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!-- Datatables css -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
+    <style>
+    @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
+    body{font-family: 'Poppins', sans-serif;
+         background: #f9fafd;}
+    p{font-family: 'Poppins', sans-serif;
+      font-size: 1.1em;
+        font-weight: 300;
+        line-height: 1.7em;
+        color: #999;
+    }
+    a,
+    a:hover{
+        color: #738091;
+        text-decoration: none;
+        transition: all 0.3s;
+        }
+
+    .navbar{
+        padding: 10px 10px;
+        border: none;
+        border-radius: 0;
+        margin-bottom: 20px;
+        margin-left:280px;
+        box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+
+    }
+
+    #sidebar {
+        min-width: 280px;
+        max-width: 280px;
+        background: #2d3744;
+        color: #fff;
+        position: fixed;
+        transition: all 0.3s;
+        height:100%;
+        overflow-x: hidden;
+    }
+
+    #sidebar .sidebar-header{
+        padding: 30px;
+        padding-left: 50px;
+        background: #2d3744;
+        height:100px;
+    }
+    #sidebar ul.components{
+        padding: 0px 0px;
+    }
+    #sidebar ul p{
+        padding-left: 30px;
+        margin-bottom:0px;
+        font-size: 0.8em;
+        display: block;
+        color:#738091;
+    }
+    #sidebar ul li a{
+        padding-top: 10px;
+        padding-left:30px;
+        font-size: 1.1em;
+        display: block;
+    }
+
+
+    #sidebar ul li a:hover {
+        color: #92a2b5;
+    }
+
+     #sidebar ul li a:focus {
+        color: white;
+    }
+
+    a[data-toggle="collapse"] {
+        position: relative;
+    }
+
+    .dropdown-toggle::after {
+        display: block;
+        position: absolute;
+        top: 50%;
+        right: 20px;
+        transform: translateY(-50%);
+    }
+
+    ul ul a {
+        font-size: 0.9em !important;
+        padding-left: 60px !important;
+    }
+
+    .content {
+        margin-left:300px;
+    }
+
+    @media(maz-width:768px){
+        #sidebar{margin-left: -250px;}
+        #sidebar.active{
+            margin-left: 0px;
+        }
+        #sidebarCollapse span{
+            display: none;
+        }
+    }
+    .navbar-custom {
+    background-color: #ffffff;
+}
+        ::-webkit-scrollbar{
+    width:8px;
+            }
+        ::-webkit-scrollbar-track{
+    background:#2d3744;
+            }
+        ::-webkit-scrollbar-thumb{
+    background:#C0C0C0;
+    border-radius:8px;
+            }
+
+   .page-item.active .page-link {
+        color: #fff !important;
+        background-color: #737df5 !important;
+        border:none;
+        border-radius:50%;
+    }
+
+    .page-link {
+        color: #000 !important;
+        margin-left:5px;
+        border-radius:50%;
+        border:none;
+    }
+
+    .page-link:hover {
+        color: dark !important;
+        background-color: #eaedf0 !important;
+        border-color: #eaedf0 !important;
+    }
+
+    .breadcrumb-item + .breadcrumb-item::before {
+    content: ">";
+    }
+    .breadcrumb {
+    background-color:#f9fafd;
+    margin-top:-10px;
+    margin-right:13px;
+    font-size:15px;
+    }
+    .breadcrumb-item>a{
+    color: #7481f4;
+    }
+    .breadcrumb-item>a:hover {
+    color: blue;
+    }
+    .icon-button,
+    .icon-button:active,
+    .icon-button:focus{
+    outline:none;
+    border:none;
+    background-color:white;
+    }
+    td,th{
+    border: 1px solid #f1f3fa;
+    }
+    </style>
+</head>
+<body>
+
+<div class="wrapper">
+    <!--SideBar-->
+    <nav id="sidebar">
+        <div class="sidebar-header">
+            <label style="font-size:18px;"><a style="color:white;" href="/"><img src="/image/tree_icon.png" width="50" height="50"
+                                                                                 class="d-inline-block align-top" alt="Tree" style="float:left;">
+                Wooden products</a></label>
+        </div>
+        <ul class="list-unstyled components">
+            <p>НАВІГАЦІЯ</p>
+            <li>
+                <a href="/sellerPersonalInformation">Особисті дані</a>
+            </li>
+            <li>
+                <a style="color:white;" href="/sellerProductInStock">Товари в наявності</a>
+            </li>
+            <li>
+                <a href="#">Продані товари</a>
+            </li>
+            <li>
+                <a href="#">Індивідульні замовлення</a>
+            </li>
+        </ul>
+    </nav>
+    <!--Navbar-->
+    <nav class="navbar navbar-expand-lg navbar-light navbar-custom">
+
+        <!--<a class="navbar-brand" href="#">Navbar</a> -->
+        <button style="margin-bottom:10px;" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            {{#nameUser}}
+
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item dropdown">
+                        <a style="margin-right:40px;" class="nav-link dropdown-toggle" href="navbarDropdown" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {{nameUser}}
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                            <form action="/logout" method="post">
+                                <button class="dropdown-item">Вихід</button>
+                                <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
+                            </form>
+                        </div>
+                    </li>
+                </ul>
+
+            {{/nameUser}}
+            {{^nameUser}}
+                <button  class="btn btn-primary ml-auto" onclick="window.location.href='/login'">Вхід</button>
+            {{/nameUser}}
+        </div>
+    </nav>
+    <!--Content-->
+    <div class="content">
+        <div style="height:40px;">
+            <div style="float:left;"><label style="color:#7b7b7f;font-size:22px;">Деталі товару</label></div>
+            <div style="float:right;"><nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="/">Wodden products</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Деталі товару</li>
+                </ol>
+            </nav>
+            </div>
+            </div>
+        {{#item}}
+        <div style="background-color:white;max-width:1030px;margin-top:15px;">
+            <div style="margin-top:30px;margin-left:25px;display:inline-block;width:470px;height:400px;text-align:center;">
+                <img id="product" style="{{#heightSize}}height:{{heightSize}}%{{/heightSize}} {{#widthSize}}width:{{widthSize}}%{{/widthSize}}" src="uploads/{{fileName}}">
+            </div>
+            <div style="margin-top:30px;display:inline-block;width:500px;height:400px;vertical-align: top;">
+                <label style="font-size:28px;color:#727f8b;">{{itemname}}</label>
+            </div>
+            <div style="margin-left:25px;margin-top:10px;padding-bottom:30px;width:980px;">
+                <table class="table table-centered mb-0" style="border: 1px solid #f1f3fa;color:#727f8b;">
+                    <thead style="background-color:#f1f3fa;">
+                    <tr>
+                        <th>Характеристика</th>
+                        <th>Значення</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#filterOptions}}
+                    <tr>
+                    <td>{{#filter}}{{filtername}}{{/filter}}</td>
+                    <td>{{value}}</td>
+                    {{/filterOptions}}
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {{/item}}
+    </div>
+    <!--Footer-->
+    <footer style="box-shadow: 1px 1px 3px rgba(0,0,0,0.4);background:#f9fafd;height:60px;margin-top:30px;">
+
+    </footer>
+</div>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<!--Datatable-->
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+<!--Need to popper works-->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+</body>
+</html>

@@ -1,5 +1,6 @@
 package com.wood_product.controller;
 
+import com.sun.xml.bind.v2.model.core.ID;
 import com.wood_product.domain.Company;
 import com.wood_product.domain.FilterOptions;
 import com.wood_product.domain.Items;
@@ -15,12 +16,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
+import java.util.List;
 
 @Controller
 public class SellerController {
@@ -42,21 +46,24 @@ public class SellerController {
     private FilterOptionsRepository filterOptionsRepository;
     @Autowired
     private FilterRepository filterRepository;
+
+    private Long IDitem;
+
     //Personal information management
     @GetMapping("/sellerPersonalInformation")
     public String personalInfo(Model model) {
         model.addAttribute("nameUser", userService.GetUserName());
         model.addAttribute("sellerPersonalInfo", userService.GetUserSecurityInfo());
-        model.addAttribute("companyInfo",userService.loadCompanyInfo());
+        model.addAttribute("companyInfo", userService.loadCompanyInfo());
         return "sellerPersonalInformation";
     }
 
     @GetMapping("/sellerPersonalInformation/changeEmail")
-    public String changeEmail(Model model){
+    public String changeEmail(Model model) {
         model.addAttribute("nameUser", userService.GetUserName());
         model.addAttribute("sellerPersonalInfo", userService.GetUserSecurityInfo());
-        model.addAttribute("companyInfo",userService.loadCompanyInfo());
-        model.addAttribute("sellerChangeEmail",userService.GetUserSecurityInfo());
+        model.addAttribute("companyInfo", userService.loadCompanyInfo());
+        model.addAttribute("sellerChangeEmail", userService.GetUserSecurityInfo());
         return "sellerPersonalInformation";
     }
 
@@ -68,7 +75,7 @@ public class SellerController {
             model.addAttribute("exists", "Користувач з такою електронною поштою вже існує");
             model.addAttribute("nameUser", userService.GetUserName());
             model.addAttribute("sellerPersonalInfo", userService.GetUserSecurityInfo());
-            model.addAttribute("companyInfo",userService.loadCompanyInfo());
+            model.addAttribute("companyInfo", userService.loadCompanyInfo());
             return "sellerPersonalInformation";
         } else {
             user.setUsername(username);
@@ -81,7 +88,7 @@ public class SellerController {
     public String changePassword(Model model) {
         model.addAttribute("nameUser", userService.GetUserName());
         model.addAttribute("sellerPersonalInfo", userService.GetUserSecurityInfo());
-        model.addAttribute("companyInfo",userService.loadCompanyInfo());
+        model.addAttribute("companyInfo", userService.loadCompanyInfo());
         model.addAttribute("sellerChangePassword", true);
         return "sellerPersonalInformation";
     }
@@ -91,7 +98,7 @@ public class SellerController {
         Users user = userService.GetUserSecurityInfo();
         model.addAttribute("nameUser", userService.GetUserName());
         model.addAttribute("sellerPersonalInfo", userService.GetUserSecurityInfo());
-        model.addAttribute("companyInfo",userService.loadCompanyInfo());
+        model.addAttribute("companyInfo", userService.loadCompanyInfo());
         if (!oldPassword.equals(user.getPassword())) {
             model.addAttribute("oldPasswordError", "Введено неправильний старий пароль");
             return "sellerPersonalInformation";
@@ -110,87 +117,143 @@ public class SellerController {
     public String changeCompanyInformation(Model model) {
         model.addAttribute("nameUser", userService.GetUserName());
         model.addAttribute("sellerPersonalInfo", userService.GetUserSecurityInfo());
-        model.addAttribute("companyInfo",userService.loadCompanyInfo());
-        model.addAttribute("sellerChangeCompany",userService.loadCompanyInfo());
+        model.addAttribute("companyInfo", userService.loadCompanyInfo());
+        model.addAttribute("sellerChangeCompany", userService.loadCompanyInfo());
         return "sellerPersonalInformation";
     }
 
     @PostMapping("/sellerPersonalInformation/changeCompanyInformation")
-    public String changeCompanyInformation(Model model,@RequestParam String companyName,@RequestParam String companyAddress,@RequestParam String companyPhone){
-        Company company=userService.loadCompanyInfo();
+    public String changeCompanyInformation(Model model, @RequestParam String companyName, @RequestParam String companyAddress, @RequestParam String companyPhone) {
+        Company company = userService.loadCompanyInfo();
         company.setName(companyName);
         company.setAddress(companyAddress);
         company.setPhoneNumber(companyPhone);
         companyRepository.save(company);
         model.addAttribute("nameUser", userService.GetUserName());
         model.addAttribute("sellerPersonalInfo", userService.GetUserSecurityInfo());
-        model.addAttribute("companyInfo",userService.loadCompanyInfo());
-        model.addAttribute("changeCompanyInfo","Особиста інформація успішно оновлена");
+        model.addAttribute("companyInfo", userService.loadCompanyInfo());
+        model.addAttribute("changeCompanyInfo", "Особиста інформація успішно оновлена");
         return "sellerPersonalInformation";
     }
 
     //Products in stock management
     @GetMapping("/sellerProductInStock")
-    public String sellerItemInStockList(Model model){
+    public String sellerItemInStockList(Model model) {
         model.addAttribute("nameUser", userService.GetUserName());
-        model.addAttribute("items",itemRepository.findAll());
+        model.addAttribute("items", itemRepository.findAll());
         model.addAttribute("categories", categoryRepository.findAll());
-        return "sellerProductInStock";
-    }
-    @PostMapping("/sellerProductInStock")
-    public String selectCategoryItem(Model model,@RequestParam String categoryName){
-        model.addAttribute("nameUser", userService.GetUserName());
-        model.addAttribute("items",itemRepository.findAll());
-        model.addAttribute("categories", categoryRepository.findAll());
-        model.addAttribute("addItem",categoryName);
-        model.addAttribute("filters",categoryRepository.findByName(categoryName).getFilter());
         return "sellerProductInStock";
     }
 
+    @PostMapping("/sellerProductInStock")
+    public String selectCategoryItem(Model model, RedirectAttributes redirectAttributes, @RequestParam String categoryName) {
+        redirectAttributes.addFlashAttribute("addItem", categoryName);
+        redirectAttributes.addFlashAttribute("filters", categoryRepository.findByName(categoryName).getFilter());
+        return "redirect:/sellerProductInStock";
+    }
+
     @GetMapping("/addProduct")
-    public String addItems(Model model){
+    public String addItems(Model model) {
         model.addAttribute("nameUser", userService.GetUserName());
-        model.addAttribute("items",itemRepository.findAll());
+        model.addAttribute("items", itemRepository.findAll());
         model.addAttribute("categories", categoryRepository.findAll());
         return "sellerProductInStock";
     }
+
     @Transactional
     @PostMapping("/addProduct")
-    public String addItems(Model model, @RequestParam("file") MultipartFile file,
-                           @RequestParam("filters[]") String[]filters,
-                           @RequestParam("filtersName[]") String[]filtersName,
-                           @RequestParam String itemname,@RequestParam Integer count,
-                           @RequestParam String description,@RequestParam Integer price,
+    public String addItems(Model model, RedirectAttributes redirectAttributes,
+                           @RequestParam("file") MultipartFile file,
+                           @RequestParam("filters[]") String[] filters,
+                           @RequestParam("filtersName[]") String[] filtersName,
+                           @RequestParam String itemname, @RequestParam Integer count,
+                           @RequestParam String description, @RequestParam Integer price,
                            @RequestParam String name) throws IOException {
-        Items item=new Items();
+        Items item = new Items();
         item.setItemname(itemname);
         item.setCount(count);
         item.setDescription(description);
         item.setPrice(price);
         item.setCategory(categoryRepository.findByName(name));
-        if(file!=null){
-            File uploadDir=new File(uploadPath);
-            if(!uploadDir.exists()){
+        if (file != null) {
+            File uploadDir = new File(uploadPath);
+            if (!uploadDir.exists()) {
                 uploadDir.mkdir();
             }
-            String uuidFile= UUID.randomUUID().toString();
-            String resultFilename=uuidFile+"."+file.getOriginalFilename();
-            file.transferTo(new File(uploadPath+resultFilename));
+            String uuidFile = UUID.randomUUID().toString();
+            String resultFilename = uuidFile + "." + file.getOriginalFilename();
+            file.transferTo(new File(uploadPath + resultFilename));
 
             item.setFileName(resultFilename);
         }
-        Set<FilterOptions> filterOptions=new HashSet<FilterOptions>();
+        Set<FilterOptions> filterOptions = new HashSet<FilterOptions>();
         itemRepository.save(item);
-        for(int i=0;i<filtersName.length;++i){
-            FilterOptions filterOption=new FilterOptions(filters[i],item,
-                    filterRepository.findById(filterRepository.findByFilternameAndName(filtersName[i],name)).get());
+        for (int i = 0; i < filtersName.length; ++i) {
+            FilterOptions filterOption = new FilterOptions(filters[i], item,
+                    filterRepository.findById(filterRepository.findByFilternameAndName(filtersName[i], name)).get());
             filterOptions.add(filterOption);
             filterOptionsRepository.save(filterOption);
         }
+        redirectAttributes.addFlashAttribute("addItemSuccess", "Товар успішно доданий");
+        return "redirect:/sellerProductInStock";
+    }
+
+    @GetMapping("/deleteProduct")
+    public String deleteProduct(RedirectAttributes redirectAttributes, @RequestParam Long itemID) {
+        IDitem = itemID;
+        redirectAttributes.addFlashAttribute("deleteItem", "Ви дійсно бажаєте видалити цей товар?");
+        return "redirect:/sellerProductInStock";
+    }
+
+    @PostMapping("/deleteProduct")
+    public String deleteProduct(RedirectAttributes redirectAttributes) {
+        Items item=itemRepository.findById(IDitem).get();
+        File file=new File(uploadPath+item.getFileName());
+        itemRepository.deleteById(IDitem);
+        file.delete();
+        redirectAttributes.addFlashAttribute("deleteSuccess", "Товар успішно видалений");
+        return "redirect:/sellerProductInStock";
+    }
+
+    @GetMapping("/editProduct")
+    public String editProduct(RedirectAttributes redirectAttributes, @RequestParam Long itemID){
+        IDitem = itemID;
+        redirectAttributes.addFlashAttribute("item",itemRepository.findById(itemID).get());
+        redirectAttributes.addFlashAttribute("categoryEdit", true);
+        return "redirect:/sellerProductInStock";
+    }
+
+    @Transactional
+    @PostMapping("/editProduct")
+    public String editProduct(RedirectAttributes redirectAttributes, @RequestParam("filters[]") String[] filters,
+                              @RequestParam("filtersOptionID[]") Long[] filtersID,
+                              @RequestParam String itemname, @RequestParam Integer count,
+                              @RequestParam String description, @RequestParam Integer price) {
+        Items item=itemRepository.findById(IDitem).get();
+        item.setItemname(itemname);
+        item.setCount(count);
+        item.setDescription(description);
+        item.setPrice(price);
+        for (int i = 0; i < filtersID.length; ++i) {
+            FilterOptions filterOption = filterOptionsRepository.findById(filtersID[i]).get();
+            filterOption.setValue(filters[i]);
+            filterOptionsRepository.save(filterOption);
+        }
+        redirectAttributes.addFlashAttribute("updateSuccess","Інформація про товар успішно змінена");
+        return "redirect:/sellerProductInStock";
+    }
+
+    @GetMapping("/sellerViewProduct")
+    public String viewProduct(Model model,@RequestParam Long itemID){
+        Items item=itemRepository.findById(itemID).get();
+        model.addAttribute("item",item);
         model.addAttribute("nameUser", userService.GetUserName());
-        model.addAttribute("items",itemRepository.findAll());
-        model.addAttribute("categories", categoryRepository.findAll());
-        model.addAttribute("addItem",false);
-        return "redirect://sellerProductInStock";
+        Image image=new ImageIcon(uploadPath+item.getFileName()).getImage();
+        if(image.getHeight(null)>=image.getWidth(null)){
+            model.addAttribute("heightSize",100);
+        }else{
+            model.addAttribute("widthSize",100);
+        }
+        return "sellerViewProduct";
     }
 }
