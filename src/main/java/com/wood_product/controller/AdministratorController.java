@@ -8,15 +8,22 @@ import com.wood_product.service.CategoryService;
 import com.wood_product.service.FilterService;
 import com.wood_product.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.jws.WebParam;
+import javax.swing.*;
+import java.awt.*;
+import java.io.File;
 import java.util.*;
+import java.util.List;
 
 @Controller
 public class AdministratorController {
@@ -36,6 +43,10 @@ public class AdministratorController {
     private FilterRepository filterRepository;
     @Autowired
     private FilterService filterService;
+    @Autowired
+    private  ItemRepository itemRepository;
+    @Autowired
+    private  FilterOptionsRepository filterOptionsRepository;
     //User management
     private Long IDUser;
 
@@ -47,18 +58,18 @@ public class AdministratorController {
     }
 
     @PostMapping("/adminUserList")
-    public String addAdmin(Users user, Model model) {
+    public String addAdmin(Users user, RedirectAttributes redirectAttributes) {
         Users userFromDB = userRepository.findByUsername(user.getUsername());
         if (userFromDB != null) {
-            model.addAttribute("exists", "Користувач з такою електронною поштою вже існує");
+            redirectAttributes.addFlashAttribute("exists", "Користувач з такою електронною поштою вже існує");
         } else {
             user.setRoles(Collections.singleton(Role.Адміністратор));
+            Date currentDate=new Date();
+            user.setRegisterDate(currentDate);
             userRepository.save(user);
-            model.addAttribute("addAdmin", "Адміністратор успішно доданий");
+            redirectAttributes.addFlashAttribute("addAdmin", "Адміністратор успішно доданий");
         }
-        model.addAttribute("nameUser", userService.GetUserName());
-        model.addAttribute("users", userService.loadAllUsers());
-        return "adminUserList";
+        return "redirect:/adminUserList";
     }
 
     @GetMapping("/adminUserList/users")
@@ -84,7 +95,8 @@ public class AdministratorController {
     }
 
     @PostMapping("/adminUserList/seller/edit")
-    public String editUser(@RequestParam String name, @RequestParam String address, @RequestParam String phoneNumber, Model model) {
+    public String editUser(@RequestParam String name, @RequestParam String address,
+                           @RequestParam String phoneNumber, RedirectAttributes redirectAttributes) {
         Optional<Users> users = userRepository.findById(IDUser);
         Users user = users.get();
         Company company = user.getCompany();
@@ -92,14 +104,13 @@ public class AdministratorController {
         company.setAddress(address);
         company.setPhoneNumber(phoneNumber);
         companyRepository.save(company);
-        model.addAttribute("updateSeller", "Особиста інформація продавця успішно оновлена");
-        model.addAttribute("nameUser", userService.GetUserName());
-        model.addAttribute("users", userService.loadAllUsers());
-        return "adminUserList";
+        redirectAttributes.addFlashAttribute("updateSeller", "Особиста інформація продавця успішно оновлена");
+        return "redirect:/adminUserList";
     }
 
     @PostMapping("/adminUserList/shopper/edit")
-    public String editUser(@RequestParam String name, @RequestParam String surname, @RequestParam String address, @RequestParam String phoneNumber, Model model) {
+    public String editUser(@RequestParam String name, @RequestParam String surname,
+                           @RequestParam String address, @RequestParam String phoneNumber, RedirectAttributes redirectAttributes) {
         Optional<Users> users = userRepository.findById(IDUser);
         Users user = users.get();
         PersonalInformation personalInformation = user.getPersonalInformation();
@@ -108,10 +119,8 @@ public class AdministratorController {
         personalInformation.setAddress(address);
         personalInformation.setPhoneNumber(phoneNumber);
         personalInformationRepository.save(personalInformation);
-        model.addAttribute("updateShopper", "Особиста інформація покупця успішно оновлена");
-        model.addAttribute("nameUser", userService.GetUserName());
-        model.addAttribute("users", userService.loadAllUsers());
-        return "adminUserList";
+        redirectAttributes.addFlashAttribute("updateShopper", "Особиста інформація покупця успішно оновлена");
+        return "redirect:/adminUserList";
     }
 
     @GetMapping("/adminUserList/delete/user")
@@ -124,12 +133,10 @@ public class AdministratorController {
     }
 
     @PostMapping("/adminUserList/delete/user")
-    public String deleteUser(Model model) {
+    public String deleteUser(RedirectAttributes redirectAttributes) {
         userRepository.deleteById(IDUser);
-        model.addAttribute("deleteSuccess", "Користувач успішно видалений");
-        model.addAttribute("nameUser", userService.GetUserName());
-        model.addAttribute("users", userService.loadAllUsers());
-        return "adminUserList";
+        redirectAttributes.addFlashAttribute("deleteSuccess", "Користувач успішно видалений");
+        return "redirect:/adminUserList";
     }
 
     //Category product management
@@ -143,17 +150,15 @@ public class AdministratorController {
     }
 
     @PostMapping("/adminCategoryList")
-    public String addCategory(Categories cetegory, Model model) {
+    public String addCategory(Categories cetegory, RedirectAttributes redirectAttributes) {
         Categories categories = categoryRepository.findByName(cetegory.getName());
         if (categories != null) {
-            model.addAttribute("exists", "Категорія з такою назвою вже існує");
+            redirectAttributes.addFlashAttribute("exists", "Категорія з такою назвою вже існує");
         } else {
             categoryRepository.save(cetegory);
-            model.addAttribute("addCategory", "Категорія успішно додана");
+            redirectAttributes.addFlashAttribute("addCategory", "Категорія успішно додана");
         }
-        model.addAttribute("nameUser", userService.GetUserName());
-        model.addAttribute("categories", categoryService.loadAllCategories());
-        return "/adminCategoryList";
+        return "redirect:/adminCategoryList";
     }
 
     @GetMapping("/adminCategoryList/edit/category")
@@ -166,21 +171,17 @@ public class AdministratorController {
     }
 
     @PostMapping("/adminCategoryList/edit/category")
-    public String editCategory(@RequestParam String name, Model model) {
+    public String editCategory(@RequestParam String name, RedirectAttributes redirectAttributes) {
         Categories categories = categoryRepository.findByName(name);
         if (categories != null) {
-            model.addAttribute("exists", "Категорія з такою назвою вже існує");
+            redirectAttributes.addFlashAttribute("exists", "Категорія з такою назвою вже існує");
         } else {
             Categories category = categoryRepository.findById(IDCategory).get();
             category.setName(name);
             categoryRepository.save(category);
-            model.addAttribute("updateCategory", "Дані котегорії товару успішно оновлені");
-            model.addAttribute("nameUser", userService.GetUserName());
-            model.addAttribute("categories", categoryService.loadAllCategories());
+            redirectAttributes.addFlashAttribute("updateCategory", "Дані котегорії товару успішно оновлені");
         }
-        model.addAttribute("nameUser", userService.GetUserName());
-        model.addAttribute("categories", categoryService.loadAllCategories());
-        return "adminCategoryList";
+        return "redirect:/adminCategoryList";
     }
 
     @GetMapping("/adminCategoryList/delete/category")
@@ -193,12 +194,10 @@ public class AdministratorController {
     }
 
     @PostMapping("/adminCategoryList/delete/category")
-    public String deleteCategory(Model model) {
+    public String deleteCategory(RedirectAttributes redirectAttributes) {
         categoryRepository.deleteById(IDCategory);
-        model.addAttribute("deleteSuccess", "Категорія товару успішно видалена");
-        model.addAttribute("nameUser", userService.GetUserName());
-        model.addAttribute("categories", categoryService.loadAllCategories());
-        return "adminCategoryList";
+        redirectAttributes.addFlashAttribute("deleteSuccess", "Категорія товару успішно видалена");
+        return "redirect:/adminCategoryList";
     }
 
     //Personal information management
@@ -242,21 +241,20 @@ public class AdministratorController {
     }
 
     @PostMapping("/adminPersonalInformation/changePassword")
-    public String changePassword(@RequestParam String oldPassword, @RequestParam String newPassword, @RequestParam String repeatPassword, Model model) {
+    public String changePassword(@RequestParam String oldPassword, @RequestParam String newPassword,
+                                 @RequestParam String repeatPassword, RedirectAttributes redirectAttributes) {
         Users user = userService.GetUserSecurityInfo();
-        model.addAttribute("nameUser", userService.GetUserName());
-        model.addAttribute("adminPersonalInfo", userService.GetUserSecurityInfo());
         if (!oldPassword.equals(user.getPassword())) {
-            model.addAttribute("oldPasswordError", "Введено неправильний старий пароль");
-            return "adminPersonalInfo";
+            redirectAttributes.addFlashAttribute("oldPasswordError", "Введено неправильний старий пароль");
+            return "redirect:/adminPersonalInformation";
         } else if (!newPassword.equals(repeatPassword)) {
-            model.addAttribute("repeatPasswordError", "Паролі не співпадають");
-            return "adminPersonalInfo";
+            redirectAttributes.addFlashAttribute("repeatPasswordError", "Паролі не співпадають");
+            return "redirect:/adminPersonalInformation";
         } else {
             user.setPassword(newPassword);
             userRepository.save(user);
-            model.addAttribute("changePassword", "Пароль змінено успішно");
-            return "adminPersonalInfo";
+            redirectAttributes.addFlashAttribute("changePassword", "Пароль змінено успішно");
+            return "redirect:/adminPersonalInformation";
         }
     }
 
@@ -273,33 +271,24 @@ public class AdministratorController {
     }
 
     @PostMapping("/adminFilterList")
-    public String addFilters(Model model, @RequestParam String filtername, @RequestParam String categoryName) {
+    public String addFilters(RedirectAttributes redirectAttributes, @RequestParam String filtername, @RequestParam String categoryName) {
         List<Filters> filterFromDB = filterRepository.findByFiltername(filtername);
         if (!filterFromDB.isEmpty()) {
-            if (categoryRepository.findByFilternameAndName(filterRepository.findByFiltername(filtername).get(0).getFiltername().toString(), categoryName) == null) {
+            if (categoryRepository.findByFilternameAndName(filterRepository.findByFiltername(filtername).get(0).getFiltername(), categoryName) == null) {
                 Categories category = categoryRepository.findByName(categoryName);
                 Filters filter = new Filters(filtername, category);
                 filterRepository.save(filter);
-                model.addAttribute("nameUser", userService.GetUserName());
-                model.addAttribute("filters", filterService.loadAllFilters());
-                model.addAttribute("categories", categoryRepository.findAll());
-                model.addAttribute("addFilter", "Фільтер успішно доданий");
+                redirectAttributes.addFlashAttribute("addFilter", "Фільтер успішно доданий");
             } else {
-                model.addAttribute("nameUser", userService.GetUserName());
-                model.addAttribute("filters", filterService.loadAllFilters());
-                model.addAttribute("categories", categoryRepository.findAll());
-                model.addAttribute("exists", "Даний фільтер вже належить цій категорії товарів");
+                redirectAttributes.addFlashAttribute("exists", "Даний фільтер вже належить цій категорії товарів");
             }
         } else {
             Categories category = categoryRepository.findByName(categoryName);
             Filters filter = new Filters(filtername, category);
             filterRepository.save(filter);
-            model.addAttribute("nameUser", userService.GetUserName());
-            model.addAttribute("filters", filterService.loadAllFilters());
-            model.addAttribute("categories", categoryRepository.findAll());
-            model.addAttribute("addFilter", "Фільтер успішно доданий");
+            redirectAttributes.addFlashAttribute("addFilter", "Фільтер успішно доданий");
         }
-        return "adminFilterList";
+        return "redirect:/adminFilterList";
     }
 
     @GetMapping("/adminFilterList/edit/filter")
@@ -313,21 +302,16 @@ public class AdministratorController {
     }
 
     @PostMapping("/adminFilterList/edit/filter")
-    public String changeFilter(Model model, @RequestParam String filterName) {
+    public String changeFilter(RedirectAttributes redirectAttributes, @RequestParam String filterName) {
         Filters filter = filterRepository.findById(IDfilter).get();
         if (categoryRepository.findByFilternameAndName(filterName, filter.getCategory().getName()) == null) {
             filter.setFiltername(filterName);
             filterRepository.save(filter);
-            model.addAttribute("nameUser", userService.GetUserName());
-            model.addAttribute("filters", filterService.loadAllFilters());
-            model.addAttribute("updateFilter", "Дані фільтра успішно змінені");
+            redirectAttributes.addFlashAttribute("updateFilter", "Дані фільтра успішно змінені");
         } else {
-            model.addAttribute("nameUser", userService.GetUserName());
-            model.addAttribute("filters", filterService.loadAllFilters());
-            model.addAttribute("categories", categoryRepository.findAll());
-            model.addAttribute("exists", "Даний фільтер вже належить цій категорії товарів");
+            redirectAttributes.addFlashAttribute("exists", "Даний фільтер вже належить цій категорії товарів");
         }
-        return "adminFilterList";
+        return "redirect:/adminFilterList";
     }
 
     @GetMapping("/adminFilterList/delete/filter")
@@ -340,12 +324,81 @@ public class AdministratorController {
     }
 
     @PostMapping("/adminFilterList/delete/filter")
-    public String deleteFilter(Model model) {
+    public String deleteFilter(RedirectAttributes redirectAttributes) {
         filterRepository.deleteById(IDfilter);
-        model.addAttribute("deleteSuccess", "Фільтер товару успішно видалений");
+        redirectAttributes.addFlashAttribute("deleteSuccess", "Фільтер товару успішно видалений");
+        return "redirect:/adminFilterList";
+    }
+
+    //Items management
+    private Long IDitem;
+
+    @Value("${upload.path}")
+    private String uploadPath;
+
+    @GetMapping("/adminItemList")
+    public String sellerItemInStockList(Model model) {
         model.addAttribute("nameUser", userService.GetUserName());
-        model.addAttribute("filters", filterService.loadAllFilters());
-        return "adminFilterList";
+        model.addAttribute("items", itemRepository.findAll());
+        return "adminItemList";
+    }
+
+    @GetMapping("/admin/deleteProduct")
+    public String deleteProduct(RedirectAttributes redirectAttributes, @RequestParam Long itemID) {
+        IDitem = itemID;
+        redirectAttributes.addFlashAttribute("deleteItem", "Ви дійсно бажаєте видалити цей товар?");
+        return "redirect:/adminItemList";
+    }
+    @PostMapping("/admin/deleteProduct")
+    public String deleteProduct(RedirectAttributes redirectAttributes) {
+        Items item=itemRepository.findById(IDitem).get();
+        File file=new File(uploadPath+item.getFileName());
+        itemRepository.deleteById(IDitem);
+        file.delete();
+        redirectAttributes.addFlashAttribute("deleteSuccess", "Товар успішно видалений");
+        return "redirect:/adminItemList";
+    }
+
+    @GetMapping("/admin/editProduct")
+    public String editProduct(RedirectAttributes redirectAttributes, @RequestParam Long itemID){
+        IDitem = itemID;
+        redirectAttributes.addFlashAttribute("item",itemRepository.findById(itemID).get());
+        redirectAttributes.addFlashAttribute("itemEdit", true);
+        return "redirect:/adminItemList";
+    }
+
+    @Transactional
+    @PostMapping("/admin/editProduct")
+    public String editProduct(RedirectAttributes redirectAttributes, @RequestParam("filters[]") String[] filters,
+                              @RequestParam("filtersOptionID[]") Long[] filtersID,
+                              @RequestParam String itemname, @RequestParam Integer count,
+                              @RequestParam String description, @RequestParam Integer price) {
+        Items item=itemRepository.findById(IDitem).get();
+        item.setItemname(itemname);
+        item.setCount(count);
+        item.setDescription(description);
+        item.setPrice(price);
+        for (int i = 0; i < filtersID.length; ++i) {
+            FilterOptions filterOption = filterOptionsRepository.findById(filtersID[i]).get();
+            filterOption.setValue(filters[i]);
+            filterOptionsRepository.save(filterOption);
+        }
+        redirectAttributes.addFlashAttribute("updateSuccess","Інформація про товар успішно змінена");
+        return "redirect:/adminItemList";
+    }
+
+    @GetMapping("/adminViewProduct")
+    public String viewProduct(Model model,@RequestParam Long itemID){
+        Items item=itemRepository.findById(itemID).get();
+        model.addAttribute("item",item);
+        model.addAttribute("nameUser", userService.GetUserName());
+        Image image=new ImageIcon(uploadPath+item.getFileName()).getImage();
+        if(image.getHeight(null)>=image.getWidth(null)){
+            model.addAttribute("heightSize",100);
+        }else{
+            model.addAttribute("widthSize",100);
+        }
+        return "adminViewProduct";
     }
 }
 

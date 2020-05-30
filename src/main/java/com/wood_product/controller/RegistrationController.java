@@ -97,7 +97,7 @@ public class RegistrationController {
         Date currentDate=new Date();
         user.setRegisterDate(currentDate);
         userRepository.save(user);
-        userRepository.save(user);;
+        userRepository.save(user);
         return "redirect:/login";
     }
 }

@@ -97,6 +97,7 @@
 
     .content {
         margin-left:300px;
+        min-height: calc(82vh - 60px);
     }
 
     @media(maz-width:768px){
@@ -112,14 +113,17 @@
     background-color: #ffffff;
 }
         ::-webkit-scrollbar{
-    width:8px;
+    width:14px;
             }
         ::-webkit-scrollbar-track{
-    background:#2d3744;
+    background:#f1f1f1;
             }
         ::-webkit-scrollbar-thumb{
     background:#C0C0C0;
-    border-radius:8px;
+            }
+
+            ::-webkit-scrollbar-thumb:hover{
+    background:#a9aaaa;
             }
 
    .page-item.active .page-link {
@@ -146,9 +150,9 @@
     content: ">";
     }
     .breadcrumb {
-    background-color:#f9fafd;
+    background-color:transparent;
     margin-top:-10px;
-    margin-right:13px;
+    margin-right:10px;
     font-size:15px;
     }
     .breadcrumb-item>a{
@@ -246,16 +250,23 @@
             </div>
             </div>
         {{#item}}
-        <div style="background-color:white;max-width:1030px;margin-top:15px;">
-            <div style="margin-top:30px;margin-left:25px;display:inline-block;width:470px;height:400px;text-align:center;margin-right:20px;">
+        <div style="background-color:white;margin-top:20px;margin-right:20px;">
+            <div style="margin-left:20px;margin-right:20px;padding-bottom:30px;">
+                <table style="width:100%;border:1px solid white;">
+                <tbody>
+                    <tr >
+                        <td style="border:1px solid white;">
+                            <div style="margin-top:-20px;;min-width:470px;height:400px;text-align:center;margin-right:40px;">
                 <img id="product" style="{{#heightSize}}height:{{heightSize}}%{{/heightSize}} {{#widthSize}}width:{{widthSize}}%{{/widthSize}}" src="uploads/{{fileName}}">
-            </div>
-            <div style="margin-top:30px;display:inline-block;width:480px;vertical-align: top;">
+                            </div>
+                        </td>
+                        <td style="border:1px solid white;">
+                            <div style="margin-top:20px;min-width:480px;">
                 <label style="font-size:28px;color:#6c757d;">{{itemname}}</label><br>
                 <label style="font-size:15px;color:#727f8b;">Дата додавання: {{addDate}}</label><br><br>
                 <label id="inStock"><b>В наявності {{count}}</b></label><br><br>
                 <label style="font-size:15px;color:#6c757d;"><b>Вартість покупки:</b></label><br>
-                <label style="font-size:28px;color:#6c757d;">₴{{price}}</label><br>
+                <label style="font-size:28px;color:#6c757d;">₴{{price}}</label><br><br>
                 <label style="font-size:15px;color:#6c757d;"><b>Опис:</b></label><br>
                 <label style="font-size:15px;color:#727f8b;">{{description}}</label><br><br><br>
                 <div style="display:inline-block;vertical-align:top; margin-right:80px;">
@@ -271,8 +282,10 @@
                     <label style="font-size:15px;color:#727f8b;">₴2025000</label>
                 </div>
             </div>
-            <div style="margin-left:25px;margin-top:30px;padding-bottom:30px;width:980px;">
-                <table class="table table-centered mb-0" style="color:#727f8b;">
+                        </td>
+                    </tr>
+                    <tr >
+                <table class="table table-centered mb-0" style="color:#727f8b;margin-top:20px;">
                     <thead style="background-color:#f1f3fa;font-size:16px;">
                     <tr>
                         <th>Характеристика</th>
@@ -288,13 +301,16 @@
                     </tr>
                     </tbody>
                 </table>
+                    </tr>
+                </tbody>
+            </table>
             </div>
         </div>
         {{/item}}
     </div>
     <!--Footer-->
-    <footer style="box-shadow: 1px 1px 3px rgba(0,0,0,0.4);background:#f9fafd;height:60px;margin-top:30px;">
-
+    <footer style="margin-left:280px;box-shadow: 1px 1px 3px rgba(0,0,0,0.4);background:#f9fafd;height:60px;margin-top:30px;">
+        <label style="margin-left:30px;margin-top:20px;color:#b6b4b6;">2020 ©Wooden products</label>
     </footer>
 </div>
 

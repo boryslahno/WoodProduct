@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Категорії товарів</title>
+    <title>Список товарів</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
@@ -194,16 +194,25 @@
         <ul class="list-unstyled components">
             <p>НАВІГАЦІЯ</p>
             <li>
-                <a href="/sellerPersonalInformation">Особисті дані</a>
+                <a href="/adminPersonalInformation">Особисті дані</a>
             </li>
             <li>
-                <a style="color:white;" href="/sellerProductInStock">Товари в наявності</a>
+                <a href="/adminUserList">Користувачі</a>
             </li>
             <li>
-                <a href="#">Продані товари</a>
+                <a href="/adminCategoryList">Категорії товарів</a>
             </li>
             <li>
-                <a href="#">Індивідульні замовлення</a>
+                <a href="/adminFilterList">Фільтри товарів</a>
+            </li>
+            <li>
+                <a style="color:white;"  href="/adminItemList">Товари</a>
+            </li>
+            <li>
+                <a href="#">Покупки</a>
+            </li>
+            <li>
+                <a href="#">Індивідуальні замволення</a>
             </li>
         </ul>
     </nav>
@@ -224,7 +233,7 @@
                         </a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                             <form action="/logout" method="post">
-                                <button style="outline:none;" class="dropdown-item">Вихід</button>
+                                <button class="dropdown-item">Вихід</button>
                                 <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
                             </form>
                         </div>
@@ -248,64 +257,64 @@
                 </ol>
             </nav>
             </div>
-            </div>
-        {{#item}}
-        <div style="background-color:white;margin-top:20px;margin-right:20px;">
-            <div style="margin-left:20px;margin-right:20px;padding-bottom:30px;">
-                <table style="width:100%;border:1px solid white;">
-                <tbody>
-                    <tr >
-                        <td style="border:1px solid white;">
-                            <div style="margin-top:-20px;;min-width:470px;height:400px;text-align:center;margin-right:40px;">
-                <img id="product" style="{{#heightSize}}height:{{heightSize}}%{{/heightSize}} {{#widthSize}}width:{{widthSize}}%{{/widthSize}}" src="uploads/{{fileName}}">
-                            </div>
-                        </td>
-                        <td style="border:1px solid white;">
-                            <div style="margin-top:20px;min-width:480px;">
-                <label style="font-size:28px;color:#6c757d;">{{itemname}}</label><br>
-                <label style="font-size:15px;color:#727f8b;">Дата додавання: {{addDate}}</label><br><br>
-                <label id="inStock"><b>В наявності {{count}}</b></label><br><br>
-                <label style="font-size:15px;color:#6c757d;"><b>Вартість покупки:</b></label><br>
-                <label style="font-size:28px;color:#6c757d;">₴{{price}}</label><br><br>
-                <label style="font-size:15px;color:#6c757d;"><b>Опис:</b></label><br>
-                <label style="font-size:15px;color:#727f8b;">{{description}}</label><br><br><br>
-                <div style="display:inline-block;vertical-align:top; margin-right:80px;">
-                    <label style="font-size:15px;color:#6c757d;"><b>В наявності:</b></label><br>
-                    <label style="font-size:15px;color:#727f8b;">{{count}}</label>
-                </div>
-                <div style="display:inline-block;vertical-align:top;margin-right:80px;">
-                    <label style="font-size:15px;color:#6c757d;"><b>Продано:</b></label><br>
-                    <label style="font-size:15px;color:#727f8b;">135</label>
-                </div>
-                <div style="display:inline-block;vertical-align:top;">
-                    <label style="font-size:15px;color:#6c757d;"><b>Дохід:</b></label><br>
-                    <label style="font-size:15px;color:#727f8b;">₴2025000</label>
-                </div>
-            </div>
-                        </td>
-                    </tr>
-                    <tr >
-                <table class="table table-centered mb-0" style="color:#727f8b;margin-top:20px;">
-                    <thead style="background-color:#f1f3fa;font-size:16px;">
-                    <tr>
-                        <th>Характеристика</th>
-                        <th>Значення</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {{#filterOptions}}
-                    <tr>
-                    <td>{{#filter}}{{filtername}}{{/filter}}</td>
-                    <td>{{value}}</td>
-                    {{/filterOptions}}
-                    </tr>
-                    </tbody>
-                </table>
-                    </tr>
-                </tbody>
-            </table>
-            </div>
         </div>
+        {{#item}}
+            <div style="background-color:white;margin-top:20px;margin-right:20px;">
+                <div style="margin-left:20px;margin-right:20px;padding-bottom:30px;">
+                    <table style="width:100%;border:1px solid white;">
+                        <tbody>
+                        <tr >
+                            <td style="border:1px solid white;">
+                                <div style="margin-top:-20px;;min-width:470px;height:400px;text-align:center;margin-right:40px;">
+                                    <img id="product" style="{{#heightSize}}height:{{heightSize}}%{{/heightSize}} {{#widthSize}}width:{{widthSize}}%{{/widthSize}}" src="uploads/{{fileName}}">
+                                </div>
+                            </td>
+                            <td style="border:1px solid white;">
+                                <div style="margin-top:20px;min-width:480px;">
+                                    <label style="font-size:28px;color:#6c757d;">{{itemname}}</label><br>
+                                    <label style="font-size:15px;color:#727f8b;">Дата додавання: {{addDate}}</label><br><br>
+                                    <label id="inStock"><b>В наявності {{count}}</b></label><br><br>
+                                    <label style="font-size:15px;color:#6c757d;"><b>Вартість покупки:</b></label><br>
+                                    <label style="font-size:28px;color:#6c757d;">₴{{price}}</label><br><br>
+                                    <label style="font-size:15px;color:#6c757d;"><b>Опис:</b></label><br>
+                                    <label style="font-size:15px;color:#727f8b;">{{description}}</label><br><br><br>
+                                    <div style="display:inline-block;vertical-align:top; margin-right:80px;">
+                                        <label style="font-size:15px;color:#6c757d;"><b>В наявності:</b></label><br>
+                                        <label style="font-size:15px;color:#727f8b;">{{count}}</label>
+                                    </div>
+                                    <div style="display:inline-block;vertical-align:top;margin-right:80px;">
+                                        <label style="font-size:15px;color:#6c757d;"><b>Продано:</b></label><br>
+                                        <label style="font-size:15px;color:#727f8b;">135</label>
+                                    </div>
+                                    <div style="display:inline-block;vertical-align:top;">
+                                        <label style="font-size:15px;color:#6c757d;"><b>Дохід:</b></label><br>
+                                        <label style="font-size:15px;color:#727f8b;">₴2025000</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr >
+                            <table class="table table-centered mb-0" style="color:#727f8b;margin-top:20px;">
+                                <thead style="background-color:#f1f3fa;font-size:16px;">
+                                <tr>
+                                    <th>Характеристика</th>
+                                    <th>Значення</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {{#filterOptions}}
+                                    <tr>
+                                        <td>{{#filter}}{{filtername}}{{/filter}}</td>
+                                        <td>{{value}}</td>
+                                {{/filterOptions}}
+                                </tr>
+                                </tbody>
+                            </table>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         {{/item}}
     </div>
     <!--Footer-->

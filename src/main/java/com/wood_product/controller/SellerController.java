@@ -59,24 +59,18 @@ public class SellerController {
     }
 
     @GetMapping("/sellerPersonalInformation/changeEmail")
-    public String changeEmail(Model model) {
-        model.addAttribute("nameUser", userService.GetUserName());
-        model.addAttribute("sellerPersonalInfo", userService.GetUserSecurityInfo());
-        model.addAttribute("companyInfo", userService.loadCompanyInfo());
-        model.addAttribute("sellerChangeEmail", userService.GetUserSecurityInfo());
+    public String changeEmail(RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("sellerChangeEmail", userService.GetUserSecurityInfo());
         return "sellerPersonalInformation";
     }
 
     @PostMapping("/sellerPersonalInformation/changeEmail")
-    public String changeEmail(@RequestParam String username, Model model) {
+    public String changeEmail(@RequestParam String username, RedirectAttributes redirectAttributes) {
         Users user = userService.GetUserSecurityInfo();
         Users userFromDB = userRepository.findByUsername(username);
         if (userFromDB != null) {
-            model.addAttribute("exists", "Користувач з такою електронною поштою вже існує");
-            model.addAttribute("nameUser", userService.GetUserName());
-            model.addAttribute("sellerPersonalInfo", userService.GetUserSecurityInfo());
-            model.addAttribute("companyInfo", userService.loadCompanyInfo());
-            return "sellerPersonalInformation";
+            redirectAttributes.addFlashAttribute("exists", "Користувач з такою електронною поштою вже існує");
+            return "redirect:/sellerPersonalInformation";
         } else {
             user.setUsername(username);
             userRepository.save(user);
@@ -94,22 +88,20 @@ public class SellerController {
     }
 
     @PostMapping("/sellerPersonalInformation/changePassword")
-    public String changePassword(@RequestParam String oldPassword, @RequestParam String newPassword, @RequestParam String repeatPassword, Model model) {
+    public String changePassword(@RequestParam String oldPassword, @RequestParam String newPassword,
+                                 @RequestParam String repeatPassword, RedirectAttributes redirectAttributes) {
         Users user = userService.GetUserSecurityInfo();
-        model.addAttribute("nameUser", userService.GetUserName());
-        model.addAttribute("sellerPersonalInfo", userService.GetUserSecurityInfo());
-        model.addAttribute("companyInfo", userService.loadCompanyInfo());
         if (!oldPassword.equals(user.getPassword())) {
-            model.addAttribute("oldPasswordError", "Введено неправильний старий пароль");
-            return "sellerPersonalInformation";
+            redirectAttributes.addFlashAttribute("oldPasswordError", "Введено неправильний старий пароль");
+            return "redirect:/sellerPersonalInformation";
         } else if (!newPassword.equals(repeatPassword)) {
-            model.addAttribute("repeatPasswordError", "Паролі не співпадають");
-            return "sellerPersonalInformation";
+            redirectAttributes.addFlashAttribute("repeatPasswordError", "Паролі не співпадають");
+            return "redirect:/sellerPersonalInformation";
         } else {
             user.setPassword(newPassword);
             userRepository.save(user);
-            model.addAttribute("changePassword", "Пароль змінено успішно");
-            return "sellerPersonalInformation";
+            redirectAttributes.addFlashAttribute("changePassword", "Пароль змінено успішно");
+            return "redirect:/sellerPersonalInformation";
         }
     }
 
@@ -123,16 +115,13 @@ public class SellerController {
     }
 
     @PostMapping("/sellerPersonalInformation/changeCompanyInformation")
-    public String changeCompanyInformation(Model model, @RequestParam String companyName, @RequestParam String companyAddress, @RequestParam String companyPhone) {
+    public String changeCompanyInformation(RedirectAttributes redirectAttributes, @RequestParam String companyName, @RequestParam String companyAddress, @RequestParam String companyPhone) {
         Company company = userService.loadCompanyInfo();
         company.setName(companyName);
         company.setAddress(companyAddress);
         company.setPhoneNumber(companyPhone);
         companyRepository.save(company);
-        model.addAttribute("nameUser", userService.GetUserName());
-        model.addAttribute("sellerPersonalInfo", userService.GetUserSecurityInfo());
-        model.addAttribute("companyInfo", userService.loadCompanyInfo());
-        model.addAttribute("changeCompanyInfo", "Особиста інформація успішно оновлена");
+        redirectAttributes.addFlashAttribute("changeCompanyInfo", "Особиста інформація успішно оновлена");
         return "sellerPersonalInformation";
     }
 
@@ -207,7 +196,6 @@ public class SellerController {
         redirectAttributes.addFlashAttribute("deleteItem", "Ви дійсно бажаєте видалити цей товар?");
         return "redirect:/sellerProductInStock";
     }
-
     @PostMapping("/deleteProduct")
     public String deleteProduct(RedirectAttributes redirectAttributes) {
         Items item=itemRepository.findById(IDitem).get();
@@ -222,7 +210,7 @@ public class SellerController {
     public String editProduct(RedirectAttributes redirectAttributes, @RequestParam Long itemID){
         IDitem = itemID;
         redirectAttributes.addFlashAttribute("item",itemRepository.findById(itemID).get());
-        redirectAttributes.addFlashAttribute("categoryEdit", true);
+        redirectAttributes.addFlashAttribute("itemEdit", true);
         return "redirect:/sellerProductInStock";
     }
 

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Особиста інформація</title>
+    <title>Список товарів</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
@@ -112,7 +112,7 @@
     .navbar-custom {
     background-color: #ffffff;
 }
-       ::-webkit-scrollbar{
+        ::-webkit-scrollbar{
     width:14px;
             }
         ::-webkit-scrollbar-track{
@@ -145,26 +145,26 @@
         background-color: #eaedf0 !important;
         border-color: #eaedf0 !important;
     }
-    .changeSeller{
+    .addItem{
     margin-top:20px;
     margin-left:20px;
     margin-bottom:20px;
     color:white;
     border-radius:5%;
     border:none;
-    background:#02d098;
+    background:#fa5c7d;
     width:150px;
     height:40px;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 3px 10px 0 rgba(0,0,0,0.19);
     }
-    .changeSeller:hover{
-    background:#01ad7d;
+    .addItem:hover{
+    background:#f9345e;
     }
-    .changeSeller:active,{
-    outline-color:#02d098;
+    .addItem:active,{
+    outline-color:#fa5c7d;
     }
-    .changeSeller:focus{
-    outline-color:#02d098;
+    .addItem:focus{
+    outline-color:#fa5c7d;
     }
 
     .breadcrumb-item + .breadcrumb-item::before {
@@ -204,16 +204,25 @@
         <ul class="list-unstyled components">
             <p>НАВІГАЦІЯ</p>
             <li>
-                <a style="color:white;" href="/sellerPersonalInformation">Особисті дані</a>
+                <a href="/adminPersonalInformation">Особисті дані</a>
             </li>
             <li>
-                <a href="/sellerProductInStock">Товари в наявності</a>
+                <a href="/adminUserList">Користувачі</a>
             </li>
             <li>
-                <a href="#">Продані товари</a>
+                <a href="/adminCategoryList">Категорії товарів</a>
             </li>
             <li>
-                <a href="#">Індивідульні замовлення</a>
+                <a href="/adminFilterList">Фільтри товарів</a>
+            </li>
+            <li>
+                <a style="color:white;"  href="/adminItemList">Товари</a>
+            </li>
+            <li>
+                <a href="#">Покупки</a>
+            </li>
+            <li>
+                <a href="#">Індивідуальні замволення</a>
             </li>
         </ul>
     </nav>
@@ -250,135 +259,86 @@
     <!--Content-->
     <div class="content">
         <div style="height:40px;">
-            <div style="float:left;"><b style="color:#7b7b7f;font-size:18px;">Особиста інформація</b></div>
+            <div style="float:left;"><b style="color:#7b7b7f;font-size:18px;">Товари</b></div>
             <div style="float:right;"><nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0">
-                    <li class="breadcrumb-item"><a href="/">Wooden products</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Особиста інформація</li>
+                    <li class="breadcrumb-item"><a href="/">Wodden products</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Товари</li>
                 </ol>
             </nav></div>
         </div>
-        <div style="margin-right:30px;">
-    <table style="width:100%;">
-        <tbody>
-            <tr>
-                <td>
-                     <div style="background-color:white;min-width:515px;margin-right:10px;margin-top:15px;text-align:center;">
+        <div style="background-color:white;margin-top:15px;margin-right:20px;">
             <!--Modal-->
-            {{#sellerChangeEmail}}
-                <div id="sellerInfoManipulate-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
+            {{#itemEdit}}
+                <div id="itemManipulate-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h4 class="modal-title" id="standard-modalLabel">Заміна електронної пошти</h4>
+                                <h4 class="modal-title" id="standard-modalLabel">Редагування товару</h4>
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                             </div>
-                            <form action="/sellerPersonalInformation/changeEmail" method="post">
+                            <form action="/admin/editProduct" method="post">
+                                {{#item}}
                                 <div class="modal-body">
                                     <div class="form-group col-md-10" align="left">
-                                        <label style="color:#696969"> Стара пошта</label>
-                                        <input type="text" disabled="true" class="form-control" value="{{username}}">
+                                        <label style="color:#696969">Назва товару</label>
+                                        <input type="text" name="itemname" class="form-control" placeholder="Введіть назву товару" value="{{itemname}}"/>
                                     </div>
                                     <div class="form-group col-md-10" align="left">
-                                        <label style="color:#696969"> Нова пошта</label>
-                                        <input type="text" class="form-control" name="username">
+                                        <label style="color:#696969">Кількість одиниць товару</label>
+                                        <input type="text" name="count" class="form-control" placeholder="Введіть кільксть товару" value="{{count}}"/>
                                     </div>
                                     <div class="form-group col-md-10" align="left">
-                                        <label style="color:#696969">У разі успішної заміни пошти вас автоматично перенаправить на сторінку входу</label>
+                                        <label style="color:#696969">Опис товару</label>
+                                        <textarea style="height:250px;" name="description" class="form-control" placeholder="Наведіть короткий опис товару" >{{description}}</textarea>
                                     </div>
-                                </div>
+                                    <div class="form-group col-md-10" align="left">
+                                        <label style="color:#696969">Ціна за одиницю товару</label>
+                                        <input type="text" name="price" class="form-control" placeholder="Введіть ціну за одиницю товару" value="{{price}}"/>
+                                    </div>
+                                    {{#filterOptions}}
+                                        <div class="form-group col-md-10" align="left">
+                                            <label style="color:#696969">{{#filter}}{{filtername}}{{/filter}}</label>
+                                            <input type="hidden" name="filtersOptionID[]" value="{{id}}">
+                                            <input type="text" name="filters[]" class="form-control" placeholder="Введіть {{#filter}}{{filtername}}{{/filter}} товару" value="{{value}}"/>
+                                        </div>
+                                    {{/filterOptions}}
+                                {{/item}}
+                            </div>
                                 <div class="modal-footer">
                                     <button type="button" id="ex" class="btn btn-light" data-dismiss="modal">Закрити</button>
-                                    <input id="createAdmin" type="submit" class="btn btn-primary" value="Змінити"/>
+                                    <input id="createCategory" type="submit" class="btn btn-primary" value="Редагувати"/>
                                     <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
                                 </div>
                             </form>
                         </div><!-- /.modal-content -->
                     </div><!-- /.modal-dialog -->
                 </div><!-- /.modal -->
-            {{/sellerChangeEmail}}
-            {{#sellerChangePassword}}
-                <div id="sellerInfoManipulate-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
+            {{/itemEdit}}
+            {{#deleteItem}}
+                <div id="itemManipulate-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h4 class="modal-title" id="standard-modalLabel">Заміна пароля</h4>
+                                <h4 class="modal-title" id="standard-modalLabel">Видалення категорії</h4>
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                             </div>
-                            <form action="/sellerPersonalInformation/changePassword" method="post">
+                            <form action="/admin/deleteProduct" method="post">
                                 <div class="modal-body">
-                                    <div class="form-group col-md-10" align="left">
-                                        <label style="color:#696969"> Старий пароль</label>
-                                        <input type="text" class="form-control" name="oldPassword" placeholder="Введіть старий пароль">
-                                    </div>
-                                    <div class="form-group col-md-10" align="left">
-                                        <label style="color:#696969"> Новий пароль</label>
-                                        <input type="text" class="form-control" name="newPassword" placeholder="Введіть новий пароль" >
-                                    </div>
-                                    <div class="form-group col-md-10" align="left">
-                                        <label style="color:#696969"> Новий пароль(повторно)</label>
-                                        <input type="text" class="form-control" name="repeatPassword" placeholder="Введіть новий пароль щераз">
-                                    </div>
+                                    <label style="color:#696969">{{deleteItem}}</label>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" id="ex" class="btn btn-light" data-dismiss="modal">Закрити</button>
-                                    <input id="createAdmin" type="submit" class="btn btn-primary" value="Змінити"/>
+                                    <button type="button" id="ex" class="btn btn-light" data-dismiss="modal">Відмінити</button>
+                                    <input  type="submit" class="btn btn-primary" value="Видалити"/>
                                     <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
                                 </div>
                             </form>
                         </div><!-- /.modal-content -->
                     </div><!-- /.modal-dialog -->
                 </div><!-- /.modal -->
-            {{/sellerChangePassword}}
-            {{#sellerChangeCompany}}
-                <div id="sellerInfoManipulate-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h4 class="modal-title" id="standard-modalLabel">Редагування особистої інформації</h4>
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                            </div>
-                            <form action="/sellerPersonalInformation/changeCompanyInformation" method="post">
-                                <div class="modal-body">
-                                    <div class="form-group col-md-10" align="left">
-                                        <label style="color:#696969"> Назва компанії</label>
-                                        <input type="text" class="form-control" name="companyName" placeholder="Введіть назву компанії" value="{{name}}">
-                                    </div>
-                                    <div class="form-group col-md-10" align="left">
-                                        <label style="color:#696969"> Адреса</label>
-                                        <input type="text" class="form-control" name="companyAddress" placeholder="Введіть адресу компанії" value="{{address}}">
-                                    </div>
-                                    <div class="form-group col-md-10" align="left">
-                                        <label style="color:#696969"> Номер телефону</label>
-                                        <input type="text" class="form-control" name="companyPhone" placeholder="Введіть контактний телефон" value="{{phoneNumber}}">
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" id="ex" class="btn btn-light" data-dismiss="modal">Закрити</button>
-                                    <input id="createAdmin" type="submit" class="btn btn-primary" value="Змінити"/>
-                                    <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
-                                </div>
-                            </form>
-                        </div><!-- /.modal-content -->
-                    </div><!-- /.modal-dialog -->
-                </div><!-- /.modal -->
-            {{/sellerChangeCompany}}
+            {{/deleteItem}}
             <!--Notification-->
-            {{#exists}}
-                <div class="toast"style="position: absolute; top: 20px; right: 20px;min-width:200px;background-color:#fa5c7d;">
-                    <div class="toast-header" style="background-color:#fa5c7d;">
-                        <img src="/image/tree_icon.png" class="rounded mr-2" alt="Tree"style="width:20px;height:20px;">
-                        <strong class="mr-auto" style="color:white;">Wodden products</strong>
-                        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="toast-body" style="color:white;">
-                        {{exists}}
-                    </div>
-                </div>
-            {{/exists}}
-            {{#changePassword}}
+            {{#updateSuccess}}
                 <div class="toast"style="position: absolute; top: 20px; right: 20px;min-width:200px;background-color:#02d098;">
                     <div class="toast-header" style="background-color:#02d098;">
                         <img src="/image/tree_icon.png" class="rounded mr-2" alt="Tree"style="width:20px;height:20px;">
@@ -388,39 +348,11 @@
                         </button>
                     </div>
                     <div class="toast-body" style="color:white;">
-                        {{changePassword}}
+                        {{updateSuccess}}
                     </div>
                 </div>
-            {{/changePassword}}
-            {{#oldPasswordError}}
-                <div class="toast"style="position: absolute; top: 20px; right: 20px;min-width:200px;background-color:#fa5c7d;">
-                    <div class="toast-header" style="background-color:#fa5c7d;">
-                        <img src="/image/tree_icon.png" class="rounded mr-2" alt="Tree"style="width:20px;height:20px;">
-                        <strong class="mr-auto" style="color:white;">Wodden products</strong>
-                        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="toast-body" style="color:white;">
-                        {{oldPasswordError}}
-                    </div>
-                </div>
-            {{/oldPasswordError}}
-            {{#repeatPasswordError}}
-                <div class="toast"style="position: absolute; top: 20px; right: 20px;min-width:200px;background-color:#fa5c7d;">
-                    <div class="toast-header" style="background-color:#fa5c7d;">
-                        <img src="/image/tree_icon.png" class="rounded mr-2" alt="Tree"style="width:20px;height:20px;">
-                        <strong class="mr-auto" style="color:white;">Wodden products</strong>
-                        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="toast-body" style="color:white;">
-                        {{repeatPasswordError}}
-                    </div>
-                </div>
-            {{/repeatPasswordError}}
-            {{#changeCompanyInfo}}
+            {{/updateSuccess}}
+            {{#deleteSuccess}}
                 <div class="toast"style="position: absolute; top: 20px; right: 20px;min-width:200px;background-color:#02d098;">
                     <div class="toast-header" style="background-color:#02d098;">
                         <img src="/image/tree_icon.png" class="rounded mr-2" alt="Tree"style="width:20px;height:20px;">
@@ -430,52 +362,63 @@
                         </button>
                     </div>
                     <div class="toast-body" style="color:white;">
-                        {{changeCompanyInfo}}
+                        {{deleteSuccess}}
                     </div>
                 </div>
-            {{/changeCompanyInfo}}
-            <div style="height:350px;color:#7b7b7f;">
-                {{#sellerPersonalInfo}}
-                    <label style="margin-top:30px;font-size:20px;"><b>Безпека</b></label><br><br>
-                    <label><b>Електронна пошта:</b> {{username}}</label>
-                    <form action="/sellerPersonalInformation/changeEmail" method="get">
-                        <button class="changeSeller"
-                                data-toggle="popover" data-trigger="hover" title=""
-                                data-content="Натисніть щоб змінити електронну пошту">
-                            Змінити пошту</button><br>
-                    </form>
-                    <form action="/sellerPersonalInformation/changePassword" method="get">
-                        <label><b>Пароль:</b> **********</label><br>
-                        <button class="changeSeller"
-                                data-toggle="popover" data-trigger="hover" title=""
-                                data-content="Натисніть щоб змінити пароль">
-                            Змінити пароль</button>
-                    </form>
-                {{/sellerPersonalInfo}}
+            {{/deleteSuccess}}
+            <!--Table-->
+            <div style="margin-left:20px;margin-right:20px;color:#7b7b7f;padding-top:30px;">
+                <table id="items" class="table dt-responsive nowrap w-100" style="width:100%;color:#7b7b7f;">
+                    <thead style="background:#f1f3fa;">
+                    <tr>
+                        <th style="display:none;">ID</th>
+                        <th>Фото</th>
+                        <th>Назва</th>
+                        <th>Кількість</th>
+                        <th>Ціна</th>
+                        <th>Категорія</th>
+                        <th>Власник</th>
+                        <th>Дії</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#items}}
+                        <tr >
+                            <td style="display:none;">{{id}}</td>
+                            <td style="text-align:center;"><img style="width:100%;margin-right:10px;" src="/uploads/{{fileName}}"></td>
+                            <td style="vertical-align:middle;">{{itemname}}</td>
+                            <td style="vertical-align:middle;">{{count}}</td>
+                            <td style="vertical-align:middle;">₴{{price}}</td>
+                            <td style="vertical-align:middle;">{{#category}}{{name}}{{/category}}</td>
+                            <td>{{#user}}{{#company}}{{name}}{{/company}}{{/user}}</td>
+                            <td style="vertical-align:middle;">
+                                <form action="/admin/editProduct" method="get" style="float:left;">
+                                    <input id="categoryId" type="hidden" name="itemID" value="{{id}}">
+                                    <button type="submit" class="icon-button"><img src="/image/pen.png"
+                                                                                   style="height:21px;width:21px;"
+                                                                                   onmouseover="editHover(this);"
+                                                                                   onmouseout="editNotHover(this);"></button>
+                                </form>
+                                <form action="/admin/deleteProduct" method="get" style="float:left;">
+                                    <input id="categoryId" type="hidden" name="itemID" value="{{id}}">
+                                    <button type="submit" class="icon-button"><img src="/image/trash.png"
+                                                                                   style="height:21px;width:21px;"
+                                                                                   onmouseover="deleteHover(this);"
+                                                                                   onmouseout="deleteNotHover(this);"></button>
+                                </form>
+                                <form action="/adminViewProduct" method="get" style="float:left;">
+                                    <input id="categoryId" type="hidden" name="itemID" value="{{id}}">
+                                    <button type="submit" class="icon-button"><img src="/image/eye.png"
+                                                                                   style="height:21px;width:21px;"
+                                                                                   onmouseover="showHover(this);"
+                                                                                   onmouseout="showNotHover(this);"></button>
+                                </form>
+                            </td>
+                        </tr>
+                    {{/items}}
+                    </tbody>
+                </table>
             </div>
-        </div>
-                </td>
-                <td>
-                    <div style="background-color:white;min-width:510px;margin-top:15px;text-align:left;">
-            <div style="height:350px;color:#7b7b7f;">
-                {{#companyInfo}}
-                    <label style="margin-top:30px;font-size:20px;margin-left:180px;"><b>Особисті дані</b></label><br><br>
-                    <label style="margin-left:20px;"><b>Назва компанії: </b> {{name}}</label><br>
-                    <label style="margin-left:20px;"><b>Адреса: </b>{{address}}</label><br>
-                    <label style="margin-left:20px;"><b>Номер телефону: </b>{{phoneNumber}}</label>
-                    <form action="/sellerPersonalInformation/changeCompanyInformation" method="get">
-                        <button class="changeSeller" style="margin-left:180px;"
-                                data-toggle="popover" data-trigger="hover" title=""
-                                data-content="Натисніть щоб змінити інформацію про компанію">
-                            Редагувати</button>
-                    </form>
-                {{/companyInfo}}
-            </div>
-        </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
         </div>
     </div>
     <!--Footer-->
@@ -496,6 +439,13 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
+<!--Show file name-->
+<script>
+            $('#customFile').on('change',function(){
+                var fileName = $(this).val();
+                $(this).next('.custom-file-label').html(fileName);
+            })
+</script>
 <!--Change icons-->
 <script>
 function deleteHover(el){
@@ -511,8 +461,14 @@ el.src="/image/pen-hover.png";
 function editNotHover(el){
 el.src="/image/pen.png";
 }
+
+function showHover(el){
+el.src="/image/eye-hover.png";
+}
+function showNotHover(el){
+el.src="/image/eye.png";
+}
 </script>
-<!--Setting toast-->
 <script>
    $(document).ready(function () {
             $('.toast').toast({
@@ -524,13 +480,18 @@ el.src="/image/pen.png";
 <!--View edit modal-->
 <script>
 $(document).ready(function () {
-    $('#sellerInfoManipulate-modal').modal('show');
+    $('#itemManipulate-modal').modal('show');
+});
+</script>
+<script>
+$(document).ready(function () {
+    $('#addItem-modal').modal('show');
 });
 </script>
 <!--View modal and popover-->
 <script>
-    $('.changeSeller').click(function () {
-     $('#sellerInfoManipulate-modal').modal('show');
+    $('.addItem').click(function () {
+     $('#selectCategory-modal').modal('show');
      $('[data-toggle="popover"]').popover('hide');
 });
 </script>
@@ -539,6 +500,25 @@ $(document).ready(function () {
 $(document).ready(function () {
             $('[data-toggle="popover"]').popover();
         });
+</script>
+<!--View datatables-->
+<script>
+    $(document).ready(function() {
+    $('#items').DataTable( {
+        "language": {
+            "lengthMenu": "Відобразити _MENU_ записів на сторінці",
+            "zeroRecords": "Немає записів",
+            "info": "Відображено від _START_ до _END_ записів з _TOTAL_",
+            "infoEmpty": "Немає записів",
+            "infoFiltered": "(filtered from _MAX_ total records)",
+            "sSearch": "Пошук:",
+            "oPaginate": {
+                    "sNext": ">",
+                    "sPrevious": "<"
+                          }
+                    }
+    } );
+} );
 </script>
 </body>
 </html>

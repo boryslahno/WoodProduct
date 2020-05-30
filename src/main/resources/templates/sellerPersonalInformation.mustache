@@ -97,6 +97,7 @@
 
     .content {
         margin-left:300px;
+        min-height: calc(82vh - 60px);
     }
 
     @media(maz-width:768px){
@@ -111,15 +112,18 @@
     .navbar-custom {
     background-color: #ffffff;
 }
-        ::-webkit-scrollbar{
-    width:8px;
+       ::-webkit-scrollbar{
+    width:14px;
             }
         ::-webkit-scrollbar-track{
-    background:#2d3744;
+    background:#f1f1f1;
             }
         ::-webkit-scrollbar-thumb{
     background:#C0C0C0;
-    border-radius:8px;
+            }
+
+            ::-webkit-scrollbar-thumb:hover{
+    background:#a9aaaa;
             }
 
    .page-item.active .page-link {
@@ -167,9 +171,9 @@
     content: ">";
     }
     .breadcrumb {
-    background-color:#f9fafd;
+    background-color:transparent;
     margin-top:-10px;
-    margin-right:13px;
+    margin-right:10px;
     font-size:15px;
     }
     .breadcrumb-item>a{
@@ -254,7 +258,12 @@
                 </ol>
             </nav></div>
         </div>
-        <div style="background-color:white;width:515px;margin-right:10px;margin-top:15px;text-align:center;display:inline-block;vertical-align: top;">
+        <div style="margin-right:30px;">
+    <table style="width:100%;">
+        <tbody>
+            <tr>
+                <td>
+                     <div style="background-color:white;min-width:515px;margin-right:10px;margin-top:15px;text-align:center;">
             <!--Modal-->
             {{#sellerChangeEmail}}
                 <div id="sellerInfoManipulate-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
@@ -425,7 +434,7 @@
                     </div>
                 </div>
             {{/changeCompanyInfo}}
-            <div style="height:400px;color:#7b7b7f;">
+            <div style="height:350px;color:#7b7b7f;">
                 {{#sellerPersonalInfo}}
                     <label style="margin-top:30px;font-size:20px;"><b>Безпека</b></label><br><br>
                     <label><b>Електронна пошта:</b> {{username}}</label>
@@ -445,8 +454,10 @@
                 {{/sellerPersonalInfo}}
             </div>
         </div>
-        <div style="background-color:white;width:515px;margin-top:15px;text-align:left;display:inline-block;vertical-align: top;">
-            <div style="height:400px;color:#7b7b7f;">
+                </td>
+                <td>
+                    <div style="background-color:white;min-width:510px;margin-top:15px;text-align:left;">
+            <div style="height:350px;color:#7b7b7f;">
                 {{#companyInfo}}
                     <label style="margin-top:30px;font-size:20px;margin-left:180px;"><b>Особисті дані</b></label><br><br>
                     <label style="margin-left:20px;"><b>Назва компанії: </b> {{name}}</label><br>
@@ -461,11 +472,15 @@
                 {{/companyInfo}}
             </div>
         </div>
-
+                </td>
+            </tr>
+        </tbody>
+    </table>
+        </div>
     </div>
     <!--Footer-->
-    <footer style="box-shadow: 1px 1px 3px rgba(0,0,0,0.4);background:#f9fafd;height:60px;margin-top:30px;">
-
+    <footer style="margin-left:280px;box-shadow: 1px 1px 3px rgba(0,0,0,0.4);background:#f9fafd;height:60px;margin-top:30px;">
+        <label style="margin-left:30px;margin-top:20px;color:#b6b4b6;">2020 ©Wooden products</label>
     </footer>
 </div>
 

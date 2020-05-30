@@ -97,6 +97,7 @@
 
     .content {
         margin-left:300px;
+        min-height: calc(82vh - 60px);
     }
 
     @media(maz-width:768px){
@@ -112,14 +113,17 @@
     background-color: #ffffff;
 }
         ::-webkit-scrollbar{
-    width:8px;
+    width:14px;
             }
         ::-webkit-scrollbar-track{
-    background:#2d3744;
+    background:#f1f1f1;
             }
         ::-webkit-scrollbar-thumb{
     background:#C0C0C0;
-    border-radius:8px;
+            }
+
+            ::-webkit-scrollbar-thumb:hover{
+    background:#a9aaaa;
             }
 
    .page-item.active .page-link {
@@ -167,9 +171,9 @@
     content: ">";
     }
     .breadcrumb {
-    background-color:#f9fafd;
+    background-color:transparent;
     margin-top:-10px;
-    margin-right:13px;
+    margin-right:10px;
     font-size:15px;
     }
     .breadcrumb-item>a{
@@ -212,7 +216,7 @@
                 <a style="color:white;" href="/adminFilterList">Фільтри товарів</a>
             </li>
             <li>
-                <a href="#">Товари</a>
+                <a href="/adminItemList">Товари</a>
             </li>
             <li>
                 <a href="#">Покупки</a>
@@ -263,11 +267,11 @@
                 </ol>
             </nav></div>
         </div>
-        <div style="background-color:white;max-width:1030px;margin-top:15px;">
+        <div style="background-color:white;margin-top:15px;margin-right:20px;">
             <button class="addFilter"
                     data-toggle="popover" data-trigger="hover" title=""
                     data-content="Натисніть щоб додати новий фільтер товару">
-                <img src="/image/plus.png" style="width:14px;height:14px;margin-right:5px;margin-bottom:2px;"/>Фільтер</button>
+                <img src="/image/plus.png" style="width:14px;height:14px;margin-right:5px;margin-bottom:2px;"/>Фільтр</button>
             <!--Modal-->
             <div id="addFilter-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
                 <div class="modal-dialog">
@@ -446,8 +450,8 @@
         </div>
     </div>
     <!--Footer-->
-    <footer style="box-shadow: 1px 1px 3px rgba(0,0,0,0.4);background:#f9fafd;height:60px;margin-top:30px;">
-
+    <footer style="margin-left:280px;box-shadow: 1px 1px 3px rgba(0,0,0,0.4);background:#f9fafd;height:60px;margin-top:30px;">
+        <label style="margin-left:30px;margin-top:20px;color:#b6b4b6;">2020 ©Wooden products</label>
     </footer>
 </div>
 
