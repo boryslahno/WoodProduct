@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Список товарів</title>
+    <title>{{NameCategory}}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
@@ -145,6 +145,24 @@
         background-color: #eaedf0 !important;
         border-color: #eaedf0 !important;
     }
+    .Filter{
+    color:white;
+    border-radius:5%;
+    border:none;
+    background:#fa5c7d;
+    width:150px;
+    height:40px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 3px 10px 0 rgba(0,0,0,0.19);
+    }
+    .Filter:hover{
+    background:#f9345e;
+    }
+    .Filter:active,{
+    outline-color:#fa5c7d;
+    }
+    .Filter:focus{
+    outline-color:#fa5c7d;
+    }
 
     .breadcrumb-item + .breadcrumb-item::before {
     content: ">";
@@ -168,9 +186,19 @@
     border:none;
     background-color:white;
     }
-    td,th{
-    border: 1px solid #f1f3fa;
+
+    .item{
+    height:390px;
+    width:240px;
+    display:inline-block;
+    vertical-align:top;
+    margin-bottom:20px;
     }
+
+    .item:hover{
+   box-shadow: 0 10px 20px 0 rgba(0,0,0,0.2), 0 9px 22px 0 rgba(0,0,0,0.19);
+    }
+
     #inStock{
     border: 1px solid #d3f6ec;
     border-radius: 10px;
@@ -178,6 +206,23 @@
     padding: 2px 10px;
     color:#0acf97;
     background:#d3f6ec;
+    }
+
+    .detail{
+    color:white;
+    border-radius:5%;
+    border:none;
+    background:#737df5;
+    font-size:14px;
+    }
+    .detail:hover{
+    background:#4d5bf2;
+    }
+    .detail:active,{
+    outline-color:#737df5;
+    }
+    .detail:focus{
+    outline-color:#737df5;
     }
     </style>
 </head>
@@ -193,27 +238,21 @@
         </div>
         <ul class="list-unstyled components">
             <p>НАВІГАЦІЯ</p>
+            <li><a href="#">Особиста інформація</a></li>
             <li>
-                <a href="/adminPersonalInformation">Особисті дані</a>
+                <a href="#catalogSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Каталог</a>
+                <ul class="collapse list-unstyled" id="catalogSubmenu">
+                    {{#categories}}
+                        <li>
+                            <form id="form{{name}}" action="/productList" method="get">
+                                <input type="hidden" name="categoryName" value="{{name}}">
+                                <a href="/productList" onclick="document.getElementById('form{{name}}').submit(); return false;">{{name}}</a>
+                            </form>
+                        </li>
+                    {{/categories}}
+                </ul>
             </li>
-            <li>
-                <a href="/adminUserList">Користувачі</a>
-            </li>
-            <li>
-                <a href="/adminCategoryList">Категорії товарів</a>
-            </li>
-            <li>
-                <a href="/adminFilterList">Фільтри товарів</a>
-            </li>
-            <li>
-                <a style="color:white;"  href="/adminItemList">Товари</a>
-            </li>
-            <li>
-                <a href="#">Покупки</a>
-            </li>
-            <li>
-                <a href="#">Індивідуальні замволення</a>
-            </li>
+            <li><a href="#">Історія покупок</a></li>
         </ul>
     </nav>
     <!--Navbar-->
@@ -249,73 +288,44 @@
     <!--Content-->
     <div class="content">
         <div style="height:40px;">
-            <div style="float:left;"><label style="color:#7b7b7f;font-size:18px;"><b>Деталі товару</b></label></div>
+            <div style="float:left;"><b style="color:#7b7b7f;font-size:18px;">{{NameCategory}}</b></div>
             <div style="float:right;"><nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0">
                     <li class="breadcrumb-item"><a href="/">Wodden products</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Деталі товару</li>
+                    <li class="breadcrumb-item"><a href="#">Каталог</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{NameCategory}}</li>
                 </ol>
-            </nav>
+            </nav></div>
+        </div>
+        <button class="Filter"
+                      data-toggle="collapse" data-target="#filterList"
+                      aria-expanded="false" aria-controls="#filterList"
+                      onmouseover="showPopover(this);">
+        <img src="/image/filter_icon.png" style="width:16px;height:16px;margin-right:8px;margin-bottom:2px;"/>
+        Фільтри</button>
+        <div class="collapse" id="filterList">
+            <div style="background-color:white;margin-right:20px;margin-top:10px;box-shadow: 0 1px 1px 0 rgba(0,0,0,0.2), 0 1px 1px 0 rgba(0,0,0,0.19);">
+                <label>Деякі фільтри</label>
             </div>
         </div>
-        {{#item}}
-            <div style="background-color:white;margin-top:20px;margin-right:20px;">
-                <div style="margin-left:20px;margin-right:20px;padding-bottom:30px;">
-                    <table style="width:100%;border:1px solid white;">
-                        <tbody>
-                        <tr >
-                            <td style="border:1px solid white;">
-                                <div style="margin-top:-20px;;min-width:470px;height:400px;text-align:center;margin-right:40px;">
-                                    <img id="product" style="{{#heightSize}}height:{{heightSize}}%{{/heightSize}} {{#widthSize}}width:{{widthSize}}%{{/widthSize}}" src="uploads/{{fileName}}">
-                                </div>
-                            </td>
-                            <td style="border:1px solid white;">
-                                <div style="margin-top:20px;min-width:480px;">
-                                    <label style="font-size:28px;color:#6c757d;">{{itemname}}</label><br>
-                                    <label style="font-size:15px;color:#727f8b;">Дата додавання: {{addDate}}</label><br><br>
-                                    <label id="inStock"><b>В наявності {{count}}</b></label>
-                                    <label style="font-size:15px;color:#6c757d;"><b>Вартість покупки:</b></label><br>
-                                    <label style="font-size:28px;color:#6c757d;">₴{{price}}</label><br><br>
-                                    <label style="font-size:15px;color:#6c757d;"><b>Опис:</b></label><br>
-                                    <label style="font-size:15px;color:#727f8b;">{{description}}</label><br><br><br>
-                                    <div style="display:inline-block;vertical-align:top; margin-right:80px;">
-                                        <label style="font-size:15px;color:#6c757d;"><b>В наявності:</b></label><br>
-                                        <label style="font-size:15px;color:#727f8b;">{{count}}</label>
+        <div style="margin-top:5px; background-color:white;margin-right:20px;box-shadow: 0 1px 1px 0 rgba(0,0,0,0.2), 0 1px 1px 0 rgba(0,0,0,0.19);">
+                <div style="margin:30px;margin-top:5px;;padding-top:20px;">
+                            {{#items}}
+                                <div class="item">
+                                    <div class="imgItem" style="margin:15px;text-align:center;">
+                                        <img {{#size}}style="width:50%;"{{/size}} {{^size}}class="img-fluid"{{/size}} src="/uploads/{{fileName}}"/>
                                     </div>
-                                    <div style="display:inline-block;vertical-align:top;margin-right:80px;">
-                                        <label style="font-size:15px;color:#6c757d;"><b>Продано:</b></label><br>
-                                        <label style="font-size:15px;color:#727f8b;">135</label>
-                                    </div>
-                                    <div style="display:inline-block;vertical-align:top;">
-                                        <label style="font-size:15px;color:#6c757d;"><b>Дохід:</b></label><br>
-                                        <label style="font-size:15px;color:#727f8b;">₴2025000</label>
+                                    <div class="detailItem" style="text-align:center;">
+                                        <label style="font-size:12px;color:#b6b4b6;">{{#user}}{{#company}}{{name}}{{/company}}{{/user}}</label><br>
+                                        <label>{{itemname}}</label><br>
+                                        <label style="color:#737df5;">₴{{price}}</label>
+                                        <label id="inStock"><b>В наявності {{count}}</b></label>
+                                        <button class="detail">Детальніше</button>
                                     </div>
                                 </div>
-                            </td>
-                        </tr>
-                        <tr >
-                            <table class="table table-centered mb-0" style="color:#727f8b;margin-top:20px;">
-                                <thead style="background-color:#f1f3fa;font-size:16px;">
-                                <tr>
-                                    <th>Характеристика</th>
-                                    <th>Значення</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {{#filterOptions}}
-                                    <tr>
-                                        <td>{{#filter}}{{filtername}}{{/filter}}</td>
-                                        <td>{{value}}</td>
-                                {{/filterOptions}}
-                                </tr>
-                                </tbody>
-                            </table>
-                        </tr>
-                        </tbody>
-                    </table>
+                            {{/items}}
                 </div>
-            </div>
-        {{/item}}
+        </div>
     </div>
     <!--Footer-->
     <footer style="margin-left:280px;box-shadow: 1px 1px 3px rgba(0,0,0,0.4);background:#f9fafd;height:60px;margin-top:30px;">
@@ -335,5 +345,44 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
+<!--Change icons-->
+<script>
+function showPopover(el){
+el.data-toggle="popover";
+el.data-trigger="hover";
+el.data-content="Натисніть щоб додати новий фільтер товару";
+}
+function deleteNotHover(el){
+el.src="/image/trash.png";
+}
+</script>
+<!--Item card fix layout-->
+<script>
+$(document).ready(function () {
+        var elements = document.getElementsByClassName("item");
+        for (var i = 0; i < elements.length; i++) {
+        var imgItem=elements[i].querySelector(".imgItem");
+        var detailItem=elements[i].querySelector(".detailItem");
+        var padding=390-imgItem.offsetHeight-detailItem.offsetHeight-20;
+        console.log(padding)
+        elements[i].querySelector(".detailItem").style.marginTop=padding+"px";
+            }
+        });
+</script>
+<!--Setting toast-->
+<script>
+   $(document).ready(function () {
+            $('.toast').toast({
+                delay: 5000
+            });
+            $('.toast').toast('show');
+        });
+</script>
+<!--View popover-->
+<script>
+$(document).ready(function () {
+            $('[data-toggle="popover"]').popover();
+        });
+</script>
 </body>
 </html>

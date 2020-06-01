@@ -35,6 +35,8 @@ public class Items {
     private Set<FilterOptions> filterOptions;
     @NotNull
     private String fileName;
+    @Transient
+    private Boolean size;
 
     public Long getId() {
         return id;
@@ -114,5 +116,13 @@ public class Items {
 
     public void setUser(Users user) {
         this.user = user;
+    }
+
+    public Boolean getSize() {
+        return size;
+    }
+
+    public void setSize(Boolean size) {
+        this.size = size;
     }
 }
