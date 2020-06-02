@@ -267,7 +267,7 @@
                 </ol>
             </nav></div>
         </div>
-        <div style="background-color:white;margin-top:15px;margin-right:20px;">
+        <div style="background-color:white;margin-top:15px;margin-right:20px;box-shadow: 0 0.5px 0.5px 0 rgba(0,0,0,0.2), 0 0.5px 0.5px 0 rgba(0,0,0,0.19);">
             <!--Modal-->
             {{#itemEdit}}
                 <div id="itemManipulate-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -385,12 +385,12 @@
                     {{#items}}
                         <tr >
                             <td style="display:none;">{{id}}</td>
-                            <td style="text-align:center;"><img style="width:100%;margin-right:10px;" src="/uploads/{{fileName}}"></td>
+                            <td style="text-align:center;width:100px;"><img style="width:100%;margin-right:10px;" src="/uploads/{{fileName}}"></td>
                             <td style="vertical-align:middle;">{{itemname}}</td>
                             <td style="vertical-align:middle;">{{count}}</td>
                             <td style="vertical-align:middle;">₴{{price}}</td>
                             <td style="vertical-align:middle;">{{#category}}{{name}}{{/category}}</td>
-                            <td>{{#user}}{{#company}}{{name}}{{/company}}{{/user}}</td>
+                            <td style="vertical-align:middle;">{{#user}}{{#company}}{{name}}{{/company}}{{/user}}</td>
                             <td style="vertical-align:middle;">
                                 <form action="/admin/editProduct" method="get" style="float:left;">
                                     <input id="categoryId" type="hidden" name="itemID" value="{{id}}">

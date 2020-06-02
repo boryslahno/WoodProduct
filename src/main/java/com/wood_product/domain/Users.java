@@ -35,6 +35,8 @@ public class Users implements UserDetails {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private Set<Items> items;
+    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER,cascade = CascadeType.REMOVE)
+    private  Set<ShoppingCart>shoppingCarts;
 
     public Company getCompany() {
         return company;
@@ -117,5 +119,21 @@ public class Users implements UserDetails {
 
     public void setRegisterDate(Date registerDate) {
         this.registerDate = registerDate;
+    }
+
+    public Set<Items> getItems() {
+        return items;
+    }
+
+    public void setItems(Set<Items> items) {
+        this.items = items;
+    }
+
+    public Set<ShoppingCart> getShoppingCarts() {
+        return shoppingCarts;
+    }
+
+    public void setShoppingCarts(Set<ShoppingCart> shoppingCarts) {
+        this.shoppingCarts = shoppingCarts;
     }
 }

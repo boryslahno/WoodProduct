@@ -7,6 +7,18 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://pay.fondy.eu/latest/checkout.css">
+    <style>
+    html {
+  height: 100%;
+}
+    body {
+  height: 100%;
+  margin: 0;
+  overflow-y: scroll;
+  font-family: 'Roboto', sans-serif;
+}
+</style>
 </head>
 <body>
 <!-- Optional JavaScript -->
@@ -62,8 +74,74 @@
         {{/nameUser}}
     </div>
 </nav>
-<div>
-    Hello user
-    <a href="/Example">Example</a>
-</div>
+<div id=app></div>
+<script src="https://pay.fondy.eu/latest/checkout.js"></script>
+<script src="https://pay.fondy.eu/latest/i18n/ru.js"></script>
+<!--<script>
+function checkoutInit(url) {
+	$ipsp('checkout').scope(function() {
+		this.setCheckoutWrapper('#checkout_wrapper');
+		this.addCallback(__DEFAULTCALLBACK__);
+		this.action('show', function(data) {
+			$('#checkout_loader').remove();
+			$('#checkout').show();
+		});
+		this.action('hide', function(data) {
+			$('#checkout').hide();
+		});
+		this.action('resize', function(data) {
+			$('#checkout_wrapper').width(480).height(data.height);
+		});
+		this.loadUrl(url);
+	});
+};
+var button = $ipsp.get("button");
+button.setMerchantId(1396424);
+button.setAmount(10.99, 'USD', true);
+button.setHost('api.fondy.eu');
+checkoutInit(button.getUrl());
+</script>-->
+<script>
+var Options = {
+  options: {
+    methods: ["card"],
+    cardIcons: ["mastercard", "visa", "diners-club", "american-express"],
+    fields: false,
+    title: "my_title",
+    link: "https://shop.com",
+    fullScreen: true,
+    button: true,
+    locales: ["en"],
+    email: true,
+    tooltip: true,
+    fee: true
+  },
+  params: {
+    merchant_id: 1396424,
+    required_rectoken: "y",
+    currency: "USD",
+    amount: 500,
+    order_desc: "my_order_desc",
+    response_url: "http://shop.com/thankyoupage",
+    email: "",
+    lang: "ru"
+  },
+  messages: {
+    ru: {
+      card_number: "Номер карты",
+      my_title: "Назначение платежа",
+      my_order_desc: "Тестовый платеж",
+      pay: "Оплатить"
+    },
+    en: {
+      card_number: "Card number",
+      my_title: "Order description",
+      my_order_desc: "Test order",
+      pay: "Pay now"
+    }
+  }
+};
+
+fondy("#app", Options);
+</script>
 </body>

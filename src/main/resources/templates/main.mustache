@@ -125,6 +125,13 @@
             ::-webkit-scrollbar-thumb:hover{
     background:#a9aaaa;
             }
+    .icon-button,
+    .icon-button:active,
+    .icon-button:focus{
+    outline:none;
+    border:none;
+    background-color:white;
+    }
     </style>
 </head>
 <body>
@@ -206,7 +213,7 @@
                     <a href="/adminFilterList">Фільтри товарів</a>
                 </li>
                 <li>
-                    <a href="#">Товари</a>
+                    <a href="/adminItemList">Товари</a>
                 </li>
                 <li>
                     <a href="#">Покупки</a>
@@ -236,7 +243,7 @@
         {{#isShoper}}
             <ul class="list-unstyled components">
                 <p>НАВІГАЦІЯ</p>
-                <li><a href="#">Особиста інформація</a></li>
+                <li><a href="/shopperPersonalInformation">Особиста інформація</a></li>
                 <li>
                     <a href="#catalogSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Каталог</a>
                     <ul class="collapse list-unstyled" id="catalogSubmenu">
@@ -263,8 +270,25 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
             {{#nameUser}}
-
                 <ul class="navbar-nav ml-auto">
+                    {{#isShoper}}
+                    <form action="/shoppingCart" method="get">
+                        <div style="margin-right:15px;margin-bottom:-15px;">
+                            <button style="margin-bottom:-10px;" type="submit" class="icon-button"><img src="/image/shopping_cart.png"
+                                                                                                        style="height:30px;width:30px;"
+                                                                                                        onmouseover="cartHover(this);"
+                                                                                                        onmouseout="cartNotHover(this);"></button>
+                            <div>
+                                {{^numberProduct}}
+                                    <label style="color:#7b7b7f;font-size:12px;margin-bottom:-10px;">Порожня</label>
+                                {{/numberProduct}}
+                                {{#numberProduct}}
+                                    <label style="color:#0acf97;font-size:12px;margin-bottom:-10px;">{{numberProduct}}</label>
+                                {{/numberProduct}}
+                            </div>
+                        </div>
+                    </form>
+                    {{/isShoper}}
                     <li class="nav-item dropdown">
                         <a style="margin-right:40px;" class="nav-link dropdown-toggle" href="navbarDropdown" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             {{nameUser}}

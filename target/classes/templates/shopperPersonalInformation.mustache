@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Особиста інформація</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!-- Datatables css -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
+    <style>
+    @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
+    body{font-family: 'Poppins', sans-serif;
+         background: #f9fafd;}
+    p{font-family: 'Poppins', sans-serif;
+      font-size: 1.1em;
+        font-weight: 300;
+        line-height: 1.7em;
+        color: #999;
+    }
+    a,
+    a:hover{
+        color: #738091;
+        text-decoration: none;
+        transition: all 0.3s;
+        }
+
+    .navbar{
+        padding: 10px 10px;
+        border: none;
+        border-radius: 0;
+        margin-bottom: 20px;
+        margin-left:280px;
+        box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+
+    }
+
+    #sidebar {
+        min-width: 280px;
+        max-width: 280px;
+        background: #2d3744;
+        color: #fff;
+        position: fixed;
+        transition: all 0.3s;
+        height:100%;
+        overflow-x: hidden;
+    }
+
+    #sidebar .sidebar-header{
+        padding: 30px;
+        padding-left: 50px;
+        background: #2d3744;
+        height:100px;
+    }
+    #sidebar ul.components{
+        padding: 0px 0px;
+    }
+    #sidebar ul p{
+        padding-left: 30px;
+        margin-bottom:0px;
+        font-size: 0.8em;
+        display: block;
+        color:#738091;
+    }
+    #sidebar ul li a{
+        padding-top: 10px;
+        padding-left:30px;
+        font-size: 1.1em;
+        display: block;
+    }
+
+
+    #sidebar ul li a:hover {
+        color: #92a2b5;
+    }
+
+     #sidebar ul li a:focus {
+        color: white;
+    }
+
+    a[data-toggle="collapse"] {
+        position: relative;
+    }
+
+    .dropdown-toggle::after {
+        display: block;
+        position: absolute;
+        top: 50%;
+        right: 20px;
+        transform: translateY(-50%);
+    }
+
+    ul ul a {
+        font-size: 0.9em !important;
+        padding-left: 60px !important;
+    }
+
+    .content {
+        margin-left:300px;
+        min-height: calc(82vh - 60px);
+    }
+
+    @media(maz-width:768px){
+        #sidebar{margin-left: -250px;}
+        #sidebar.active{
+            margin-left: 0px;
+        }
+        #sidebarCollapse span{
+            display: none;
+        }
+    }
+    .navbar-custom {
+    background-color: #ffffff;
+}
+       ::-webkit-scrollbar{
+    width:14px;
+            }
+        ::-webkit-scrollbar-track{
+    background:#f1f1f1;
+            }
+        ::-webkit-scrollbar-thumb{
+    background:#C0C0C0;
+            }
+
+            ::-webkit-scrollbar-thumb:hover{
+    background:#a9aaaa;
+            }
+
+   .page-item.active .page-link {
+        color: #fff !important;
+        background-color: #737df5 !important;
+        border:none;
+        border-radius:50%;
+    }
+
+    .page-link {
+        color: #000 !important;
+        margin-left:5px;
+        border-radius:50%;
+        border:none;
+    }
+
+    .page-link:hover {
+        color: dark !important;
+        background-color: #eaedf0 !important;
+        border-color: #eaedf0 !important;
+    }
+    .changeShopper{
+    margin-top:20px;
+    margin-left:20px;
+    margin-bottom:20px;
+    color:white;
+    border-radius:5%;
+    border:none;
+    background:#02d098;
+    width:150px;
+    height:40px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 3px 10px 0 rgba(0,0,0,0.19);
+    }
+    .changeShopper:hover{
+    background:#01ad7d;
+    }
+    .changeShopper:active,{
+    outline-color:#02d098;
+    }
+    .changeShopper:focus{
+    outline-color:#02d098;
+    }
+
+    .breadcrumb-item + .breadcrumb-item::before {
+    content: ">";
+    }
+    .breadcrumb {
+    background-color:transparent;
+    margin-top:-10px;
+    margin-right:10px;
+    font-size:15px;
+    }
+    .breadcrumb-item>a{
+    color: #7481f4;
+    }
+    .breadcrumb-item>a:hover {
+    color: blue;
+    }
+    .icon-button,
+    .icon-button:active,
+    .icon-button:focus{
+    outline:none;
+    border:none;
+    background-color:white;
+    }
+    </style>
+</head>
+<body>
+
+<div class="wrapper">
+    <!--SideBar-->
+    <nav id="sidebar">
+        <div class="sidebar-header">
+            <label style="font-size:18px;"><a style="color:white;" href="/"><img src="/image/tree_icon.png" width="50" height="50"
+                                                                                 class="d-inline-block align-top" alt="Tree" style="float:left;">
+                Wooden products</a></label>
+        </div>
+        <ul class="list-unstyled components">
+            <p>НАВІГАЦІЯ</p>
+            <li><a href="/shopperPersonalInformation">Особиста інформація</a></li>
+            <li>
+                <a href="#catalogSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Каталог</a>
+                <ul class="collapse list-unstyled" id="catalogSubmenu">
+                    {{#categories}}
+                        <li>
+                            <form id="form{{name}}" action="/productList" method="get">
+                                <input type="hidden" name="categoryName" value="{{name}}">
+                                <a href="/productList" onclick="document.getElementById('form{{name}}').submit(); return false;">{{name}}</a>
+                            </form>
+                        </li>
+                    {{/categories}}
+                </ul>
+            </li>
+            <li><a href="#">Історія покупок</a></li>
+        </ul>
+    </nav>
+    <!--Navbar-->
+    <nav class="navbar navbar-expand-lg navbar-light navbar-custom">
+
+        <!--<a class="navbar-brand" href="#">Navbar</a> -->
+        <button style="margin-bottom:10px;" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            {{#nameUser}}
+
+                <ul class="navbar-nav ml-auto">
+                    <form action="/shoppingCart" method="get">
+                        <div style="margin-right:15px;margin-bottom:-15px;">
+                            <button style="margin-bottom:-10px;" type="submit" class="icon-button"><img src="/image/shopping_cart.png"
+                                                                                                        style="height:30px;width:30px;"
+                                                                                                        onmouseover="cartHover(this);"
+                                                                                                        onmouseout="cartNotHover(this);"></button>
+                            <div>
+                                {{^numberProduct}}
+                                    <label style="color:#7b7b7f;font-size:12px;margin-bottom:-10px;">Порожня</label>
+                                {{/numberProduct}}
+                                {{#numberProduct}}
+                                    <label style="color:#0acf97;font-size:12px;margin-bottom:-10px;">{{numberProduct}}</label>
+                                {{/numberProduct}}
+                            </div>
+                        </div>
+                    </form>
+                    <li class="nav-item dropdown">
+                        <a style="margin-right:40px;" class="nav-link dropdown-toggle" href="navbarDropdown" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {{nameUser}}
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                            <form action="/logout" method="post">
+                                <button class="dropdown-item">Вихід</button>
+                                <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
+                            </form>
+                        </div>
+                    </li>
+                </ul>
+
+            {{/nameUser}}
+            {{^nameUser}}
+                <button  class="btn btn-primary ml-auto" onclick="window.location.href='/login'">Вхід</button>
+            {{/nameUser}}
+        </div>
+    </nav>
+    <!--Content-->
+    <div class="content">
+        <div style="height:40px;">
+            <div style="float:left;"><b style="color:#7b7b7f;font-size:18px;">Особиста інформація</b></div>
+            <div style="float:right;"><nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="/">Wooden products</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Особиста інформація</li>
+                </ol>
+            </nav></div>
+        </div>
+        <div style="margin-right:30px;">
+            <table style="width:100%;">
+                <tbody>
+                <tr>
+                    <td>
+                        <div style="background-color:white;min-width:515px;margin-right:10px;margin-top:15px;text-align:center;">
+                            <!--Modal-->
+                            {{#shopperChangeEmail}}
+                                <div id="shopperInfoManipulate-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title" id="standard-modalLabel">Заміна електронної пошти</h4>
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                            </div>
+                                            <form action="/shopperPersonalInformation/changeEmail" method="post">
+                                                <div class="modal-body">
+                                                    <div class="form-group col-md-10" align="left">
+                                                        <label style="color:#696969"> Стара пошта</label>
+                                                        <input type="text" disabled="true" class="form-control" value="{{username}}">
+                                                    </div>
+                                                    <div class="form-group col-md-10" align="left">
+                                                        <label style="color:#696969"> Нова пошта</label>
+                                                        <input type="text" class="form-control" name="username">
+                                                    </div>
+                                                    <div class="form-group col-md-10" align="left">
+                                                        <label style="color:#696969">У разі успішної заміни пошти вас автоматично перенаправить на сторінку входу</label>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" id="ex" class="btn btn-light" data-dismiss="modal">Закрити</button>
+                                                    <input id="createAdmin" type="submit" class="btn btn-primary" value="Змінити"/>
+                                                    <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
+                                                </div>
+                                            </form>
+                                        </div><!-- /.modal-content -->
+                                    </div><!-- /.modal-dialog -->
+                                </div><!-- /.modal -->
+                            {{/shopperChangeEmail}}
+                            {{#shopperChangePassword}}
+                                <div id="shopperInfoManipulate-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title" id="standard-modalLabel">Заміна пароля</h4>
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                            </div>
+                                            <form action="/shopperPersonalInformation/changePassword" method="post">
+                                                <div class="modal-body">
+                                                    <div class="form-group col-md-10" align="left">
+                                                        <label style="color:#696969"> Старий пароль</label>
+                                                        <input type="text" class="form-control" name="oldPassword" placeholder="Введіть старий пароль">
+                                                    </div>
+                                                    <div class="form-group col-md-10" align="left">
+                                                        <label style="color:#696969"> Новий пароль</label>
+                                                        <input type="text" class="form-control" name="newPassword" placeholder="Введіть новий пароль" >
+                                                    </div>
+                                                    <div class="form-group col-md-10" align="left">
+                                                        <label style="color:#696969"> Новий пароль(повторно)</label>
+                                                        <input type="text" class="form-control" name="repeatPassword" placeholder="Введіть новий пароль щераз">
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" id="ex" class="btn btn-light" data-dismiss="modal">Закрити</button>
+                                                    <input id="createAdmin" type="submit" class="btn btn-primary" value="Змінити"/>
+                                                    <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
+                                                </div>
+                                            </form>
+                                        </div><!-- /.modal-content -->
+                                    </div><!-- /.modal-dialog -->
+                                </div><!-- /.modal -->
+                            {{/shopperChangePassword}}
+                            {{#shopperChangePersonalInfo}}
+                                <div id="shopperInfoManipulate-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title" id="standard-modalLabel">Редагування особистої інформації</h4>
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                            </div>
+                                            <form action="/shopperPersonalInformation/changePersonalInformation" method="post">
+                                                <div class="modal-body">
+                                                    <div class="form-group col-md-10" align="left">
+                                                        <label style="color:#696969">Ім'я</label>
+                                                        <input type="text" class="form-control" name="name" placeholder="Введіть своє ім'я" value="{{name}}">
+                                                    </div>
+                                                    <div class="form-group col-md-10" align="left">
+                                                        <label style="color:#696969">Прізвище</label>
+                                                        <input type="text" class="form-control" name="surname" placeholder="Введіть своє прізвище" value="{{surname}}">
+                                                    </div>
+                                                    <div class="form-group col-md-10" align="left">
+                                                        <label style="color:#696969"> Адреса</label>
+                                                        <input type="text" class="form-control" name="address" placeholder="Введіть свою адресу" value="{{address}}">
+                                                    </div>
+                                                    <div class="form-group col-md-10" align="left">
+                                                        <label style="color:#696969"> Номер телефону</label>
+                                                        <input type="text" class="form-control" name="phoneNumber" placeholder="Введіть контактний телефон" value="{{phoneNumber}}">
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" id="ex" class="btn btn-light" data-dismiss="modal">Закрити</button>
+                                                    <input id="createAdmin" type="submit" class="btn btn-primary" value="Змінити"/>
+                                                    <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
+                                                </div>
+                                            </form>
+                                        </div><!-- /.modal-content -->
+                                    </div><!-- /.modal-dialog -->
+                                </div><!-- /.modal -->
+                            {{/shopperChangePersonalInfo}}
+                            <!--Notification-->
+                            {{#exists}}
+                                <div class="toast"style="position: absolute; top: 20px; right: 20px;min-width:200px;background-color:#fa5c7d;">
+                                    <div class="toast-header" style="background-color:#fa5c7d;">
+                                        <img src="/image/tree_icon.png" class="rounded mr-2" alt="Tree"style="width:20px;height:20px;">
+                                        <strong class="mr-auto" style="color:white;">Wodden products</strong>
+                                        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="toast-body" style="color:white;">
+                                        {{exists}}
+                                    </div>
+                                </div>
+                            {{/exists}}
+                            {{#changePassword}}
+                                <div class="toast"style="position: absolute; top: 20px; right: 20px;min-width:200px;background-color:#02d098;">
+                                    <div class="toast-header" style="background-color:#02d098;">
+                                        <img src="/image/tree_icon.png" class="rounded mr-2" alt="Tree"style="width:20px;height:20px;">
+                                        <strong class="mr-auto" style="color:white;">Wodden products</strong>
+                                        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="toast-body" style="color:white;">
+                                        {{changePassword}}
+                                    </div>
+                                </div>
+                            {{/changePassword}}
+                            {{#oldPasswordError}}
+                                <div class="toast"style="position: absolute; top: 20px; right: 20px;min-width:200px;background-color:#fa5c7d;">
+                                    <div class="toast-header" style="background-color:#fa5c7d;">
+                                        <img src="/image/tree_icon.png" class="rounded mr-2" alt="Tree"style="width:20px;height:20px;">
+                                        <strong class="mr-auto" style="color:white;">Wodden products</strong>
+                                        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="toast-body" style="color:white;">
+                                        {{oldPasswordError}}
+                                    </div>
+                                </div>
+                            {{/oldPasswordError}}
+                            {{#repeatPasswordError}}
+                                <div class="toast"style="position: absolute; top: 20px; right: 20px;min-width:200px;background-color:#fa5c7d;">
+                                    <div class="toast-header" style="background-color:#fa5c7d;">
+                                        <img src="/image/tree_icon.png" class="rounded mr-2" alt="Tree"style="width:20px;height:20px;">
+                                        <strong class="mr-auto" style="color:white;">Wodden products</strong>
+                                        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="toast-body" style="color:white;">
+                                        {{repeatPasswordError}}
+                                    </div>
+                                </div>
+                            {{/repeatPasswordError}}
+                            {{#changePerlInfo}}
+                                <div class="toast"style="position: absolute; top: 20px; right: 20px;min-width:200px;background-color:#02d098;">
+                                    <div class="toast-header" style="background-color:#02d098;">
+                                        <img src="/image/tree_icon.png" class="rounded mr-2" alt="Tree"style="width:20px;height:20px;">
+                                        <strong class="mr-auto" style="color:white;">Wodden products</strong>
+                                        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="toast-body" style="color:white;">
+                                        {{changePerlInfo}}
+                                    </div>
+                                </div>
+                            {{/changePerlInfo}}
+                            <div style="height:350px;color:#7b7b7f;box-shadow: 0 0.5px 0.5px 0 rgba(0,0,0,0.2), 0 0.5px 0.5px 0 rgba(0,0,0,0.19);">
+                                {{#shopperSecurity}}
+                                    <label style="margin-top:30px;font-size:20px;"><b>Безпека</b></label><br><br>
+                                    <label><b>Електронна пошта:</b> {{username}}</label>
+                                    <form action="/shopperPersonalInformation/changeEmail" method="get">
+                                        <button class="changeShopper"
+                                                data-toggle="popover" data-trigger="hover" title=""
+                                                data-content="Натисніть щоб змінити електронну пошту">
+                                            Змінити пошту</button><br>
+                                    </form>
+                                    <form action="/shopperPersonalInformation/changePassword" method="get">
+                                        <label><b>Пароль:</b> **********</label><br>
+                                        <button class="changeShopper"
+                                                data-toggle="popover" data-trigger="hover" title=""
+                                                data-content="Натисніть щоб змінити пароль">
+                                            Змінити пароль</button>
+                                    </form>
+                                {{/shopperSecurity}}
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="background-color:white;min-width:510px;margin-top:15px;text-align:left;box-shadow: 0 0.5px 0.5px 0 rgba(0,0,0,0.2), 0 0.5px 0.5px 0 rgba(0,0,0,0.19);">
+                            <div style="height:350px;color:#7b7b7f;">
+                                {{#personalInfo}}
+                                    <label style="margin-top:30px;font-size:20px;margin-left:180px;"><b>Особисті дані</b></label><br><br>
+                                    <label style="margin-left:20px;"><b>Ім'я та прізвище: </b> {{name}} {{surname}}</label><br>
+                                    <label style="margin-left:20px;"><b>Адреса: </b>{{address}}</label><br>
+                                    <label style="margin-left:20px;"><b>Номер телефону: </b>{{phoneNumber}}</label>
+                                    <form action="/shopperPersonalInformation/changePersonalInformation" method="get">
+                                        <button class="changeShopper" style="margin-left:180px;"
+                                                data-toggle="popover" data-trigger="hover" title=""
+                                                data-content="Натисніть щоб змінити особисту інформацію">
+                                            Редагувати</button>
+                                    </form>
+                                {{/personalInfo}}
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!--Footer-->
+    <footer style="margin-left:280px;box-shadow: 1px 1px 3px rgba(0,0,0,0.4);background:#f9fafd;height:60px;margin-top:30px;">
+        <label style="margin-left:30px;margin-top:20px;color:#b6b4b6;">2020 ©Wooden products</label>
+    </footer>
+</div>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<!--Datatable-->
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+<!--Need to popper works-->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+<!--Setting toast-->
+<script>
+   $(document).ready(function () {
+            $('.toast').toast({
+                delay: 5000
+            });
+            $('.toast').toast('show');
+        });
+</script>
+<!--View edit modal-->
+<script>
+$(document).ready(function () {
+    $('#shopperInfoManipulate-modal').modal('show');
+});
+</script>
+<!--View modal and popover-->
+<script>
+    $('.changeSeller').click(function () {
+     $('#sellerInfoManipulate-modal').modal('show');
+     $('[data-toggle="popover"]').popover('hide');
+});
+</script>
+<!--View popover-->
+<script>
+$(document).ready(function () {
+            $('[data-toggle="popover"]').popover();
+        });
+</script>
+</body>
+</html>

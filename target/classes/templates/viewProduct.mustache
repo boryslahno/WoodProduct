@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Список товарів</title>
+    <title>Товар</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
@@ -179,6 +179,29 @@
     color:#0acf97;
     background:#d3f6ec;
     }
+
+    .addCart{
+    margin-top:20px;
+    margin-left:20px;
+    margin-bottom:20px;
+    color:white;
+    border-radius:5%;
+    border:none;
+    background:#fa5c7d;
+    width:150px;
+    height:40px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 3px 10px 0 rgba(0,0,0,0.19);
+    }
+    .addCart:hover{
+    background:#f9345e;
+    }
+    .addCart:active,{
+    outline-color:#fa5c7d;
+    }
+    .addCart:focus{
+    outline-color:#fa5c7d;
+    }
+
     </style>
 </head>
 <body>
@@ -193,27 +216,21 @@
         </div>
         <ul class="list-unstyled components">
             <p>НАВІГАЦІЯ</p>
+            <li><a href="/shopperPersonalInformation">Особиста інформація</a></li>
             <li>
-                <a href="/adminPersonalInformation">Особисті дані</a>
+                <a href="#catalogSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Каталог</a>
+                <ul class="collapse list-unstyled" id="catalogSubmenu">
+                    {{#categories}}
+                        <li>
+                            <form id="form{{name}}" action="/productList" method="get">
+                                <input type="hidden" name="categoryName" value="{{name}}">
+                                <a href="/productList" onclick="document.getElementById('form{{name}}').submit(); return false;">{{name}}</a>
+                            </form>
+                        </li>
+                    {{/categories}}
+                </ul>
             </li>
-            <li>
-                <a href="/adminUserList">Користувачі</a>
-            </li>
-            <li>
-                <a href="/adminCategoryList">Категорії товарів</a>
-            </li>
-            <li>
-                <a href="/adminFilterList">Фільтри товарів</a>
-            </li>
-            <li>
-                <a style="color:white;"  href="/adminItemList">Товари</a>
-            </li>
-            <li>
-                <a href="#">Покупки</a>
-            </li>
-            <li>
-                <a href="#">Індивідуальні замволення</a>
-            </li>
+            <li><a href="#">Історія покупок</a></li>
         </ul>
     </nav>
     <!--Navbar-->
@@ -227,13 +244,29 @@
             {{#nameUser}}
 
                 <ul class="navbar-nav ml-auto">
+                    <form action="/shoppingCart" method="get">
+                        <div style="margin-right:15px;margin-bottom:-15px;">
+                            <button style="margin-bottom:-10px;" type="submit" class="icon-button"><img src="/image/shopping_cart.png"
+                                                                                                        style="height:30px;width:30px;"
+                                                                                                        onmouseover="cartHover(this);"
+                                                                                                        onmouseout="cartNotHover(this);"></button>
+                            <div>
+                                {{^numberProduct}}
+                                    <label style="color:#7b7b7f;font-size:12px;margin-bottom:-10px;">Порожня</label>
+                                {{/numberProduct}}
+                                {{#numberProduct}}
+                                    <label style="color:#0acf97;font-size:12px;margin-bottom:-10px;">{{numberProduct}}</label>
+                                {{/numberProduct}}
+                            </div>
+                        </div>
+                    </form>
                     <li class="nav-item dropdown">
                         <a style="margin-right:40px;" class="nav-link dropdown-toggle" href="navbarDropdown" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             {{nameUser}}
                         </a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                             <form action="/logout" method="post">
-                                <button class="dropdown-item">Вихід</button>
+                                <button style="outline:none;" class="dropdown-item">Вихід</button>
                                 <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
                             </form>
                         </div>
@@ -263,7 +296,7 @@
                 <div style="margin-left:20px;margin-right:20px;padding-bottom:30px;">
                     <table style="width:100%;border:1px solid white;">
                         <tbody>
-                        <tr >
+                        <tr>
                             <td style="border:1px solid white;">
                                 <div style="margin-top:-20px;;min-width:470px;height:400px;text-align:center;margin-right:40px;">
                                     <img id="product" style="{{#heightSize}}height:{{heightSize}}%{{/heightSize}} {{#widthSize}}width:{{widthSize}}%{{/widthSize}}" src="uploads/{{fileName}}">
@@ -273,9 +306,21 @@
                                 <div style="margin-top:20px;min-width:480px;">
                                     <label style="font-size:28px;color:#6c757d;">{{itemname}}</label><br>
                                     <label style="font-size:15px;color:#727f8b;">Дата додавання: {{addDate}}</label><br><br>
-                                    <label id="inStock"><b>В наявності {{count}}</b></label>
+                                    <label id="inStock"><b>В наявності {{count}}</b></label><br><br>
                                     <label style="font-size:15px;color:#6c757d;"><b>Вартість покупки:</b></label><br>
                                     <label style="font-size:28px;color:#6c757d;">₴{{price}}</label><br><br>
+                                    <label style="font-size:15px;color:#6c757d;"><b>Кількість</b></label>
+                                    <form action="/addToCart" method="post" class="form-inline" style="margin-top:-15px;">
+                                        <div class="form-group">
+                                            <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
+                                            <input type="hidden" name="itemID" value="{{id}}">
+                                            <input style="width:80px;" name="count" type="number" class="form-control" min="1" max="{{count}}">
+                                        </div>
+                                        <div class="form-group">
+                                            <button style="width:190px;" class="addCart" type="submit" ><img style="height:15px;width:15px;margin-right:10px;" src="/image/shopping_cart_button.png">
+                                            Додати в корзину</button>
+                                        </div>
+                                    </form><br>
                                     <label style="font-size:15px;color:#6c757d;"><b>Опис:</b></label><br>
                                     <label style="font-size:15px;color:#727f8b;">{{description}}</label><br><br><br>
                                     <div style="display:inline-block;vertical-align:top; margin-right:80px;">
@@ -285,10 +330,6 @@
                                     <div style="display:inline-block;vertical-align:top;margin-right:80px;">
                                         <label style="font-size:15px;color:#6c757d;"><b>Продано:</b></label><br>
                                         <label style="font-size:15px;color:#727f8b;">135</label>
-                                    </div>
-                                    <div style="display:inline-block;vertical-align:top;">
-                                        <label style="font-size:15px;color:#6c757d;"><b>Дохід:</b></label><br>
-                                        <label style="font-size:15px;color:#727f8b;">₴2025000</label>
                                     </div>
                                 </div>
                             </td>

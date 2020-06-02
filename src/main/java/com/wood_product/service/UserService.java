@@ -92,6 +92,16 @@ public class UserService implements UserDetailsService {
         return personalInformationRepository.findByUserId(id);
     }
 
+    public PersonalInformation loadPersonalInfo(){
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            Users user=userRepository.findByUsername(((UserDetails) principal).getUsername());
+            return personalInformationRepository.findByUserId(user.getId());
+        } else {
+            return null;
+        }
+    }
+
     public Company loadCompanyInfo(Long id) {
         Company company = companyRepository.findByUserId(id);
         return company;

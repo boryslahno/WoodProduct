@@ -238,7 +238,7 @@
         </div>
         <ul class="list-unstyled components">
             <p>НАВІГАЦІЯ</p>
-            <li><a href="#">Особиста інформація</a></li>
+            <li><a href="/shopperPersonalInformation">Особиста інформація</a></li>
             <li>
                 <a href="#catalogSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Каталог</a>
                 <ul class="collapse list-unstyled" id="catalogSubmenu">
@@ -264,8 +264,23 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             {{#nameUser}}
-
                 <ul class="navbar-nav ml-auto">
+                    <form action="/shoppingCart" method="get">
+                    <div style="margin-right:15px;margin-bottom:-15px;">
+                        <button style="margin-bottom:-10px;" type="submit" class="icon-button"><img src="/image/shopping_cart.png"
+                                                                       style="height:30px;width:30px;"
+                                                                       onmouseover="cartHover(this);"
+                                                                       onmouseout="cartNotHover(this);"></button>
+                            <div>
+                                {{^numberProduct}}
+                                    <label style="color:#7b7b7f;font-size:12px;margin-bottom:-10px;">Порожня</label>
+                                {{/numberProduct}}
+                                {{#numberProduct}}
+                                    <label style="color:#0acf97;font-size:12px;margin-bottom:-10px;">{{numberProduct}}</label>
+                                {{/numberProduct}}
+                            </div>
+                    </div>
+                    </form>
                     <li class="nav-item dropdown">
                         <a style="margin-right:40px;" class="nav-link dropdown-toggle" href="navbarDropdown" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             {{nameUser}}
@@ -320,7 +335,10 @@
                                         <label>{{itemname}}</label><br>
                                         <label style="color:#737df5;">₴{{price}}</label>
                                         <label id="inStock"><b>В наявності {{count}}</b></label>
-                                        <button class="detail">Детальніше</button>
+                                        <form action="/viewProduct" method="get">
+                                            <input type="hidden" name="itemID" value="{{id}}">
+                                        <button type="submit" class="detail">Детальніше</button>
+                                        </form>
                                     </div>
                                 </div>
                             {{/items}}
@@ -352,8 +370,11 @@ el.data-toggle="popover";
 el.data-trigger="hover";
 el.data-content="Натисніть щоб додати новий фільтер товару";
 }
-function deleteNotHover(el){
-el.src="/image/trash.png";
+function cartNotHover(el){
+el.src="/image/shopping_cart.png";
+}
+function cartHover(el){
+el.src="/image/shopping_cart_full.png";
 }
 </script>
 <!--Item card fix layout-->

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>{{NameCategory}}</title>
+    <title>Корзина</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
@@ -145,24 +145,6 @@
         background-color: #eaedf0 !important;
         border-color: #eaedf0 !important;
     }
-    .Filter{
-    color:white;
-    border-radius:5%;
-    border:none;
-    background:#fa5c7d;
-    width:150px;
-    height:40px;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 3px 10px 0 rgba(0,0,0,0.19);
-    }
-    .Filter:hover{
-    background:#f9345e;
-    }
-    .Filter:active,{
-    outline-color:#fa5c7d;
-    }
-    .Filter:focus{
-    outline-color:#fa5c7d;
-    }
 
     .breadcrumb-item + .breadcrumb-item::before {
     content: ">";
@@ -186,19 +168,9 @@
     border:none;
     background-color:white;
     }
-
-    .item{
-    height:390px;
-    width:240px;
-    display:inline-block;
-    vertical-align:top;
-    margin-bottom:20px;
+    td,th{
+    border: 1px solid #f1f3fa;
     }
-
-    .item:hover{
-   box-shadow: 0 10px 20px 0 rgba(0,0,0,0.2), 0 9px 22px 0 rgba(0,0,0,0.19);
-    }
-
     #inStock{
     border: 1px solid #d3f6ec;
     border-radius: 10px;
@@ -208,21 +180,38 @@
     background:#d3f6ec;
     }
 
-    .detail{
+    .pay{
     color:white;
     border-radius:5%;
     border:none;
-    background:#737df5;
-    font-size:14px;
+    background:#02d098;
+    width:150px;
+    height:40px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 3px 10px 0 rgba(0,0,0,0.19);
     }
-    .detail:hover{
-    background:#4d5bf2;
+    .pay:hover{
+    background:#01ad7d;
     }
-    .detail:active,{
-    outline-color:#737df5;
+    .pay:active,{
+    outline-color:#02d098;
     }
-    .detail:focus{
-    outline-color:#737df5;
+    .pay:focus{
+    outline-color:#02d098;
+    }
+    .orderSummary{
+    margin-bottom:20px;
+    min-width:315px;
+    border-radius:2%;
+    border: 1px solid #dee2e6;
+    }
+
+    hr{
+    margin-left:15px;
+    margin-right:15px;
+    border: none;
+    background-color: #dee2e6;
+    color: #dee2e6;
+    height: 0.5px;
     }
     </style>
 </head>
@@ -264,13 +253,14 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             {{#nameUser}}
+
                 <ul class="navbar-nav ml-auto">
                     <form action="/shoppingCart" method="get">
-                    <div style="margin-right:15px;margin-bottom:-15px;">
-                        <button style="margin-bottom:-10px;" type="submit" class="icon-button"><img src="/image/shopping_cart.png"
-                                                                       style="height:30px;width:30px;"
-                                                                       onmouseover="cartHover(this);"
-                                                                       onmouseout="cartNotHover(this);"></button>
+                        <div style="margin-right:15px;margin-bottom:-15px;">
+                            <button style="margin-bottom:-10px;" type="submit" class="icon-button"><img src="/image/shopping_cart.png"
+                                                                                                        style="height:30px;width:30px;"
+                                                                                                        onmouseover="cartHover(this);"
+                                                                                                        onmouseout="cartNotHover(this);"></button>
                             <div>
                                 {{^numberProduct}}
                                     <label style="color:#7b7b7f;font-size:12px;margin-bottom:-10px;">Порожня</label>
@@ -279,7 +269,7 @@
                                     <label style="color:#0acf97;font-size:12px;margin-bottom:-10px;">{{numberProduct}}</label>
                                 {{/numberProduct}}
                             </div>
-                    </div>
+                        </div>
                     </form>
                     <li class="nav-item dropdown">
                         <a style="margin-right:40px;" class="nav-link dropdown-toggle" href="navbarDropdown" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -287,7 +277,7 @@
                         </a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                             <form action="/logout" method="post">
-                                <button class="dropdown-item">Вихід</button>
+                                <button style="outline:none;" class="dropdown-item">Вихід</button>
                                 <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
                             </form>
                         </div>
@@ -303,47 +293,98 @@
     <!--Content-->
     <div class="content">
         <div style="height:40px;">
-            <div style="float:left;"><b style="color:#7b7b7f;font-size:18px;">{{NameCategory}}</b></div>
+            <div style="float:left;"><label style="color:#7b7b7f;font-size:18px;"><b>Корзина</b></label></div>
             <div style="float:right;"><nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0">
                     <li class="breadcrumb-item"><a href="/">Wodden products</a></li>
-                    <li class="breadcrumb-item"><a href="#">Каталог</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">{{NameCategory}}</li>
+                    <li class="breadcrumb-item active" aria-current="page">Корзина</li>
                 </ol>
-            </nav></div>
-        </div>
-        <button class="Filter"
-                      data-toggle="collapse" data-target="#filterList"
-                      aria-expanded="false" aria-controls="#filterList"
-                      onmouseover="showPopover(this);">
-        <img src="/image/filter_icon.png" style="width:16px;height:16px;margin-right:8px;margin-bottom:2px;"/>
-        Фільтри</button>
-        <div class="collapse" id="filterList">
-            <div style="background-color:white;margin-right:20px;margin-top:10px;box-shadow: 0 1px 1px 0 rgba(0,0,0,0.2), 0 1px 1px 0 rgba(0,0,0,0.19);">
-                <label>Деякі фільтри</label>
+            </nav>
             </div>
         </div>
-        <div style="margin-top:5px; background-color:white;margin-right:20px;box-shadow: 0 1px 1px 0 rgba(0,0,0,0.2), 0 1px 1px 0 rgba(0,0,0,0.19);">
-                <div style="margin:30px;margin-top:5px;;padding-top:20px;">
-                            {{#items}}
-                                <div class="item">
-                                    <div class="imgItem" style="margin:15px;text-align:center;">
-                                        <img {{#size}}style="width:50%;"{{/size}} {{^size}}class="img-fluid"{{/size}} src="/uploads/{{fileName}}"/>
-                                    </div>
-                                    <div class="detailItem" style="text-align:center;">
-                                        <label style="font-size:12px;color:#b6b4b6;">{{#user}}{{#company}}{{name}}{{/company}}{{/user}}</label><br>
-                                        <label>{{itemname}}</label><br>
-                                        <label style="color:#737df5;">₴{{price}}</label>
-                                        <label id="inStock"><b>В наявності {{count}}</b></label>
-                                        <form action="/viewProduct" method="get">
-                                            <input type="hidden" name="itemID" value="{{id}}">
-                                        <button type="submit" class="detail">Детальніше</button>
-                                        </form>
-                                    </div>
+            <div style="background-color:white;margin-top:20px;margin-right:20px;box-shadow: 0 0.5px 0.5px 0 rgba(0,0,0,0.2), 0 0.5px 0.5px 0 rgba(0,0,0,0.19);">
+                <div style="margin-left:20px;margin-right:20px;padding-bottom:30px;padding-top:20px;">
+                    <div style="margin-right:20px;display:inline-block;vertical-align:top;min-width:650px;">
+                        <table style="width:100%;color:#7b7b7f;">
+                                    <thead style="background-color:#f1f3fa;font-size:14px;">
+                                    <tr style="height:50px;text-align:center">
+                                        <th style="display:none;">ID</th>
+                                        <th>Товар</th>
+                                        <th>Назва</th>
+                                        <th>Ціна</th>
+                                        <th>Кількість</th>
+                                        <th>Загальна сума</th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {{^itemsInCart}}
+                                        <tr style="height:50px;text-align:center;">
+                                            <td style="border:1px solid white;">-</td>
+                                            <td style="border:1px solid white;">-</td>
+                                            <td style="border:1px solid white;">-</td>
+                                            <td style="border:1px solid white;">-</td>
+                                            <td style="border:1px solid white;">-</td>
+                                            <td style="border:1px solid white;">-</td>
+                                        </tr>
+                                    {{/itemsInCart}}
+                                        {{#itemsInCart}}
+                                            <tr style="text-align:center;">
+                                                <td style="display:none;">{{id}}</td>
+                                                <td style="width:60px;"><img style="width:100%;margin-top:5px;" src="/uploads/{{#item}}{{fileName}}{{/item}}"></td>
+                                                <td style="vertical-align:middle;">{{#item}}{{itemname}}{{/item}}</td>
+                                                <td style="vertical-align:middle;">{{#item}}{{price}}{{/item}}</td>
+                                                <td style="vertical-align:middle;">{{quantity}}</td>
+                                                <td style="vertical-align:middle;">{{total}}</td>
+                                                <td style="vertical-align:middle;">
+                                                    <form action="/deleteProductWithCart" method="post">
+                                                        <input id="categoryId" type="hidden" name="itemID" value="{{id}}">
+                                                        <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
+                                                        <button type="submit" class="icon-button"><img src="/image/trash.png"
+                                                                                                       style="height:21px;width:21px;"
+                                                                                                       onmouseover="deleteHover(this);"
+                                                                                                       onmouseout="deleteNotHover(this);"></button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        {{/itemsInCart}}
+                                    </tbody>
+                                </table>
+                    </div>
+                    <div style="display:inline-block;vertical-align:top;">
+                        {{^orderDetais}}
+                            <div class="orderSummary">
+                                <label style="margin-bottom:-10px;margin-top:20px;margin-left:20px;color:#6c757d;"><b>ПІДСУМОК ЗАМОВЛЕННЯ</b></label><br>
+                                <hr>
+                                <pre><label style="margin-left:30px;color:#6c757d;font-size:16px;">Загальна сума:          ₴0</label></pre>
+                                <hr>
+                                <pre><label style="margin-left:30px;color:#6c757d;font-size:16px;"><b>До оплати:              ₴0</b></label></pre>
+                                <div style="margin-left:80px;margin-bottom:10px;">
+                                    <form action="/greeting" method="get">
+                                        <button class="pay" type="submit">Оплатити</button>
+                                    </form>
                                 </div>
-                            {{/items}}
+                            </div>
+                        {{/orderDetais}}
+                        {{#orderDetais}}
+                            <div class="orderSummary">
+                                <label style="margin-bottom:-10px;margin-top:20px;margin-left:20px;color:#6c757d;"><b>ПІДСУМОК ЗАМОВЛЕННЯ</b></label><br>
+                                <label style="margin-bottom:-10px;margin-left:20px;color:#6c757d;font-size:12px;">виробник: Truton Intertainment</label>
+                                <hr>
+                                <pre><label style="margin-left:30px;color:#6c757d;font-size:16px;">Загальна сума:          ₴20000</label></pre>
+                                <hr>
+                                <pre><label style="margin-left:30px;color:#6c757d;font-size:16px;"><b>До оплати:              ₴10000</b></label></pre>
+                                <div style="margin-left:80px;margin-bottom:10px;">
+                                    <form action="#" method="post">
+                                        <button class="pay" type="submit">Оплатити</button>
+                                    </form>
+                                </div>
+                            </div>
+                        {{/orderDetais}}
+                    </div>
+
                 </div>
-        </div>
+            </div>
     </div>
     <!--Footer-->
     <footer style="margin-left:280px;box-shadow: 1px 1px 3px rgba(0,0,0,0.4);background:#f9fafd;height:60px;margin-top:30px;">
@@ -362,48 +403,28 @@
 <!--Need to popper works-->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-
 <!--Change icons-->
 <script>
-function showPopover(el){
-el.data-toggle="popover";
-el.data-trigger="hover";
-el.data-content="Натисніть щоб додати новий фільтер товару";
+function deleteHover(el){
+el.src="/image/trash-hover.png";
 }
-function cartNotHover(el){
-el.src="/image/shopping_cart.png";
+function deleteNotHover(el){
+el.src="/image/trash.png";
 }
-function cartHover(el){
-el.src="/image/shopping_cart_full.png";
+
+function editHover(el){
+el.src="/image/pen-hover.png";
 }
-</script>
-<!--Item card fix layout-->
-<script>
-$(document).ready(function () {
-        var elements = document.getElementsByClassName("item");
-        for (var i = 0; i < elements.length; i++) {
-        var imgItem=elements[i].querySelector(".imgItem");
-        var detailItem=elements[i].querySelector(".detailItem");
-        var padding=390-imgItem.offsetHeight-detailItem.offsetHeight-20;
-        console.log(padding)
-        elements[i].querySelector(".detailItem").style.marginTop=padding+"px";
-            }
-        });
-</script>
-<!--Setting toast-->
-<script>
-   $(document).ready(function () {
-            $('.toast').toast({
-                delay: 5000
-            });
-            $('.toast').toast('show');
-        });
-</script>
-<!--View popover-->
-<script>
-$(document).ready(function () {
-            $('[data-toggle="popover"]').popover();
-        });
+function editNotHover(el){
+el.src="/image/pen.png";
+}
+
+function showHover(el){
+el.src="/image/eye-hover.png";
+}
+function showNotHover(el){
+el.src="/image/eye.png";
+}
 </script>
 </body>
 </html>

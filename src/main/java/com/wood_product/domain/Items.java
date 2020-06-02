@@ -33,6 +33,8 @@ public class Items {
     private Categories category;
     @OneToMany(mappedBy = "item",fetch = FetchType.EAGER,cascade = CascadeType.REMOVE)
     private Set<FilterOptions> filterOptions;
+    @OneToOne(mappedBy = "item", fetch = FetchType.EAGER,cascade = CascadeType.REMOVE)
+    private ShoppingCart shoppingCart;
     @NotNull
     private String fileName;
     @Transient
@@ -124,5 +126,13 @@ public class Items {
 
     public void setSize(Boolean size) {
         this.size = size;
+    }
+
+    public ShoppingCart getShoppingCart() {
+        return shoppingCart;
+    }
+
+    public void setShoppingCart(ShoppingCart shoppingCart) {
+        this.shoppingCart = shoppingCart;
     }
 }
