@@ -4,7 +4,7 @@ import org.springframework.security.core.Transient;
 
 import javax.persistence.*;
 
-@Entity
+@Entity(name = "shopping_cart")
 @Table(name = "shopping_cart")
 public class ShoppingCart {
 

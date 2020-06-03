@@ -47,6 +47,8 @@ public class AdministratorController {
     private  ItemRepository itemRepository;
     @Autowired
     private  FilterOptionsRepository filterOptionsRepository;
+    @Autowired
+    private ShoppingRepository shoppingRepository;
     //User management
     private Long IDUser;
 
@@ -399,6 +401,13 @@ public class AdministratorController {
             model.addAttribute("widthSize",100);
         }
         return "adminViewProduct";
+    }
+
+    @GetMapping("/adminSoldProducts")
+    public String adminViewSoldProducts(Model model){
+        model.addAttribute("nameUser", userService.GetUserName());
+        model.addAttribute("soldItems",shoppingRepository.findAll());
+        return "adminSoldProducts";
     }
 }
 

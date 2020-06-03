@@ -1,5 +1,6 @@
 package com.wood_product.controller;
 
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import com.sun.xml.bind.v2.model.core.ID;
 import com.wood_product.domain.Company;
 import com.wood_product.domain.FilterOptions;
@@ -46,6 +47,8 @@ public class SellerController {
     private FilterOptionsRepository filterOptionsRepository;
     @Autowired
     private FilterRepository filterRepository;
+    @Autowired
+    private ShoppingRepository shoppingRepository;
 
     private Long IDitem;
 
@@ -246,5 +249,12 @@ public class SellerController {
             model.addAttribute("widthSize",100);
         }
         return "sellerViewProduct";
+    }
+
+    @GetMapping("/sellerSoldProducts")
+    public String viewSoldProducts(Model model){
+        model.addAttribute("nameUser", userService.GetUserName());
+        model.addAttribute("soldItems",shoppingRepository.findByOwner(userService.currentUser()));
+        return "sellerSoldProducts";
     }
 }

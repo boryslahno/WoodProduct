@@ -27,7 +27,7 @@
         padding: 10px 10px;
         border: none;
         border-radius: 0;
-        margin-bottom: 40px;
+        margin-bottom: 20px;
         margin-left:280px;
         box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
 
@@ -95,7 +95,7 @@
 
     .content {
         margin-left:300px;
-        padding-top:80px;
+        min-height: calc(82vh - 60px);
     }
 
     @media(maz-width:768px){
@@ -109,8 +109,6 @@
     }
     .navbar-custom {
     background-color: #ffffff;
-    position:fixed;
-    width:1080px;
 }
         ::-webkit-scrollbar{
     width:14px;
@@ -125,12 +123,105 @@
             ::-webkit-scrollbar-thumb:hover{
     background:#a9aaaa;
             }
+
+   .page-item.active .page-link {
+        color: #fff !important;
+        background-color: #737df5 !important;
+        border:none;
+        border-radius:50%;
+    }
+
+    .page-link {
+        color: #000 !important;
+        margin-left:5px;
+        border-radius:50%;
+        border:none;
+    }
+
+    .page-link:hover {
+        color: dark !important;
+        background-color: #eaedf0 !important;
+        border-color: #eaedf0 !important;
+    }
+    .Filter{
+    color:white;
+    border-radius:5%;
+    border:none;
+    background:#fa5c7d;
+    width:150px;
+    height:40px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 3px 10px 0 rgba(0,0,0,0.19);
+    }
+    .Filter:hover{
+    background:#f9345e;
+    }
+    .Filter:active,{
+    outline-color:#fa5c7d;
+    }
+    .Filter:focus{
+    outline-color:#fa5c7d;
+    }
+
+    .breadcrumb-item + .breadcrumb-item::before {
+    content: ">";
+    }
+    .breadcrumb {
+    background-color:transparent;
+    margin-top:-10px;
+    margin-right:10px;
+    font-size:15px;
+    }
+    .breadcrumb-item>a{
+    color: #7481f4;
+    }
+    .breadcrumb-item>a:hover {
+    color: blue;
+    }
     .icon-button,
     .icon-button:active,
     .icon-button:focus{
     outline:none;
     border:none;
     background-color:white;
+    }
+
+    .item{
+    height:390px;
+    width:240px;
+    display:inline-block;
+    vertical-align:top;
+    margin-bottom:20px;
+    box-shadow: 0 1px 1px 0 rgba(0,0,0,0.2), 0 1px 1px 0 rgba(0,0,0,0.19);
+    }
+
+    .item:hover{
+   box-shadow: 0 10px 20px 0 rgba(0,0,0,0.2), 0 9px 22px 0 rgba(0,0,0,0.19);
+    }
+
+    #inStock{
+    border: 1px solid #d3f6ec;
+    border-radius: 10px;
+    font-size:14px;
+    padding: 2px 10px;
+    color:#0acf97;
+    background:#d3f6ec;
+    }
+
+    .detail{
+    color:white;
+    border-radius:5%;
+    border:none;
+    background:#737df5;
+    font-size:14px;
+    }
+    .detail:hover{
+    background:#4d5bf2;
+    }
+    .detail:active,{
+    outline-color:#737df5;
+    }
+    .detail:focus{
+    outline-color:#737df5;
     }
     </style>
 </head>
@@ -218,9 +309,9 @@
                 <li>
                     <a href="#">Покупки</a>
                 </li>
-                <li>
+                <!--<li>
                     <a href="#">Індивідуальні замволення</a>
-                </li>
+                </li>-->
             </ul>
         {{/isAdmin}}
         {{#isSeller}}
@@ -235,9 +326,9 @@
                 <li>
                     <a href="#">Продані товари</a>
                 </li>
-                <li>
+                <!--<li>
                     <a href="#">Індивідульні замовлення</a>
-                </li>
+                </li>-->
             </ul>
         {{/isSeller}}
         {{#isShoper}}
@@ -257,7 +348,7 @@
                         {{/categories}}
                     </ul>
                 </li>
-                <li><a href="#">Історія покупок</a></li>
+                <li><a href="/shopperShopHistory">Історія покупок</a></li>
             </ul>
         {{/isShoper}}
     </nav>
@@ -310,28 +401,51 @@
         </nav>
 
     <div class="content">
+        <div style="height:40px;">
+            <div style="float:left;"><b style="color:#7b7b7f;font-size:18px;">Корисні поради</b></div>
+            <div style="float:right;"><nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="/">Wodden products</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Корисні поради</li>
+                </ol>
+            </nav></div>
+        </div>
 
-        <h2>Collapsible Sidebar Using Bootstrap 1</h2>
+        <div style="margin-top:5px;margin-right:20px;">
+            <div style="margin:30px;margin-top:5px;padding-top:20px;">
+                    <div class="item" style="margin-right:40px;display:inline-block;vertical-align:top;width:400px;height:300px;background-color:white;">
+                        <div class="imgItem" style="margin:15px;text-align:center;">
+                            <img style="width:350px; height:150px;" src="/image/useful1.jpg"/>
+                        </div>
+                        <div style="margin-left:20px;color:#b6b4b6;">   Вишукані меблі та вироби, виготовлені із натуральних порід деревини, є  прикрасою будь-якого інтер'єру.
+                            Проте, незважаючи на високоякісне...</div>
+                        <div  style="text-align:center;margin-left:240px;margin-top:-10px;">
+                            <form action="/news1" method="get">
+                                <button type="submit" class="detail">Детальніше</button>
+                            </form>
+                        </div>
+                    </div>
 
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-
-        <div class="line"></div>
-
-        <h2>Collapsible Sidebar Using Bootstrap 2</h2>
-
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-
-        <div class="line"></div>
-        <h2>Collapsible Sidebar Using Bootstrap 3</h2>
-
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-
-        <div class="line"></div>
+                <div class="item" style="display:inline-block;vertical-align:top;width:400px;height:300px;background-color:white;">
+                    <div class="imgItem" style="margin:15px;text-align:center;">
+                        <img style="width:350px; height:150px;" src="/image/useful2.jpg"/>
+                    </div>
+                    <div style="margin-left:20px;color:#b6b4b6;">Ви можете погоджуватися, або ні, але натуральне дерево у будь-якому інтер’єрі та приміщенні завжди виглядає шикарно!
+                        Дерев’яні меблі виражають високий статус та...</div>
+                    <div  style="text-align:center;margin-left:240px;margin-top:-10px;">
+                        <form action="/news1" method="get">
+                            <button type="submit" class="detail">Детальніше</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </div>
+    <!--Footer-->
+    <footer style="margin-left:280px;box-shadow: 1px 1px 3px rgba(0,0,0,0.4);background:#f9fafd;height:60px;margin-top:30px;">
+        <label style="margin-left:30px;margin-top:20px;color:#b6b4b6;">2020 ©Wooden products</label>
+    </footer>
 </div>
 </body>
 </html>

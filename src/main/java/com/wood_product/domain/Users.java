@@ -37,7 +37,8 @@ public class Users implements UserDetails {
     private Set<Items> items;
     @OneToMany(mappedBy = "user",fetch = FetchType.EAGER,cascade = CascadeType.REMOVE)
     private  Set<ShoppingCart>shoppingCarts;
-
+    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER,cascade = CascadeType.REMOVE)
+    private Set<Shopping> shoppings;
     public Company getCompany() {
         return company;
     }
@@ -135,5 +136,13 @@ public class Users implements UserDetails {
 
     public void setShoppingCarts(Set<ShoppingCart> shoppingCarts) {
         this.shoppingCarts = shoppingCarts;
+    }
+
+    public Set<Shopping> getShoppings() {
+        return shoppings;
+    }
+
+    public void setShoppings(Set<Shopping> shoppings) {
+        this.shoppings = shoppings;
     }
 }

@@ -230,7 +230,7 @@
                     {{/categories}}
                 </ul>
             </li>
-            <li><a href="#">Історія покупок</a></li>
+            <li><a href="/shopperShopHistory">Історія покупок</a></li>
         </ul>
     </nav>
     <!--Navbar-->
@@ -314,7 +314,7 @@
                                         <div class="form-group">
                                             <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
                                             <input type="hidden" name="itemID" value="{{id}}">
-                                            <input style="width:80px;" name="count" type="number" class="form-control" min="1" max="{{count}}">
+                                            <input style="width:80px;" name="count" type="number" class="form-control" min="1" max="{{count}}" value="1">
                                         </div>
                                         <div class="form-group">
                                             <button style="width:190px;" class="addCart" type="submit" ><img style="height:15px;width:15px;margin-right:10px;" src="/image/shopping_cart_button.png">

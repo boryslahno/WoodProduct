@@ -252,7 +252,7 @@
                     {{/categories}}
                 </ul>
             </li>
-            <li><a href="#">Історія покупок</a></li>
+            <li><a href="/shopperShopHistory">Історія покупок</a></li>
         </ul>
     </nav>
     <!--Navbar-->
@@ -312,7 +312,7 @@
                 </ol>
             </nav></div>
         </div>
-        <button class="Filter"
+        <!--<button class="Filter"
                       data-toggle="collapse" data-target="#filterList"
                       aria-expanded="false" aria-controls="#filterList"
                       onmouseover="showPopover(this);">
@@ -320,15 +320,19 @@
         Фільтри</button>
         <div class="collapse" id="filterList">
             <div style="background-color:white;margin-right:20px;margin-top:10px;box-shadow: 0 1px 1px 0 rgba(0,0,0,0.2), 0 1px 1px 0 rgba(0,0,0,0.19);">
-                <label>Деякі фільтри</label>
+                {{#filters}}
+                    <form>
+
+                    </form>
+                {{/filters}}
             </div>
-        </div>
+        </div>-->
         <div style="margin-top:5px; background-color:white;margin-right:20px;box-shadow: 0 1px 1px 0 rgba(0,0,0,0.2), 0 1px 1px 0 rgba(0,0,0,0.19);">
                 <div style="margin:30px;margin-top:5px;;padding-top:20px;">
                             {{#items}}
                                 <div class="item">
-                                    <div class="imgItem" style="margin:15px;text-align:center;">
-                                        <img {{#size}}style="width:50%;"{{/size}} {{^size}}class="img-fluid"{{/size}} src="/uploads/{{fileName}}"/>
+                                    <div class="imgItem" style="margin:15px;text-align:center;overflow:hidden;height:230px;width:210px;">
+                                        <img {{^size}}class="img-fluid"{{/size}}  {{#size}}style="height:100%;" {{/size}} src="/uploads/{{fileName}}"/>
                                     </div>
                                     <div class="detailItem" style="text-align:center;">
                                         <label style="font-size:12px;color:#b6b4b6;">{{#user}}{{#company}}{{name}}{{/company}}{{/user}}</label><br>

@@ -1,19 +1,24 @@
 package com.wood_product.controller;
 
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import com.wood_product.domain.*;
 import com.wood_product.repos.*;
 import com.wood_product.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.jws.soap.SOAPBinding;
+import javax.persistence.GeneratedValue;
 import javax.swing.*;
 import java.awt.*;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +39,10 @@ public class ShopperController {
     private PersonalInformationRepository personalInformationRepository;
     @Autowired
     private ShoppingCartRepository shoppingCartRepository;
+    @Autowired
+    private CompanyRepository companyRepository;
+    @Autowired
+    private ShoppingRepository shoppingRepository;
     //Product management
     @GetMapping("/productList")
     public String productList(Model model, @RequestParam String categoryName){
@@ -93,8 +102,7 @@ public class ShopperController {
         }else {
             model.addAttribute("numberProduct","Є товари");
         }
-        Map<String,Object> orderDetails=new HashMap<String,Object>();
-
+        model.addAttribute("orderDetails",shoppingCartRepository.findByUser());
         return "shoppingCart";
     }
 
@@ -113,6 +121,41 @@ public class ShopperController {
         shoppingCart.setUser(userService.currentUser());
         shoppingCart.setTotal(count*item.getPrice());
         shoppingCartRepository.save(shoppingCart);
+        return "redirect:/shoppingCart";
+    }
+
+    @GetMapping("/payProduct")
+    public String payProduct(Model model, @RequestParam String companyName){
+        model.addAttribute("nameUser", userService.GetUserName());
+        model.addAttribute("categories",categoryRepository.findAll());
+        model.addAttribute("companyName",companyName);
+        Iterable<ShoppingCart> itemInCart=shoppingCartRepository.findByUser(userService.currentUser());
+        model.addAttribute("itemsInCart",itemInCart);
+        if(!itemInCart.iterator().hasNext()){
+            model.addAttribute("numberProduct",false);
+        }else {
+            model.addAttribute("numberProduct","Є товари");
+        }
+        return "payProduct";
+    }
+
+    @Transactional
+    @PostMapping("/deleteAfterPay")
+    public String deleteProductWithCart(@RequestParam String companyName){
+        Iterable<ShoppingCart> shoppingCarts=shoppingCartRepository.findByCompany(companyName);
+        for (ShoppingCart shoppingCart:shoppingCarts) {
+            Shopping shopping=new Shopping();
+            shopping.setItem(shoppingCart.getItem());
+            shopping.setUser(shoppingCart.getUser());
+            shopping.setQuantity(shoppingCart.getQuantity());
+            shopping.setTotal(shoppingCart.getTotal()/2);
+            Date currentDate=new Date();
+            shopping.setShopDate(currentDate);
+            shoppingRepository.save(shopping);
+            Items item=shoppingCart.getItem();
+            item.setCount(item.getCount()-shoppingCart.getQuantity());
+        }
+        shoppingCartRepository.deleteAll(shoppingCarts);
         return "redirect:/shoppingCart";
     }
     //Personal information management
@@ -197,9 +240,18 @@ public class ShopperController {
     }
 
 
-    @GetMapping("/greeting")
-    public String greeting(){
-
-        return "greeting";
+    @GetMapping("/shopperShopHistory")
+    public String viewShopHistory(Model model){
+        model.addAttribute("nameUser", userService.GetUserName());
+        model.addAttribute("categories",categoryRepository.findAll());
+        Iterable<ShoppingCart> itemInCart=shoppingCartRepository.findByUser(userService.currentUser());
+        model.addAttribute("itemsInCart",itemInCart);
+        if(!itemInCart.iterator().hasNext()){
+            model.addAttribute("numberProduct",false);
+        }else {
+            model.addAttribute("numberProduct","Є товари");
+        }
+        model.addAttribute("shopItems",shoppingRepository.findByUser(userService.currentUser()));
+        return "shopperShopHistory";
     }
 }

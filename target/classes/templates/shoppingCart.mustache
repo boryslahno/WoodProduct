@@ -241,7 +241,7 @@
                     {{/categories}}
                 </ul>
             </li>
-            <li><a href="#">Історія покупок</a></li>
+            <li><a href="/shopperShopHistory">Історія покупок</a></li>
         </ul>
     </nav>
     <!--Navbar-->
@@ -352,7 +352,7 @@
                                 </table>
                     </div>
                     <div style="display:inline-block;vertical-align:top;">
-                        {{^orderDetais}}
+                        {{^orderDetails}}
                             <div class="orderSummary">
                                 <label style="margin-bottom:-10px;margin-top:20px;margin-left:20px;color:#6c757d;"><b>ПІДСУМОК ЗАМОВЛЕННЯ</b></label><br>
                                 <hr>
@@ -360,27 +360,28 @@
                                 <hr>
                                 <pre><label style="margin-left:30px;color:#6c757d;font-size:16px;"><b>До оплати:              ₴0</b></label></pre>
                                 <div style="margin-left:80px;margin-bottom:10px;">
-                                    <form action="/greeting" method="get">
-                                        <button class="pay" type="submit">Оплатити</button>
+                                    <form action="/payProduct" method="get">
+                                        <button class="pay" disabled type="submit">Оплатити</button>
                                     </form>
                                 </div>
                             </div>
-                        {{/orderDetais}}
-                        {{#orderDetais}}
+                        {{/orderDetails}}
+                        {{#orderDetails}}
                             <div class="orderSummary">
                                 <label style="margin-bottom:-10px;margin-top:20px;margin-left:20px;color:#6c757d;"><b>ПІДСУМОК ЗАМОВЛЕННЯ</b></label><br>
-                                <label style="margin-bottom:-10px;margin-left:20px;color:#6c757d;font-size:12px;">виробник: Truton Intertainment</label>
+                                <label style="margin-bottom:-10px;margin-left:20px;color:#6c757d;font-size:12px;">виробник: {{companyName}}</label>
                                 <hr>
-                                <pre><label style="margin-left:30px;color:#6c757d;font-size:16px;">Загальна сума:          ₴20000</label></pre>
+                                <pre><label style="margin-left:30px;color:#6c757d;font-size:16px;">Загальна сума:         ₴{{total}}</label></pre>
                                 <hr>
-                                <pre><label style="margin-left:30px;color:#6c757d;font-size:16px;"><b>До оплати:              ₴10000</b></label></pre>
+                                <pre><label style="margin-left:30px;color:#6c757d;font-size:16px;"><b>До оплати:             ₴{{toPay}}</b></label></pre>
                                 <div style="margin-left:80px;margin-bottom:10px;">
-                                    <form action="#" method="post">
+                                    <form action="/payProduct" method="get">
+                                        <input type="hidden" name="companyName" value="{{companyName}}">
                                         <button class="pay" type="submit">Оплатити</button>
                                     </form>
                                 </div>
                             </div>
-                        {{/orderDetais}}
+                        {{/orderDetails}}
                     </div>
 
                 </div>

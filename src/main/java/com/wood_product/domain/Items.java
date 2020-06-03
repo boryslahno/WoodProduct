@@ -7,7 +7,7 @@ import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.Set;
 
-@Entity
+@Entity(name = "items")
 @Table(name = "items")
 public class Items {
     @Id
@@ -35,6 +35,8 @@ public class Items {
     private Set<FilterOptions> filterOptions;
     @OneToOne(mappedBy = "item", fetch = FetchType.EAGER,cascade = CascadeType.REMOVE)
     private ShoppingCart shoppingCart;
+    @OneToMany(mappedBy = "item",fetch = FetchType.EAGER,cascade = CascadeType.REMOVE)
+    private Set<Shopping> shoppings;
     @NotNull
     private String fileName;
     @Transient
@@ -134,5 +136,13 @@ public class Items {
 
     public void setShoppingCart(ShoppingCart shoppingCart) {
         this.shoppingCart = shoppingCart;
+    }
+
+    public Set<Shopping> getShoppings() {
+        return shoppings;
+    }
+
+    public void setShoppings(Set<Shopping> shoppings) {
+        this.shoppings = shoppings;
     }
 }
