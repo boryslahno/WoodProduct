@@ -6,7 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-@Entity
+@Entity(name ="filter_options")
 @Table(name = "filter_options")
 public class FilterOptions {
     @Id

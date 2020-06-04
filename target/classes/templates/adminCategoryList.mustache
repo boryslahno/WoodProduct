@@ -268,11 +268,14 @@
             </nav></div>
         </div>
         <div style="background-color:white;margin-top:15px;margin-right:20px;box-shadow: 0 0.5px 0.5px 0 rgba(0,0,0,0.2), 0 0.5px 0.5px 0 rgba(0,0,0,0.19);">
+            <form action="/addCategory" method="get">
             <button class="addCategory"
                     data-toggle="popover" data-trigger="hover" title=""
                     data-content="Натисніть щоб додати нову категорію товару">
                 <img src="/image/plus.png" style="width:14px;height:14px;margin-right:5px;margin-bottom:2px;"/>Категорія</button>
+            </form>
             <!--Modal-->
+            {{#addCategory}}
             <div id="addCategory-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -280,11 +283,24 @@
                             <h4 class="modal-title" id="standard-modalLabel">Додавання категорії</h4>
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                         </div>
-                        <form action="/adminCategoryList" method="post">
+                        <form action="/addCategory" method="post">
                             <div class="modal-body">
                                 <div class="form-group col-md-10" align="left">
                                     <label style="color:#696969">Назва категорії</label>
-                                    <input type="text" name="name" class="form-control" placeholder="Введіть назву категорії"/>
+                                    <input type="text" name="name" class="form-control
+                                     {{#errors}}
+                                        {{#nameLengthError}}is-invalid{{/nameLengthError}}
+                                        {{#nameEmptyError}}is-invalid{{/nameEmptyError}}
+                                        {{#existsError}}is-invalid{{/existsError}}
+                                    {{/errors}}" placeholder="Введіть назву категорії"
+                                    value="{{#errors}}{{#formData}}{{name}}{{/formData}}{{/errors}}"/>
+                                    {{#errors}}
+                                        <div class="invalid-feedback">
+                                            {{#existsError}}{{existsError}}{{/existsError}}
+                                            {{#nameLengthError}}{{nameLengthError}}{{/nameLengthError}}
+                                            {{#nameEmptyError}}{{nameEmptyError}}{{/nameEmptyError}}
+                                        </div>
+                                    {{/errors}}
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -296,6 +312,7 @@
                     </div><!-- /.modal-content -->
                 </div><!-- /.modal-dialog -->
             </div><!-- /.modal -->
+            {{/addCategory}}
             {{#categoryEdit}}
                 <div id="categoryManipulate-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
                     <div class="modal-dialog">
@@ -308,7 +325,20 @@
                                 <div class="modal-body">
                                     <div class="form-group col-md-10" align="left">
                                         <label style="color:#696969"> Назва категорії</label>
-                                        <input type="text" class="form-control" name="name" value="{{name}}">
+                                        <input type="text" name="name" class="form-control
+                                     {{#errors}}
+                                            {{#nameLengthError}}is-invalid{{/nameLengthError}}
+                                            {{#nameEmptyError}}is-invalid{{/nameEmptyError}}
+                                            {{#existsError}}is-invalid{{/existsError}}
+                                        {{/errors}}" placeholder="Введіть назву категорії"
+                                               value="{{^errors}}{{name}}{{/errors}}{{#errors}}{{#formData}}{{name}}{{/formData}}{{/errors}}"/>
+                                        {{#errors}}
+                                            <div class="invalid-feedback">
+                                                {{#existsError}}{{existsError}}{{/existsError}}
+                                                {{#nameLengthError}}{{nameLengthError}}{{/nameLengthError}}
+                                                {{#nameEmptyError}}{{nameEmptyError}}{{/nameEmptyError}}
+                                            </div>
+                                        {{/errors}}
                                     </div>
                                 </div>
                                 <div class="modal-footer">
@@ -344,7 +374,7 @@
                 </div><!-- /.modal -->
             {{/deleteCategory}}
             <!--Notification-->
-            {{#addCategory}}
+            {{#addCategorySuccess}}
                 <div class="toast"style="position: absolute; top: 20px; right: 20px;min-width:200px;background-color:#02d098;">
                     <div class="toast-header" style="background-color:#02d098;">
                         <img src="/image/tree_icon.png" class="rounded mr-2" alt="Tree"style="width:20px;height:20px;">
@@ -354,24 +384,10 @@
                         </button>
                     </div>
                     <div class="toast-body" style="color:white;">
-                        {{addCategory}}
+                        {{addCategorySuccess}}
                     </div>
                 </div>
-            {{/addCategory}}
-            {{#exists}}
-                <div class="toast"style="position: absolute; top: 20px; right: 20px;min-width:200px;background-color:#fa5c7d;">
-                    <div class="toast-header" style="background-color:#fa5c7d;">
-                        <img src="/image/tree_icon.png" class="rounded mr-2" alt="Tree"style="width:20px;height:20px;">
-                        <strong class="mr-auto" style="color:white;">Wodden products</strong>
-                        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="toast-body" style="color:white;">
-                        {{exists}}
-                    </div>
-                </div>
-            {{/exists}}
+            {{/addCategorySuccess}}
             {{#updateCategory}}
                 <div class="toast"style="position: absolute; top: 20px; right: 20px;min-width:200px;background-color:#02d098;">
                     <div class="toast-header" style="background-color:#02d098;">
@@ -504,13 +520,12 @@ $(document).ready(function () {
     $('#categoryManipulate-modal').modal('show');
 });
 </script>
-<!--View modal and popover-->
 <script>
-    $('.addCategory').click(function () {
-     $('#addCategory-modal').modal('show');
-     $('[data-toggle="popover"]').popover('hide');
+$(document).ready(function () {
+    $('#addCategory-modal').modal('show');
 });
 </script>
+
 <!--View popover-->
 <script>
 $(document).ready(function () {

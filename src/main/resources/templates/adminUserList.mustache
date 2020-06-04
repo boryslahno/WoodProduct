@@ -268,12 +268,15 @@
             </nav></div>
         </div>
         <div style="background-color:white;margin-top:15px;margin-right:20px;box-shadow: 0 0.5px 0.5px 0 rgba(0,0,0,0.2), 0 0.5px 0.5px 0 rgba(0,0,0,0.19);">
-            <button class="addAdmin"
+            <form action="/addAdmin" method="get">
+            <button type="submit" class="addAdmin"
                     data-toggle="popover" data-trigger="hover" title=""
                     data-content="Натисніть щоб додати нового адміністратора">
                 <img src="/image/plus.png" style="width:14px;height:14px;margin-right:5px;margin-bottom:2px;"/>Адміністратор</button>
+            </form>
             <!--Modal-->
-            <div id="addAdmin-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
+            {{#addAdmin}}
+                <div id="addAdmin-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -284,11 +287,26 @@
                         <div class="modal-body">
                             <div class="form-group col-md-10" align="left">
                                 <label style="color:#696969"> Електронна пошта</label>
-                                <input type="email" name="username" class="form-control" placeholder="example@gmail.com"/>
+                                <input required type="email" name="username" class="form-control {{#errors}}{{#existsError}}is-invalid{{/existsError}}{{/errors}}" placeholder="example@gmail.com" value="{{#errors}}{{#user}}{{username}}{{/user}}{{/errors}}"/>
+                                {{#errors}}
+                                    {{#existsError}}
+                                        <div class="invalid-feedback">
+                                            {{existsError}}
+                                        </div>
+                                    {{/existsError}}
+                                {{/errors}}
                             </div>
                             <div class="form-group col-md-10" align="left">
                                 <label style="color:#696969"> Пароль</label>
-                                <input type="password" name="password" class="form-control" placeholder="Введіть пароль"/>
+                                <input type="password" name="password" class="form-control
+                                {{#errors}}{{#passwordLengthError}}is-invalid{{/passwordLengthError}}{{/errors}}" placeholder="Введіть пароль" value="{{#errors}}{{#user}}{{password}}{{/user}}{{/errors}}"/>
+                                {{#errors}}
+                                    {{#passwordLengthError}}
+                                        <div class="invalid-feedback">
+                                            {{passwordLengthError}}
+                                        </div>
+                                    {{/passwordLengthError}}
+                                {{/errors}}
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -300,39 +318,7 @@
                     </div><!-- /.modal-content -->
                 </div><!-- /.modal-dialog -->
             </div><!-- /.modal -->
-            {{#sellerPerInfo}}
-                <div id="userManipulate-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title" id="standard-modalLabel">Особиста інформація</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        </div>
-                        <form action="/adminUserList/seller/edit" method="post">
-                            <div class="modal-body">
-                                <div class="form-group col-md-10" align="left">
-                                    <label style="color:#696969"> Назва компанії</label>
-                                    <input type="text" class="form-control" name="name" value="{{name}}">
-                                </div>
-                                <div class="form-group col-md-10" align="left">
-                                    <label style="color:#696969"> Адресса компанії</label>
-                                    <input type="text" class="form-control" name="address" value="{{address}}">
-                                </div>
-                                <div class="form-group col-md-10" align="left">
-                                    <label style="color:#696969"> Номер телефону</label>
-                                    <input type="text" class="form-control" name="phoneNumber" value="{{phoneNumber}}">
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" id="ex" class="btn btn-light" data-dismiss="modal">Закрити</button>
-                                <input id="createAdmin" type="submit" class="btn btn-primary" value="Змінити"/>
-                                <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
-                            </div>
-                        </form>
-                    </div><!-- /.modal-content -->
-                </div><!-- /.modal-dialog -->
-            </div><!-- /.modal -->
-                        {{/sellerPerInfo}}
+            {{/addAdmin}}
             {{#shopperPerInf}}
                 <div id="userManipulate-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
                     <div class="modal-dialog">
@@ -342,34 +328,142 @@
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                             </div>
                             <form action="/adminUserList/shopper/edit" method="post">
-                            <div class="modal-body">
-                                <div class="form-group col-md-10" align="left">
-                                    <label style="color:#696969"> Ім'я</label>
-                                    <input type="text" class="form-control" name="name" value="{{name}}">
+                                <div class="modal-body">
+                                    <div class="form-group col-md-10" align="left">
+                                        <label style="color:#696969"> Ім'я</label>
+                                        <input type="text" class="form-control
+                                    {{#errors}}
+                                            {{#nameLengthError}}is-invalid{{/nameLengthError}}
+                                            {{#nameEmptyError}}is-invalid{{/nameEmptyError}}
+                                        {{/errors}}" name="name"
+                                               value="{{^errors}}{{name}}{{/errors}}{{#errors}}{{#formData}}{{name}}{{/formData}}{{/errors}}">
+                                        {{#errors}}
+                                            <div class="invalid-feedback">
+                                                {{#nameLengthError}}{{nameLengthError}}{{/nameLengthError}}
+                                                {{#nameEmptyError}}{{nameEmptyError}}{{/nameEmptyError}}
+                                            </div>
+                                        {{/errors}}
+                                    </div>
+                                    <div class="form-group col-md-10" align="left">
+                                        <label style="color:#696969"> Прізвище</label>
+                                        <input type="text" class="form-control
+                                    {{#errors}}
+                                            {{#surnameLengthError}}is-invalid{{/surnameLengthError}}
+                                            {{#surnameEmptyError}}is-invalid{{/surnameEmptyError}}
+                                        {{/errors}}" name="surname"
+                                               value="{{^errors}}{{surname}}{{/errors}} {{#errors}}{{#formData}}{{surname}}{{/formData}}{{/errors}}">
+                                        {{#errors}}
+                                            <div class="invalid-feedback">
+                                                {{#surnameLengthError}}{{surnameLengthError}}{{/surnameLengthError}}
+                                                {{#surnameEmptyError}}{{surnameEmptyError}}{{/surnameEmptyError}}
+                                            </div>
+                                        {{/errors}}
+                                    </div>
+                                    <div class="form-group col-md-10" align="left">
+                                        <label style="color:#696969"> Адресса</label>
+                                        <input type="text" class="form-control{{#errors}}
+                                            {{#addressLengthError}}is-invalid{{/addressLengthError}}
+                                            {{#addressEmptyError}}is-invalid{{/addressEmptyError}}
+                                        {{/errors}}" name="address"
+                                               value="{{^errors}}{{address}}{{/errors}} {{#errors}}{{#formData}}{{address}}{{/formData}}{{/errors}}">
+                                        {{#errors}}
+                                            <div class="invalid-feedback">
+                                                {{#addressLengthError}}{{addressLengthError}}{{/addressLengthError}}
+                                                {{#addressEmptyError}}{{addressEmptyError}}{{/addressEmptyError}}
+                                            </div>
+                                        {{/errors}}
+                                    </div>
+                                    <div class="form-group col-md-10" align="left">
+                                        <label style="color:#696969"> Номер телефону</label>
+                                        <input type="text" class="form-control
+                                    {{#errors}}
+                                            {{#phoneLengthError}}is-invalid{{/phoneLengthError}}
+                                            {{#phoneEmptyError}}is-invalid{{/phoneEmptyError}}
+                                        {{/errors}}" name="phoneNumber"
+                                               value="{{^errors}}{{phoneNumber}}{{/errors}} {{#errors}}{{#formData}}{{phoneNumber}}{{/formData}}{{/errors}}">
+                                        {{#errors}}
+                                            <div class="invalid-feedback">
+                                                {{#phoneLengthError}}{{phoneLengthError}}{{/phoneLengthError}}
+                                                {{#phoneEmptyError}}{{phoneEmptyError}}{{/phoneEmptyError}}
+                                            </div>
+                                        {{/errors}}
+                                    </div>
                                 </div>
-                                <div class="form-group col-md-10" align="left">
-                                    <label style="color:#696969"> Прізвище</label>
-                                    <input type="text" class="form-control" name="surname" value="{{surname}}">
+                                <div class="modal-footer">
+                                    <button type="button" id="ex" class="btn btn-light" data-dismiss="modal">Закрити</button>
+                                    <input id="createAdmin" type="submit" class="btn btn-primary" value="Змінити"/>
+                                    <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
                                 </div>
-                                <div class="form-group col-md-10" align="left">
-                                    <label style="color:#696969"> Адресса</label>
-                                    <input type="text" class="form-control" name="address" value="{{address}}">
-                                </div>
-                                <div class="form-group col-md-10" align="left">
-                                    <label style="color:#696969"> Номер телефону</label>
-                                    <input type="text" class="form-control" name="phoneNumber" value="{{phoneNumber}}">
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" id="ex" class="btn btn-light" data-dismiss="modal">Закрити</button>
-                                <input id="createAdmin" type="submit" class="btn btn-primary" value="Змінити"/>
-                                <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
-                            </div>
                             </form>
                         </div><!-- /.modal-content -->
                     </div><!-- /.modal-dialog -->
                 </div><!-- /.modal -->
             {{/shopperPerInf}}
+            {{#sellerPerInfo}}
+                <div id="userManipulate-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="standard-modalLabel">Особиста інформація</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            </div>
+                            <form action="/adminUserList/seller/edit" method="post">
+                                <div class="modal-body">
+                                    <div class="form-group col-md-10" align="left">
+                                        <label style="color:#696969"> Ім'я</label>
+                                        <input type="text" class="form-control
+                                    {{#errors}}
+                                            {{#nameLengthError}}is-invalid{{/nameLengthError}}
+                                            {{#nameEmptyError}}is-invalid{{/nameEmptyError}}
+                                        {{/errors}}" name="name"
+                                               value="{{^errors}}{{name}}{{/errors}}{{#errors}}{{#formData}}{{name}}{{/formData}}{{/errors}}">
+                                        {{#errors}}
+                                            <div class="invalid-feedback">
+                                                {{#nameLengthError}}{{nameLengthError}}{{/nameLengthError}}
+                                                {{#nameEmptyError}}{{nameEmptyError}}{{/nameEmptyError}}
+                                            </div>
+                                        {{/errors}}
+                                    </div>
+                                    <div class="form-group col-md-10" align="left">
+                                        <label style="color:#696969"> Адресса</label>
+                                        <input type="text" class="form-control{{#errors}}
+                                            {{#addressLengthError}}is-invalid{{/addressLengthError}}
+                                            {{#addressEmptyError}}is-invalid{{/addressEmptyError}}
+                                        {{/errors}}" name="address"
+                                               value="{{^errors}}{{address}}{{/errors}} {{#errors}}{{#formData}}{{address}}{{/formData}}{{/errors}}">
+                                        {{#errors}}
+                                            <div class="invalid-feedback">
+                                                {{#addressLengthError}}{{addressLengthError}}{{/addressLengthError}}
+                                                {{#addressEmptyError}}{{addressEmptyError}}{{/addressEmptyError}}
+                                            </div>
+                                        {{/errors}}
+                                    </div>
+                                    <div class="form-group col-md-10" align="left">
+                                        <label style="color:#696969"> Номер телефону</label>
+                                        <input type="text" class="form-control
+                                    {{#errors}}
+                                            {{#phoneLengthError}}is-invalid{{/phoneLengthError}}
+                                            {{#phoneEmptyError}}is-invalid{{/phoneEmptyError}}
+                                        {{/errors}}" name="phoneNumber"
+                                               value="{{^errors}}{{phoneNumber}}{{/errors}} {{#errors}}{{#formData}}{{phoneNumber}}{{/formData}}{{/errors}}">
+                                        {{#errors}}
+                                            <div class="invalid-feedback">
+                                                {{#phoneLengthError}}{{phoneLengthError}}{{/phoneLengthError}}
+                                                {{#phoneEmptyError}}{{phoneEmptyError}}{{/phoneEmptyError}}
+                                            </div>
+                                        {{/errors}}
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" id="ex" class="btn btn-light" data-dismiss="modal">Закрити</button>
+                                    <input id="createAdmin" type="submit" class="btn btn-primary" value="Змінити"/>
+                                    <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
+                                </div>
+                            </form>
+                        </div><!-- /.modal-content -->
+                    </div><!-- /.modal-dialog -->
+                </div><!-- /.modal -->
+            {{/sellerPerInfo}}
             {{#adminPerInfo}}
                 <div id="userManipulate-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
                     <div class="modal-dialog">
@@ -415,7 +509,7 @@
                 </div><!-- /.modal -->
             {{/deleteUser}}
             <!--Notification-->
-            {{#addAdmin}}
+            {{#addAdminSuccess}}
             <div class="toast"style="position: absolute; top: 20px; right: 20px;min-width:200px;background-color:#02d098;">
                 <div class="toast-header" style="background-color:#02d098;">
                     <img src="/image/tree_icon.png" class="rounded mr-2" alt="Tree"style="width:20px;height:20px;">
@@ -425,24 +519,10 @@
                     </button>
                 </div>
                 <div class="toast-body" style="color:white;">
-                    {{addAdmin}}
+                    {{addAdminSuccess}}
                 </div>
             </div>
-           {{/addAdmin}}
-            {{#exists}}
-                <div class="toast"style="position: absolute; top: 20px; right: 20px;min-width:200px;background-color:#fa5c7d;">
-                    <div class="toast-header" style="background-color:#fa5c7d;">
-                        <img src="/image/tree_icon.png" class="rounded mr-2" alt="Tree"style="width:20px;height:20px;">
-                        <strong class="mr-auto" style="color:white;">Wodden products</strong>
-                        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="toast-body" style="color:white;">
-                        {{exists}}
-                    </div>
-                </div>
-            {{/exists}}
+           {{/addAdminSuccess}}
             {{#updateSeller}}
             <div class="toast"style="position: absolute; top: 20px; right: 20px;min-width:200px;background-color:#02d098;">
                 <div class="toast-header" style="background-color:#02d098;">
@@ -593,13 +673,18 @@ $(document).ready(function () {
     $('#userManipulate-modal').modal('show');
 });
 </script>
-<!--View modal and popover-->
 <script>
+$(document).ready(function () {
+    $('#addAdmin-modal').modal('show');
+});
+</script>
+<!--View modal and popover-->
+<!--<script>
     $('.addAdmin').click(function () {
      $('#addAdmin-modal').modal('show');
      $('[data-toggle="popover"]').popover('hide');
 });
-</script>
+</script>-->
 <!--View popover-->
 <script>
 $(document).ready(function () {

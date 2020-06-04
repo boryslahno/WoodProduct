@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,10 +22,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.jws.WebParam;
 import javax.swing.*;
+import javax.validation.Valid;
 import java.awt.*;
 import java.io.File;
 import java.util.*;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @Controller
 public class AdministratorController {
@@ -59,69 +64,156 @@ public class AdministratorController {
         return "adminUserList";
     }
 
+    @GetMapping("/addAdmin")
+    public String viewAddAdmin(RedirectAttributes redirectAttributes){ ;
+        redirectAttributes.addFlashAttribute("addAdmin",true);
+        return "redirect:/adminUserList";
+    }
+
     @PostMapping("/adminUserList")
     public String addAdmin(Users user, RedirectAttributes redirectAttributes) {
         Users userFromDB = userRepository.findByUsername(user.getUsername());
+        Map<String,String> errors=new HashMap<>();
+        user.setPassword(user.getPassword().replaceAll(" ",""));
+        if(user.getPassword().length()<7){
+            errors.put("passwordLengthError","Пароль повинен містити мінімум 6 символів");
+        }
         if (userFromDB != null) {
-            redirectAttributes.addFlashAttribute("exists", "Користувач з такою електронною поштою вже існує");
-        } else {
+            errors.put("existsError", "Користувач з такою електронною поштою вже існує");
+        }
+        if(!errors.isEmpty()){
+            redirectAttributes.addFlashAttribute("addAdmin",true);
+            redirectAttributes.addFlashAttribute("errors",errors);
+            redirectAttributes.addFlashAttribute("user",user);
+        }else
+        {
             user.setRoles(Collections.singleton(Role.Адміністратор));
             Date currentDate=new Date();
             user.setRegisterDate(currentDate);
             userRepository.save(user);
-            redirectAttributes.addFlashAttribute("addAdmin", "Адміністратор успішно доданий");
+            redirectAttributes.addFlashAttribute("addAdminSuccess", "Адміністратор успішно доданий");
         }
         return "redirect:/adminUserList";
     }
 
     @GetMapping("/adminUserList/users")
-    public String reviewUser(@RequestParam Long userID, Model model) {
+    public String reviewUser(@RequestParam Long userID, RedirectAttributes redirectAttributes) {
         IDUser = userID;
         String role = userService.GetUserRole(userID);
         if (role == "Продавець") {
-            model.addAttribute("sellerPerInfo", userService.loadCompanyInfo(userID));
-            model.addAttribute("shopperPerInf", null);
-            model.addAttribute("adminPerInfo", null);
+            redirectAttributes.addFlashAttribute("sellerPerInfo", userService.loadCompanyInfo(userID));
+            redirectAttributes.addFlashAttribute("shopperPerInf", null);
+            redirectAttributes.addFlashAttribute("adminPerInfo", null);
         } else if (role == "Покупець") {
-            model.addAttribute("sellerPerInfo", null);
-            model.addAttribute("shopperPerInf", userService.loadPersonalInfo(userID));
-            model.addAttribute("adminPerInfo", null);
+            redirectAttributes.addFlashAttribute("sellerPerInfo", null);
+            redirectAttributes.addFlashAttribute("shopperPerInf", userService.loadPersonalInfo(userID));
+            redirectAttributes.addFlashAttribute("adminPerInfo", null);
         } else {
-            model.addAttribute("sellerPerInfo", null);
-            model.addAttribute("shopperPerInf", null);
-            model.addAttribute("adminPerInfo", "Особиста інформація відсутня");
+            redirectAttributes.addFlashAttribute("sellerPerInfo", null);
+            redirectAttributes.addFlashAttribute("shopperPerInf", null);
+            redirectAttributes.addFlashAttribute("adminPerInfo", "Особиста інформація відсутня");
         }
-        model.addAttribute("nameUser", userService.GetUserName());
-        model.addAttribute("users", userService.loadAllUsers());
-        return "adminUserList";
+        return "redirect:/adminUserList";
     }
 
     @PostMapping("/adminUserList/seller/edit")
     public String editUser(@RequestParam String name, @RequestParam String address,
                            @RequestParam String phoneNumber, RedirectAttributes redirectAttributes) {
-        Optional<Users> users = userRepository.findById(IDUser);
-        Users user = users.get();
-        Company company = user.getCompany();
-        company.setName(name);
-        company.setAddress(address);
-        company.setPhoneNumber(phoneNumber);
-        companyRepository.save(company);
-        redirectAttributes.addFlashAttribute("updateSeller", "Особиста інформація продавця успішно оновлена");
+        Map<String,String> errors=new HashMap<>();
+        name=name.replaceAll(" ","");
+        if(name.length()>71){
+            errors.put("nameLengthError","Ім'я занадто довге");
+        }
+        if(name.equals("")){
+            errors.put("nameEmptyError","Поле ім'я не може бути порожнім");
+        }
+        address=address.replaceAll(" ","");
+        if(address.length()>301){
+            errors.put("addressLengthError","Адреса занадто довга");
+        }
+        if(address.equals("")){
+            errors.put("addressEmptyError","Поле адреса не може бути порожнім");
+        }
+        phoneNumber=phoneNumber.replaceAll(" ","");
+        if(phoneNumber.length()>16){
+            errors.put("phoneLengthError","Номер телефону занадто довгий");
+        }
+        if(phoneNumber.equals("")){
+            errors.put("phoneEmptyError","Поле номер телефону не може бути порожнім");
+        }
+        if(!errors.isEmpty()){
+            Map<String,String> formData=new HashMap<>();
+            formData.put("name",name);
+            formData.put("address",address);
+            formData.put("phoneNumber",phoneNumber);
+            redirectAttributes.addFlashAttribute("errors",errors);
+            redirectAttributes.addFlashAttribute("formData",formData);
+            redirectAttributes.addFlashAttribute("sellerPerInfo", userService.loadCompanyInfo(IDUser));
+        }else {
+            Optional<Users> users = userRepository.findById(IDUser);
+            Users user = users.get();
+            Company company = user.getCompany();
+            company.setName(name);
+            company.setAddress(address);
+            company.setPhoneNumber(phoneNumber);
+            companyRepository.save(company);
+            redirectAttributes.addFlashAttribute("updateSeller", "Особиста інформація продавця успішно оновлена");
+        }
         return "redirect:/adminUserList";
     }
 
     @PostMapping("/adminUserList/shopper/edit")
     public String editUser(@RequestParam String name, @RequestParam String surname,
                            @RequestParam String address, @RequestParam String phoneNumber, RedirectAttributes redirectAttributes) {
-        Optional<Users> users = userRepository.findById(IDUser);
-        Users user = users.get();
-        PersonalInformation personalInformation = user.getPersonalInformation();
-        personalInformation.setName(name);
-        personalInformation.setSurname(surname);
-        personalInformation.setAddress(address);
-        personalInformation.setPhoneNumber(phoneNumber);
-        personalInformationRepository.save(personalInformation);
-        redirectAttributes.addFlashAttribute("updateShopper", "Особиста інформація покупця успішно оновлена");
+        Map<String,String> errors=new HashMap<>();
+        name=name.replaceAll(" ","");
+        if(name.length()>51){
+            errors.put("nameLengthError","Ім'я занадто довге");
+        }
+        if(name.equals("")){
+            errors.put("nameEmptyError","Поле ім'я не може бути порожнім");
+        }
+        surname=surname.replaceAll(" ","");
+        if(surname.length()>51){
+            errors.put("surnameLengthError","Прізвище занадто довге");
+        }
+        if(surname.equals("")){
+            errors.put("surnameEmptyError","Поле прізвище не може бути порожнім");
+        }
+        address=address.replaceAll(" ","");
+        if(address.length()>301){
+            errors.put("addressLengthError","Адреса занадто довга");
+        }
+        if(address.equals("")){
+            errors.put("addressEmptyError","Поле адреса не може бути порожнім");
+        }
+        phoneNumber=phoneNumber.replaceAll(" ","");
+        if(phoneNumber.length()>16){
+            errors.put("phoneLengthError","Номер телефону занадто довгий");
+        }
+        if(phoneNumber.equals("")){
+            errors.put("phoneEmptyError","Поле номер телефону не може бути порожнім");
+        }
+        if(!errors.isEmpty()){
+            Map<String,String> formData=new HashMap<>();
+            formData.put("name",name);
+            formData.put("surname",surname);
+            formData.put("address",address);
+            formData.put("phoneNumber",phoneNumber);
+            redirectAttributes.addFlashAttribute("errors",errors);
+            redirectAttributes.addFlashAttribute("formData",formData);
+            redirectAttributes.addFlashAttribute("shopperPerInf", userService.loadPersonalInfo(IDUser));
+        }else {
+            Optional<Users> users = userRepository.findById(IDUser);
+            Users user = users.get();
+            PersonalInformation personalInformation = user.getPersonalInformation();
+            personalInformation.setName(name);
+            personalInformation.setSurname(surname);
+            personalInformation.setAddress(address);
+            personalInformation.setPhoneNumber(phoneNumber);
+            personalInformationRepository.save(personalInformation);
+            redirectAttributes.addFlashAttribute("updateShopper", "Особиста інформація покупця успішно оновлена");
+        }
         return "redirect:/adminUserList";
     }
 
@@ -151,33 +243,67 @@ public class AdministratorController {
         return "adminCategoryList";
     }
 
-    @PostMapping("/adminCategoryList")
-    public String addCategory(Categories cetegory, RedirectAttributes redirectAttributes) {
-        Categories categories = categoryRepository.findByName(cetegory.getName());
+    @GetMapping("/addCategory")
+    public String viewAddCategory(RedirectAttributes redirectAttributes){
+        redirectAttributes.addFlashAttribute("addCategory",true);
+        return "redirect:/adminCategoryList";
+    }
+
+    @PostMapping("/addCategory")
+    public String addCategory(Categories category, RedirectAttributes redirectAttributes) {
+        Categories categories = categoryRepository.findByName(category.getName());
+        Map<String,String> errors=new HashMap<>();
+        category.setName(category.getName().replaceAll(" ",""));
+        if(category.getName().equals("")){
+            errors.put("nameEmptyError","Назва категорії не може бути порожньою");
+        }
+        if(category.getName().length()>51){
+            errors.put("nameLengthError","Назва категорії занадто довга");
+        }
         if (categories != null) {
-            redirectAttributes.addFlashAttribute("exists", "Категорія з такою назвою вже існує");
-        } else {
-            categoryRepository.save(cetegory);
-            redirectAttributes.addFlashAttribute("addCategory", "Категорія успішно додана");
+            errors.put("existsError", "Категорія з такою назвою вже існує");
+        }
+        if(!errors.isEmpty()){
+            Map<String,String> formData=new HashMap<>();
+            formData.put("name",category.getName());
+            redirectAttributes.addFlashAttribute("errors",errors);
+            redirectAttributes.addFlashAttribute("formData",formData);
+            redirectAttributes.addFlashAttribute("addCategory",true);
+        }else {
+            categoryRepository.save(category);
+            redirectAttributes.addFlashAttribute("addCategorySuccess", "Категорія успішно додана");
         }
         return "redirect:/adminCategoryList";
     }
 
     @GetMapping("/adminCategoryList/edit/category")
-    public String reviewCategory(@RequestParam Long categoryID, Model model) {
+    public String reviewCategory(@RequestParam Long categoryID, RedirectAttributes redirectAttributes) {
         IDCategory = categoryID;
-        model.addAttribute("nameUser", userService.GetUserName());
-        model.addAttribute("categories", categoryService.loadAllCategories());
-        model.addAttribute("categoryEdit", categoryRepository.findById(categoryID).get());
-        return "adminCategoryList";
+        redirectAttributes.addFlashAttribute("categoryEdit", categoryRepository.findById(categoryID).get());
+        return "redirect:/adminCategoryList";
     }
 
     @PostMapping("/adminCategoryList/edit/category")
-    public String editCategory(@RequestParam String name, RedirectAttributes redirectAttributes) {
+    public String editCategory(@RequestParam String name,RedirectAttributes redirectAttributes) {
         Categories categories = categoryRepository.findByName(name);
+        Map<String,String> errors=new HashMap<>();
+        name=name.replaceAll(" ","");
+        if(name.equals("")){
+            errors.put("nameEmptyError","Назва категорії не може бути порожньою");
+        }
+        if(name.length()>51){
+            errors.put("nameLengthError","Назва категорії занадто довга");
+        }
         if (categories != null) {
-            redirectAttributes.addFlashAttribute("exists", "Категорія з такою назвою вже існує");
-        } else {
+            errors.put("existsError", "Категорія з такою назвою вже існує");
+        }
+        if(!errors.isEmpty()){
+            Map<String,String> formData=new HashMap<>();
+            formData.put("name",name);
+            redirectAttributes.addFlashAttribute("errors",errors);
+            redirectAttributes.addFlashAttribute("formData",formData);
+            redirectAttributes.addFlashAttribute("categoryEdit", categoryRepository.findById(IDCategory).get());
+        }else {
             Categories category = categoryRepository.findById(IDCategory).get();
             category.setName(name);
             categoryRepository.save(category);
@@ -272,23 +398,49 @@ public class AdministratorController {
         return "adminFilterList";
     }
 
-    @PostMapping("/adminFilterList")
+    @GetMapping("/addFilter")
+    public String viewAddFilters(RedirectAttributes redirectAttributes){
+        redirectAttributes.addFlashAttribute("addFilter",true);
+        return "redirect:/adminFilterList";
+    }
+
+    @PostMapping("/addFilter")
     public String addFilters(RedirectAttributes redirectAttributes, @RequestParam String filtername, @RequestParam String categoryName) {
         List<Filters> filterFromDB = filterRepository.findByFiltername(filtername);
+        Map<String,String> errors=new HashMap<>();
+        if(categoryName.equals("Категорії")){
+            errors.put("categorySelectError","Категорія не вибрана");
+        }
+        filtername=filtername.replaceAll(" ","");
+        if(filtername.equals("")){
+            errors.put("nameEmptyError","Назва фільтру не може бути порожня");
+        }
+        if(filtername.length()>51){
+            errors.put("nameLengthError","Назва фільру занадто довга");
+        }
         if (!filterFromDB.isEmpty()) {
             if (categoryRepository.findByFilternameAndName(filterRepository.findByFiltername(filtername).get(0).getFiltername(), categoryName) == null) {
                 Categories category = categoryRepository.findByName(categoryName);
                 Filters filter = new Filters(filtername, category);
+                if(errors.isEmpty()){
                 filterRepository.save(filter);
-                redirectAttributes.addFlashAttribute("addFilter", "Фільтер успішно доданий");
+                redirectAttributes.addFlashAttribute("addFilterSuccess", "Фільтер успішно доданий");}
             } else {
-                redirectAttributes.addFlashAttribute("exists", "Даний фільтер вже належить цій категорії товарів");
+                errors.put("existsError", "Даний фільтер вже належить цій категорії товарів");
             }
-        } else {
+        }
+        else if(!errors.isEmpty()){
+            Map<String,String> formData=new HashMap<>();
+            formData.put("filtername",filtername);
+            redirectAttributes.addFlashAttribute("errors",errors);
+            redirectAttributes.addFlashAttribute("formData",formData);
+            redirectAttributes.addFlashAttribute("addFilter",true);
+        }
+        else {
             Categories category = categoryRepository.findByName(categoryName);
             Filters filter = new Filters(filtername, category);
             filterRepository.save(filter);
-            redirectAttributes.addFlashAttribute("addFilter", "Фільтер успішно доданий");
+            redirectAttributes.addFlashAttribute("addFilterSuccess", "Фільтер успішно доданий");
         }
         return "redirect:/adminFilterList";
     }

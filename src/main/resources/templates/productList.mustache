@@ -224,6 +224,28 @@
     .detail:focus{
     outline-color:#737df5;
     }
+
+    .apply{
+    margin-top:20px;
+    margin-left:20px;
+    margin-bottom:20px;
+    color:white;
+    border-radius:5%;
+    border:none;
+    background:#02d098;
+    width:150px;
+    height:40px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 3px 10px 0 rgba(0,0,0,0.19);
+    }
+    .apply:hover{
+    background:#01ad7d;
+    }
+    .apply:active,{
+    outline-color:#02d098;
+    }
+    .apply:focus{
+    outline-color:#02d098;
+    }
     </style>
 </head>
 <body>
@@ -312,7 +334,7 @@
                 </ol>
             </nav></div>
         </div>
-        <!--<button class="Filter"
+        <button class="Filter"
                       data-toggle="collapse" data-target="#filterList"
                       aria-expanded="false" aria-controls="#filterList"
                       onmouseover="showPopover(this);">
@@ -320,13 +342,32 @@
         Фільтри</button>
         <div class="collapse" id="filterList">
             <div style="background-color:white;margin-right:20px;margin-top:10px;box-shadow: 0 1px 1px 0 rgba(0,0,0,0.2), 0 1px 1px 0 rgba(0,0,0,0.19);">
+            <form action="/applyFilter" method="get">
+                <div class="form-group col-md-10" align="left">
+                    <label style="margin-top:20px;color:#696969;font-size:18px;" for="customRange3">Ціна</label><br>
+                    <input style="width:400px;" type="range" value="15000" class="custom-range" min="0" max="50000" step="1000" name="price" id="customRange3" onchange="updateTextInput(this.value);">
+                    <label style="margin-left:10px;margin-top:-10px;color:#696969;font-size:16px;" id="textInput"> 15000</label>
+                </div>
+                <input type="hidden" name="categoryName" value="{{NameCategory}}">
                 {{#filters}}
-                    <form>
-
-                    </form>
+                    <div style="display:inline-block;vertical-align:top;margin-right:20px;width:300px;">
+                        <div class="form-group col-md-10" align="left">
+                            <label style="font-size:18px;color:#696969">{{filterName}}</label>
+                            {{#value}}
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="filterOption" id="exampleRadios1" value="{{#value}}{{value}}{{/value}}">
+                                    <label style="color:#696969;" class="form-check-label" for="exampleRadios1">
+                                        {{#value}}{{value}}{{/value}}
+                                    </label>
+                                </div>
+                            {{/value}}
+                        </div>
+                    </div>
                 {{/filters}}
+                <button class="apply" type="submit">Застосувати</button>
+            </form>
             </div>
-        </div>-->
+        </div>
         <div style="margin-top:5px; background-color:white;margin-right:20px;box-shadow: 0 1px 1px 0 rgba(0,0,0,0.2), 0 1px 1px 0 rgba(0,0,0,0.19);">
                 <div style="margin:30px;margin-top:5px;;padding-top:20px;">
                             {{#items}}
@@ -393,6 +434,11 @@ $(document).ready(function () {
         elements[i].querySelector(".detailItem").style.marginTop=padding+"px";
             }
         });
+</script>
+<script>
+    function updateTextInput(val) {
+          $("#textInput").text(val);
+        }
 </script>
 <!--Setting toast-->
 <script>

@@ -3,6 +3,7 @@ package com.wood_product.controller;
 import com.sun.org.apache.xpath.internal.operations.Mod;
 import com.wood_product.domain.*;
 import com.wood_product.repos.*;
+import com.wood_product.service.FilterValue;
 import com.wood_product.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,12 +17,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.jws.soap.SOAPBinding;
 import javax.persistence.GeneratedValue;
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.swing.*;
 import java.awt.*;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 public class ShopperController {
@@ -43,6 +43,10 @@ public class ShopperController {
     private CompanyRepository companyRepository;
     @Autowired
     private ShoppingRepository shoppingRepository;
+    @Autowired
+    private FilterRepository filterRepository;
+    @Autowired
+    private FilterOptionsRepository filterOptionsRepository;
     //Product management
     @GetMapping("/productList")
     public String productList(Model model, @RequestParam String categoryName){
@@ -66,6 +70,57 @@ public class ShopperController {
         }else {
             model.addAttribute("numberProduct","Є товари");
         }
+        Iterable<Filters> filters=filterRepository.findByCategory(categoryRepository.findByName(categoryName));
+        List<FilterValue> filterValues=new ArrayList<>();
+        for (Filters filter:filters) {
+            FilterValue temp=new FilterValue();
+            temp.setFilterName(filter.getFiltername());
+            temp.setValue(filterOptionsRepository.findByFilterAndCategory(filter,categoryName));
+            filterValues.add(temp);
+        }
+        model.addAttribute("filters",filterValues);
+        return "productList";
+    }
+
+    @GetMapping("/applyFilter")
+    public String applyFilter(Model model, @RequestParam String price, @RequestParam String categoryName, @RequestParam("filterOption")String filterOption){
+        /*String options="";
+        for(int i=0;i<filterOption.length;++i){
+            if(i==filterOption.length-1){
+            options+=filterOption[i];
+            }else{
+                options+=filterOption[i]+" AND value= ";
+            }
+        }*/
+        Iterable<Items> items=itemRepository.findByFilter(filterOption,categoryName,Integer.valueOf(price));
+        for (Items item:items) {
+            Image image=new ImageIcon(uploadPath+item.getFileName()).getImage();
+            if(image.getHeight(null)>300){
+                item.setSize(true);
+            }else{
+                item.setSize(false);
+            }
+        }
+        model.addAttribute("nameUser", userService.GetUserName());
+        model.addAttribute("items",items);
+        model.addAttribute("categories",categoryRepository.findAll());
+        model.addAttribute("NameCategory",categoryName);
+        Iterable<ShoppingCart> itemInCart=shoppingCartRepository.findByUser(userService.currentUser());
+        model.addAttribute("itemsInCart",itemInCart);
+        if(!itemInCart.iterator().hasNext()){
+            model.addAttribute("numberProduct",false);
+        }else {
+            model.addAttribute("numberProduct","Є товари");
+        }
+        Iterable<Filters> filters=filterRepository.findByCategory(categoryRepository.findByName(categoryName));
+        List<FilterValue> filterValues=new ArrayList<>();
+        for (Filters filter:filters) {
+            FilterValue temp=new FilterValue();
+            temp.setFilterName(filter.getFiltername());
+            temp.setValue(filterOptionsRepository.findByFilterAndCategory(filter,categoryName));
+            filterValues.add(temp);
+        }
+        model.addAttribute("filters",filterValues);
         return "productList";
     }
 

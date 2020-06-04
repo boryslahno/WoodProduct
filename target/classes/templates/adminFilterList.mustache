@@ -268,32 +268,55 @@
             </nav></div>
         </div>
         <div style="background-color:white;margin-top:15px;margin-right:20px;box-shadow: 0 0.5px 0.5px 0 rgba(0,0,0,0.2), 0 0.5px 0.5px 0 rgba(0,0,0,0.19);">
-            <button class="addFilter"
+            <form action="/addFilter" method="get">
+            <button type="submit" class="addFilter"
                     data-toggle="popover" data-trigger="hover" title=""
                     data-content="Натисніть щоб додати новий фільтер товару">
                 <img src="/image/plus.png" style="width:14px;height:14px;margin-right:5px;margin-bottom:2px;"/>Фільтр</button>
+            </form>
             <!--Modal-->
-            <div id="addFilter-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
+            {{#addFilter}}
+                <div id="addFilter-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h4 class="modal-title" id="standard-modalLabel">Додавання фільтру товару</h4>
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                         </div>
-                        <form action="/adminFilterList" method="post">
+                        <form action="/addFilter" method="post">
                             <div class="modal-body">
                                 <div class="form-group col-md-10" align="left">
                                     <label style="color:#696969">Назва фільтру</label>
-                                    <input type="text" name="filtername" class="form-control" placeholder="Введіть назву фільтру"/>
+                                    <input type="text" name="filtername" class="form-control
+                                    {{#errors}}
+                                        {{#nameLengthError}}is-invalid{{/nameLengthError}}
+                                        {{#nameEmptyError}}is-invalid{{/nameEmptyError}}
+                                        {{#existsError}}is-invalid{{/existsError}}
+                                    {{/errors}}" placeholder="Введіть назву фільтру"
+                                    {{#errors}}
+                                           value="{{#formData}}{{filtername}}{{/formData}}"{{/errors}}/>
+                                    {{#errors}}
+                                        <div class="invalid-feedback">
+                                            {{#existsError}}{{existsError}}{{/existsError}}
+                                            {{#nameLengthError}}{{nameLengthError}}{{/nameLengthError}}
+                                            {{#nameEmptyError}}{{nameEmptyError}}{{/nameEmptyError}}
+                                        </div>
+                                    {{/errors}}
                                 </div>
                                 <div class="form-group col-md-10" align="left">
                                     <label style="color:#696969">Назва категорії</label>
-                                    <select class="custom-select mr-sm-2" id="inlineFormCustomSelect" name="categoryName">
+                                    <select class="custom-select mr-sm-2
+                                        {{#errors}}{{#categorySelectError}}is-invalid{{/categorySelectError}}{{/errors}}" id="inlineFormCustomSelect" name="categoryName">
                                         <option selected>Категорії</option>
                                         {{#categories}}
                                         <option value="{{name}}">{{name}}</option>
                                         {{/categories}}
                                     </select>
+                                    {{#errors}}
+                                        <div class="invalid-feedback">
+                                            {{#categorySelectError}}{{categorySelectError}}{{/categorySelectError}}
+                                        </div>
+                                    {{/errors}}
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -305,6 +328,7 @@
                     </div><!-- /.modal-content -->
                 </div><!-- /.modal-dialog -->
             </div><!-- /.modal -->
+            {{/addFilter}}
             {{#filterEdit}}
                 <div id="filterManipulate-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
                     <div class="modal-dialog">
@@ -353,7 +377,7 @@
                 </div><!-- /.modal -->
             {{/deleteFilter}}
             <!--Notification-->
-            {{#addFilter}}
+            {{#addFilterSuccess}}
                 <div class="toast"style="position: absolute; top: 20px; right: 20px;min-width:200px;background-color:#02d098;">
                     <div class="toast-header" style="background-color:#02d098;">
                         <img src="/image/tree_icon.png" class="rounded mr-2" alt="Tree"style="width:20px;height:20px;">
@@ -363,10 +387,10 @@
                         </button>
                     </div>
                     <div class="toast-body" style="color:white;">
-                        {{addFilter}}
+                        {{addFilterSuccess}}
                     </div>
                 </div>
-            {{/addFilter}}
+            {{/addFilterSuccess}}
             {{#exists}}
                 <div class="toast"style="position: absolute; top: 20px; right: 20px;min-width:200px;background-color:#fa5c7d;">
                     <div class="toast-header" style="background-color:#fa5c7d;">
@@ -498,11 +522,9 @@ $(document).ready(function () {
     $('#filterManipulate-modal').modal('show');
 });
 </script>
-<!--View modal and popover-->
 <script>
-    $('.addFilter').click(function () {
-     $('#addFilter-modal').modal('show');
-     $('[data-toggle="popover"]').popover('hide');
+$(document).ready(function () {
+    $('#addFilter-modal').modal('show');
 });
 </script>
 <!--View popover-->

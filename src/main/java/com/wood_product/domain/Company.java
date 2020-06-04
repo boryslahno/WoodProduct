@@ -11,11 +11,13 @@ public class Company {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotNull
+    @Size(max = 70)
     private String name;
     @NotNull
     @Size(max = 300)
     private String address;
     @NotNull
+    @Size(max = 20)
     private String phoneNumber;
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)

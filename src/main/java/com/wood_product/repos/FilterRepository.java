@@ -16,4 +16,5 @@ public interface FilterRepository extends JpaRepository<Filters,Long> {
     @Query("SELECT f.id FROM categories c INNER JOIN c.filter f WHERE f.filtername=:filtername AND c.name=:categoryname")
     Long findByFilternameAndName(String filtername, String categoryname);
     //Filters findByFiltername(String name);
+    Iterable<Filters> findByCategory(Categories category);
 }

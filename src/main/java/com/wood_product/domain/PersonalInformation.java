@@ -12,11 +12,14 @@ public class PersonalInformation {
     private Long id;
 
     @NotNull
+    @Size(max = 50)
     private String name;
     @NotNull
+    @Size(max = 50)
     private String surname;
     @Size(max = 300)
     private String address;
+    @Size(max = 20)
     private String phoneNumber;
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
