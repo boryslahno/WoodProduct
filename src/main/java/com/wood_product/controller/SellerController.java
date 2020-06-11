@@ -24,6 +24,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
 
@@ -64,7 +65,7 @@ public class SellerController {
     @GetMapping("/sellerPersonalInformation/changeEmail")
     public String changeEmail(RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("sellerChangeEmail", userService.GetUserSecurityInfo());
-        return "sellerPersonalInformation";
+        return "redirect:/sellerPersonalInformation";
     }
 
     @PostMapping("/sellerPersonalInformation/changeEmail")
@@ -256,5 +257,67 @@ public class SellerController {
         model.addAttribute("nameUser", userService.GetUserName());
         model.addAttribute("soldItems",shoppingRepository.findByOwner(userService.currentUser()));
         return "sellerSoldProducts";
+    }
+
+    @GetMapping("/countSold")
+    public String countSold(Model model,@RequestParam Date startData,@RequestParam Date endData){
+        model.addAttribute("nameUser", userService.GetUserName());
+        model.addAttribute("soldItems",shoppingRepository.findByOwner(userService.currentUser()));
+
+        return "sellerSoldProducts";
+    }
+
+    //Seller statistic
+    @GetMapping("/sellerStatistic")
+    public String Statistic(Model model){
+        model.addAttribute("nameUser", userService.GetUserName());
+        SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd");
+        Date currentDate=new Date();
+        try {
+            model.addAttribute("totalSum",shoppingRepository.findSumSold(userService.currentUser(),currentDate,currentDate)*2);
+        }catch (NullPointerException ex){
+            model.addAttribute("totalSum",0);
+        }
+        Integer totalQuantity=shoppingRepository.findCountSold(userService.currentUser(),currentDate,currentDate);
+        if(totalQuantity==null){
+            totalQuantity=0;
+        }
+        List<Map<String,Object>> topItems=shoppingRepository.findTopItems(userService.currentUser(),currentDate,currentDate);
+        if(topItems.size()>5){
+            model.addAttribute("topItems",topItems.subList(0,6));
+        }else
+        {
+            model.addAttribute("topItems",topItems);
+        }
+        model.addAttribute("totalQuantity",totalQuantity);
+        model.addAttribute("categoryQuantity",shoppingRepository.findCategoryCountSold(userService.currentUser(),currentDate,currentDate));
+        return "sellerStatistic";
+    }
+
+    @GetMapping("/viewStatistic")
+    public String viewStatistic(Model model,@RequestParam String startData,@RequestParam String endData) throws Exception{
+        model.addAttribute("nameUser", userService.GetUserName());
+        SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd");
+        Date start=format.parse(startData);
+        Date end=format.parse(endData);
+        try {
+            model.addAttribute("totalSum",shoppingRepository.findSumSold(userService.currentUser(),start,end)*2);
+        }catch (NullPointerException ex){
+            model.addAttribute("totalSum",0);
+        }
+        Integer totalQuantity=shoppingRepository.findCountSold(userService.currentUser(),start,end);
+        if(totalQuantity==null){
+            totalQuantity=0;
+        }
+        List<Map<String,Object>> topItems=shoppingRepository.findTopItems(userService.currentUser(),start,end);
+        if(topItems.size()>5){
+            model.addAttribute("topItems",topItems.subList(0,5));
+        }else
+        {
+            model.addAttribute("topItems",topItems);
+        }
+        model.addAttribute("totalQuantity",totalQuantity);
+        model.addAttribute("categoryQuantity",shoppingRepository.findCategoryCountSold(userService.currentUser(),start,end));
+        return "sellerStatistic";
     }
 }

@@ -47,185 +47,219 @@ public class ShopperController {
     private FilterRepository filterRepository;
     @Autowired
     private FilterOptionsRepository filterOptionsRepository;
+
     //Product management
     @GetMapping("/productList")
-    public String productList(Model model, @RequestParam String categoryName){
-        Iterable<Items> items=itemRepository.findByCategory(categoryRepository.findByName(categoryName));
-        for (Items item:items) {
-            Image image=new ImageIcon(uploadPath+item.getFileName()).getImage();
-            if(image.getHeight(null)>300){
+    public String productList(Model model, @RequestParam String categoryName) {
+        Iterable<Items> items = itemRepository.findByCategory(categoryRepository.findByName(categoryName));
+        int max = 0;
+        for (Items item : items) {
+            if (item.getPrice() > max) {
+                max = item.getPrice();
+            }
+            Image image = new ImageIcon(uploadPath + item.getFileName()).getImage();
+            if (image.getHeight(null) > 300) {
                 item.setSize(true);
-            }else{
+            } else {
                 item.setSize(false);
             }
         }
+        model.addAttribute("max", max);
+        model.addAttribute("step", (int) max * 0.1);
         model.addAttribute("nameUser", userService.GetUserName());
-        model.addAttribute("items",items);
-        model.addAttribute("categories",categoryRepository.findAll());
-        model.addAttribute("NameCategory",categoryName);
-        Iterable<ShoppingCart> itemInCart=shoppingCartRepository.findByUser(userService.currentUser());
-        model.addAttribute("itemsInCart",itemInCart);
-        if(!itemInCart.iterator().hasNext()){
-            model.addAttribute("numberProduct",false);
-        }else {
-            model.addAttribute("numberProduct","Є товари");
+        model.addAttribute("items", items);
+        model.addAttribute("categories", categoryRepository.findAll());
+        model.addAttribute("NameCategory", categoryName);
+        Iterable<ShoppingCart> itemInCart = shoppingCartRepository.findByUser(userService.currentUser());
+        model.addAttribute("itemsInCart", itemInCart);
+        if (!itemInCart.iterator().hasNext()) {
+            model.addAttribute("numberProduct", false);
+        } else {
+            model.addAttribute("numberProduct", "Є товари");
         }
-        Iterable<Filters> filters=filterRepository.findByCategory(categoryRepository.findByName(categoryName));
-        List<FilterValue> filterValues=new ArrayList<>();
-        for (Filters filter:filters) {
-            FilterValue temp=new FilterValue();
+        Iterable<Filters> filters = filterRepository.findByCategory(categoryRepository.findByName(categoryName));
+        List<FilterValue> filterValues = new ArrayList<>();
+        for (Filters filter : filters) {
+            FilterValue temp = new FilterValue();
             temp.setFilterName(filter.getFiltername());
-            temp.setValue(filterOptionsRepository.findByFilterAndCategory(filter,categoryName));
+            temp.setValue(filterOptionsRepository.findByFilterAndCategory(filter, categoryName));
             filterValues.add(temp);
         }
-        model.addAttribute("filters",filterValues);
+        model.addAttribute("filters", filterValues);
         return "productList";
     }
 
     @GetMapping("/applyFilter")
-    public String applyFilter(Model model, @RequestParam String price, @RequestParam String categoryName, @RequestParam("filterOption")String filterOption){
-        /*String options="";
-        for(int i=0;i<filterOption.length;++i){
-            if(i==filterOption.length-1){
-            options+=filterOption[i];
-            }else{
-                options+=filterOption[i]+" AND value= ";
+    public String applyFilter(Model model, @RequestParam String price, @RequestParam String categoryName, @RequestParam("filterOption[]") String[] filterOption) {
+
+        Iterable<Items> allItems = itemRepository.findByCategory(categoryRepository.findByName(categoryName));
+        int max = 0;
+        for (Items item : allItems) {
+            if (item.getPrice() > max) {
+                max = item.getPrice();
             }
-        }*/
-        Iterable<Items> items=itemRepository.findByFilter(filterOption,categoryName,Integer.valueOf(price));
-        for (Items item:items) {
-            Image image=new ImageIcon(uploadPath+item.getFileName()).getImage();
-            if(image.getHeight(null)>300){
+        }
+        List<Items> items;
+        if (filterOption.length<1) {
+            items = itemRepository.findByPriceRange(categoryName, Integer.valueOf(price));
+        } else {
+            List<Items> removeItems=new ArrayList<>();
+            items = itemRepository.findByFilter(filterOption[0], categoryName, Integer.valueOf(price));
+            boolean find;
+            for (int i = 1; i < filterOption.length; i++) {
+                for (Items item:removeItems) {
+                    removeItems=null;
+                }
+                for (Items item:items) {
+                    find=false;
+                    for (FilterOptions filterOptions:item.getFilterOptions()) {
+                        if(filterOptions.getValue().equals(filterOption[i])){
+                            find=true;
+                        }
+                    }
+                    if(!find){
+                        removeItems.add(item);
+                    }
+                }
+                items.removeAll(removeItems);
+            }
+        }
+        for (Items item : items) {
+            Image image = new ImageIcon(uploadPath + item.getFileName()).getImage();
+            if (image.getHeight(null) > 300) {
                 item.setSize(true);
-            }else{
+            } else {
                 item.setSize(false);
             }
         }
+        model.addAttribute("max", max);
+        model.addAttribute("step", (int) max * 0.1);
         model.addAttribute("nameUser", userService.GetUserName());
-        model.addAttribute("items",items);
-        model.addAttribute("categories",categoryRepository.findAll());
-        model.addAttribute("NameCategory",categoryName);
-        Iterable<ShoppingCart> itemInCart=shoppingCartRepository.findByUser(userService.currentUser());
-        model.addAttribute("itemsInCart",itemInCart);
-        if(!itemInCart.iterator().hasNext()){
-            model.addAttribute("numberProduct",false);
-        }else {
-            model.addAttribute("numberProduct","Є товари");
+        model.addAttribute("items", items);
+        model.addAttribute("categories", categoryRepository.findAll());
+        model.addAttribute("NameCategory", categoryName);
+        Iterable<ShoppingCart> itemInCart = shoppingCartRepository.findByUser(userService.currentUser());
+        model.addAttribute("itemsInCart", itemInCart);
+        if (!itemInCart.iterator().hasNext()) {
+            model.addAttribute("numberProduct", false);
+        } else {
+            model.addAttribute("numberProduct", "Є товари");
         }
-        Iterable<Filters> filters=filterRepository.findByCategory(categoryRepository.findByName(categoryName));
-        List<FilterValue> filterValues=new ArrayList<>();
-        for (Filters filter:filters) {
-            FilterValue temp=new FilterValue();
+        Iterable<Filters> filters = filterRepository.findByCategory(categoryRepository.findByName(categoryName));
+        List<FilterValue> filterValues = new ArrayList<>();
+        for (Filters filter : filters) {
+            FilterValue temp = new FilterValue();
             temp.setFilterName(filter.getFiltername());
-            temp.setValue(filterOptionsRepository.findByFilterAndCategory(filter,categoryName));
+            temp.setValue(filterOptionsRepository.findByFilterAndCategory(filter, categoryName));
             filterValues.add(temp);
         }
-        model.addAttribute("filters",filterValues);
+        model.addAttribute("filters", filterValues);
         return "productList";
     }
 
     @GetMapping("/viewProduct")
-    public String viewProduct(Model model,@RequestParam Long itemID){
-        Items item=itemRepository.findById(itemID).get();
-        model.addAttribute("item",item);
+    public String viewProduct(Model model, @RequestParam Long itemID) {
+        Items item = itemRepository.findById(itemID).get();
+        model.addAttribute("item", item);
         model.addAttribute("nameUser", userService.GetUserName());
-        Image image=new ImageIcon(uploadPath+item.getFileName()).getImage();
-        if(image.getHeight(null)>=image.getWidth(null)){
-            model.addAttribute("heightSize",100);
-        }else{
-            model.addAttribute("widthSize",100);
+        Image image = new ImageIcon(uploadPath + item.getFileName()).getImage();
+        if (image.getHeight(null) >= image.getWidth(null)) {
+            model.addAttribute("heightSize", 100);
+        } else {
+            model.addAttribute("widthSize", 100);
         }
-        model.addAttribute("categories",categoryRepository.findAll());
-        Iterable<ShoppingCart> itemInCart=shoppingCartRepository.findByUser(userService.currentUser());
-        model.addAttribute("itemsInCart",itemInCart);
-        if(!itemInCart.iterator().hasNext()){
-            model.addAttribute("numberProduct",false);
-        }else {
-            model.addAttribute("numberProduct","Є товари");
+        model.addAttribute("categories", categoryRepository.findAll());
+        Iterable<ShoppingCart> itemInCart = shoppingCartRepository.findByUser(userService.currentUser());
+        model.addAttribute("itemsInCart", itemInCart);
+        if (!itemInCart.iterator().hasNext()) {
+            model.addAttribute("numberProduct", false);
+        } else {
+            model.addAttribute("numberProduct", "Є товари");
         }
         return "viewProduct";
     }
 
     @GetMapping("/shoppingCart")
-    public String shoppingCart(Model model){
+    public String shoppingCart(Model model) {
         model.addAttribute("nameUser", userService.GetUserName());
-        model.addAttribute("categories",categoryRepository.findAll());
-        Iterable<ShoppingCart> itemInCart=shoppingCartRepository.findByUser(userService.currentUser());
-        model.addAttribute("itemsInCart",itemInCart);
-        if(!itemInCart.iterator().hasNext()){
-            model.addAttribute("numberProduct",false);
-        }else {
-            model.addAttribute("numberProduct","Є товари");
+        model.addAttribute("categories", categoryRepository.findAll());
+        Iterable<ShoppingCart> itemInCart = shoppingCartRepository.findByUser(userService.currentUser());
+        model.addAttribute("itemsInCart", itemInCart);
+        if (!itemInCart.iterator().hasNext()) {
+            model.addAttribute("numberProduct", false);
+        } else {
+            model.addAttribute("numberProduct", "Є товари");
         }
-        model.addAttribute("orderDetails",shoppingCartRepository.findByUser());
+        model.addAttribute("orderDetails", shoppingCartRepository.findByUser());
         return "shoppingCart";
     }
 
     @PostMapping("/deleteProductWithCart")
-    public String deleteProductWithCart(@RequestParam Long itemID){
+    public String deleteProductWithCart(@RequestParam Long itemID) {
         shoppingCartRepository.deleteById(itemID);
         return "redirect:/shoppingCart";
     }
 
     @PostMapping("/addToCart")
-    public String addToChart(@RequestParam Long itemID,@RequestParam Integer count){
-        Items item=itemRepository.findById(itemID).get();
-        ShoppingCart shoppingCart=new ShoppingCart();
+    public String addToChart(@RequestParam Long itemID, @RequestParam Integer count) {
+        Items item = itemRepository.findById(itemID).get();
+        ShoppingCart shoppingCart = new ShoppingCart();
         shoppingCart.setQuantity(count);
         shoppingCart.setItem(item);
         shoppingCart.setUser(userService.currentUser());
-        shoppingCart.setTotal(count*item.getPrice());
+        shoppingCart.setTotal(count * item.getPrice());
         shoppingCartRepository.save(shoppingCart);
         return "redirect:/shoppingCart";
     }
 
     @GetMapping("/payProduct")
-    public String payProduct(Model model, @RequestParam String companyName){
+    public String payProduct(Model model, @RequestParam String companyName) {
         model.addAttribute("nameUser", userService.GetUserName());
-        model.addAttribute("categories",categoryRepository.findAll());
-        model.addAttribute("companyName",companyName);
-        Iterable<ShoppingCart> itemInCart=shoppingCartRepository.findByUser(userService.currentUser());
-        model.addAttribute("itemsInCart",itemInCart);
-        if(!itemInCart.iterator().hasNext()){
-            model.addAttribute("numberProduct",false);
-        }else {
-            model.addAttribute("numberProduct","Є товари");
+        model.addAttribute("categories", categoryRepository.findAll());
+        model.addAttribute("companyName", companyName);
+        Iterable<ShoppingCart> itemInCart = shoppingCartRepository.findByUser(userService.currentUser());
+        model.addAttribute("itemsInCart", itemInCart);
+        if (!itemInCart.iterator().hasNext()) {
+            model.addAttribute("numberProduct", false);
+        } else {
+            model.addAttribute("numberProduct", "Є товари");
         }
         return "payProduct";
     }
 
     @Transactional
     @PostMapping("/deleteAfterPay")
-    public String deleteProductWithCart(@RequestParam String companyName){
-        Iterable<ShoppingCart> shoppingCarts=shoppingCartRepository.findByCompany(companyName);
-        for (ShoppingCart shoppingCart:shoppingCarts) {
-            Shopping shopping=new Shopping();
+    public String deleteProductWithCart(@RequestParam String companyName) {
+        Iterable<ShoppingCart> shoppingCarts = shoppingCartRepository.findByCompany(companyName);
+        for (ShoppingCart shoppingCart : shoppingCarts) {
+            Shopping shopping = new Shopping();
             shopping.setItem(shoppingCart.getItem());
             shopping.setUser(shoppingCart.getUser());
             shopping.setQuantity(shoppingCart.getQuantity());
-            shopping.setTotal(shoppingCart.getTotal()/2);
-            Date currentDate=new Date();
+            shopping.setTotal(shoppingCart.getTotal() / 2);
+            Date currentDate = new Date();
             shopping.setShopDate(currentDate);
             shoppingRepository.save(shopping);
-            Items item=shoppingCart.getItem();
-            item.setCount(item.getCount()-shoppingCart.getQuantity());
+            Items item = shoppingCart.getItem();
+            item.setCount(item.getCount() - shoppingCart.getQuantity());
         }
         shoppingCartRepository.deleteAll(shoppingCarts);
         return "redirect:/shoppingCart";
     }
+
     //Personal information management
     @GetMapping("/shopperPersonalInformation")
-    public String personalInformation(Model model){
+    public String personalInformation(Model model) {
         model.addAttribute("nameUser", userService.GetUserName());
         model.addAttribute("shopperSecurity", userService.GetUserSecurityInfo());
         model.addAttribute("personalInfo", userService.loadPersonalInfo());
-        model.addAttribute("categories",categoryRepository.findAll());
-        Iterable<ShoppingCart> itemInCart=shoppingCartRepository.findByUser(userService.currentUser());
-        model.addAttribute("itemsInCart",itemInCart);
-        if(!itemInCart.iterator().hasNext()){
-            model.addAttribute("numberProduct",false);
-        }else {
-            model.addAttribute("numberProduct","Є товари");
+        model.addAttribute("categories", categoryRepository.findAll());
+        Iterable<ShoppingCart> itemInCart = shoppingCartRepository.findByUser(userService.currentUser());
+        model.addAttribute("itemsInCart", itemInCart);
+        if (!itemInCart.iterator().hasNext()) {
+            model.addAttribute("numberProduct", false);
+        } else {
+            model.addAttribute("numberProduct", "Є товари");
         }
         return "shopperPersonalInformation";
     }
@@ -284,7 +318,7 @@ public class ShopperController {
     public String changeCompanyInformation(RedirectAttributes redirectAttributes, @RequestParam String name,
                                            @RequestParam String address, @RequestParam String surname,
                                            @RequestParam String phoneNumber) {
-        PersonalInformation personalInformation=userService.loadPersonalInfo();
+        PersonalInformation personalInformation = userService.loadPersonalInfo();
         personalInformation.setName(name);
         personalInformation.setSurname(surname);
         personalInformation.setAddress(address);
@@ -296,17 +330,17 @@ public class ShopperController {
 
 
     @GetMapping("/shopperShopHistory")
-    public String viewShopHistory(Model model){
+    public String viewShopHistory(Model model) {
         model.addAttribute("nameUser", userService.GetUserName());
-        model.addAttribute("categories",categoryRepository.findAll());
-        Iterable<ShoppingCart> itemInCart=shoppingCartRepository.findByUser(userService.currentUser());
-        model.addAttribute("itemsInCart",itemInCart);
-        if(!itemInCart.iterator().hasNext()){
-            model.addAttribute("numberProduct",false);
-        }else {
-            model.addAttribute("numberProduct","Є товари");
+        model.addAttribute("categories", categoryRepository.findAll());
+        Iterable<ShoppingCart> itemInCart = shoppingCartRepository.findByUser(userService.currentUser());
+        model.addAttribute("itemsInCart", itemInCart);
+        if (!itemInCart.iterator().hasNext()) {
+            model.addAttribute("numberProduct", false);
+        } else {
+            model.addAttribute("numberProduct", "Є товари");
         }
-        model.addAttribute("shopItems",shoppingRepository.findByUser(userService.currentUser()));
+        model.addAttribute("shopItems", shoppingRepository.findByUser(userService.currentUser()));
         return "shopperShopHistory";
     }
 }

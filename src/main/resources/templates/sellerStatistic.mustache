@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>{{NameCategory}}</title>
+    <title>Статистика</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
@@ -145,7 +145,10 @@
         background-color: #eaedf0 !important;
         border-color: #eaedf0 !important;
     }
-    .Filter{
+    .addItem{
+    margin-top:20px;
+    margin-left:20px;
+    margin-bottom:20px;
     color:white;
     border-radius:5%;
     border:none;
@@ -154,13 +157,13 @@
     height:40px;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 3px 10px 0 rgba(0,0,0,0.19);
     }
-    .Filter:hover{
+    .addItem:hover{
     background:#f9345e;
     }
-    .Filter:active,{
+    .addItem:active,{
     outline-color:#fa5c7d;
     }
-    .Filter:focus{
+    .addItem:focus{
     outline-color:#fa5c7d;
     }
 
@@ -187,44 +190,6 @@
     background-color:white;
     }
 
-    .item{
-    height:390px;
-    width:240px;
-    display:inline-block;
-    vertical-align:top;
-    margin-bottom:20px;
-    }
-
-    .item:hover{
-   box-shadow: 0 10px 20px 0 rgba(0,0,0,0.2), 0 9px 22px 0 rgba(0,0,0,0.19);
-    }
-
-    #inStock{
-    border: 1px solid #d3f6ec;
-    border-radius: 10px;
-    font-size:14px;
-    padding: 2px 10px;
-    color:#0acf97;
-    background:#d3f6ec;
-    }
-
-    .detail{
-    color:white;
-    border-radius:5%;
-    border:none;
-    background:#737df5;
-    font-size:14px;
-    }
-    .detail:hover{
-    background:#4d5bf2;
-    }
-    .detail:active,{
-    outline-color:#737df5;
-    }
-    .detail:focus{
-    outline-color:#737df5;
-    }
-
     .apply{
     margin-top:20px;
     margin-left:20px;
@@ -246,6 +211,13 @@
     .apply:focus{
     outline-color:#02d098;
     }
+
+    hr{
+    border: none;
+    background-color: #dee2e6;
+    color: #dee2e6;
+    height: 0.5px;
+    }
     </style>
 </head>
 <body>
@@ -260,21 +232,18 @@
         </div>
         <ul class="list-unstyled components">
             <p>НАВІГАЦІЯ</p>
-            <li><a href="/shopperPersonalInformation">Особиста інформація</a></li>
             <li>
-                <a href="#catalogSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Каталог</a>
-                <ul class="collapse list-unstyled" id="catalogSubmenu">
-                    {{#categories}}
-                        <li>
-                            <form id="form{{name}}" action="/productList" method="get">
-                                <input type="hidden" name="categoryName" value="{{name}}">
-                                <a href="/productList" onclick="document.getElementById('form{{name}}').submit(); return false;">{{name}}</a>
-                            </form>
-                        </li>
-                    {{/categories}}
-                </ul>
+                <a href="/sellerPersonalInformation">Особисті дані</a>
             </li>
-            <li><a href="/shopperShopHistory">Історія покупок</a></li>
+            <li>
+                <a href="/sellerProductInStock">Товари в наявності</a>
+            </li>
+            <li>
+                <a href="/sellerSoldProducts">Продані товари</a>
+            </li>
+            <li>
+                <a style="color:white;" href="/sellerStatistic">Статистика</a>
+            </li>
         </ul>
     </nav>
     <!--Navbar-->
@@ -286,23 +255,8 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             {{#nameUser}}
+
                 <ul class="navbar-nav ml-auto">
-                    <form action="/shoppingCart" method="get">
-                    <div style="margin-right:15px;margin-bottom:-15px;">
-                        <button style="margin-bottom:-10px;" type="submit" class="icon-button"><img src="/image/shopping_cart.png"
-                                                                       style="height:30px;width:30px;"
-                                                                       onmouseover="cartHover(this);"
-                                                                       onmouseout="cartNotHover(this);"></button>
-                            <div>
-                                {{^numberProduct}}
-                                    <label style="color:#7b7b7f;font-size:12px;margin-bottom:-10px;">Порожня</label>
-                                {{/numberProduct}}
-                                {{#numberProduct}}
-                                    <label style="color:#0acf97;font-size:12px;margin-bottom:-10px;">{{numberProduct}}</label>
-                                {{/numberProduct}}
-                            </div>
-                    </div>
-                    </form>
                     <li class="nav-item dropdown">
                         <a style="margin-right:40px;" class="nav-link dropdown-toggle" href="navbarDropdown" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             {{nameUser}}
@@ -325,76 +279,83 @@
     <!--Content-->
     <div class="content">
         <div style="height:40px;">
-            <div style="float:left;"><b style="color:#7b7b7f;font-size:18px;">{{NameCategory}}</b></div>
+            <div style="float:left;"><b style="color:#7b7b7f;font-size:18px;">Статистика</b></div>
             <div style="float:right;"><nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0">
                     <li class="breadcrumb-item"><a href="/">Wodden products</a></li>
-                    <li class="breadcrumb-item"><a href="#">Каталог</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">{{NameCategory}}</li>
+                    <li class="breadcrumb-item active" aria-current="page">Статистика</li>
                 </ol>
             </nav></div>
         </div>
-        <button class="Filter"
-                      data-toggle="collapse" data-target="#filterList"
-                      aria-expanded="false" aria-controls="#filterList"
-                      onmouseover="showPopover(this);">
-        <img src="/image/filter_icon.png" style="width:16px;height:16px;margin-right:8px;margin-bottom:2px;"/>
-        Фільтри</button>
-        <div class="collapse" id="filterList">
-            <div style="background-color:white;margin-right:20px;margin-top:10px;box-shadow: 0 1px 1px 0 rgba(0,0,0,0.2), 0 1px 1px 0 rgba(0,0,0,0.19);">
-            <form id="filterForm"action="/applyFilter" method="get">
-                <div class="form-group col-md-10" align="left">
-                    <label style="margin-top:20px;color:#696969;font-size:18px;" for="customRange3">Ціна</label><br>
-                    <input style="width:400px;" type="range" value="{{max}}" class="custom-range" min="0" max="{{max}}" step="{{step}}" name="price" id="customRange3" onchange="updateTextInput(this.value);">
-                    <label style="margin-left:10px;margin-top:-10px;color:#696969;font-size:16px;" id="textInput"> {{max}}</label>
-                </div>
-                <input type="hidden" name="categoryName" value="{{NameCategory}}">
-                <input style="display:none" class="form-check-input" type="checkbox" name="filterOption[]" id="exampleRadios1">
-                {{#filters}}
-                    <div style="display:inline-block;vertical-align:top;margin-right:20px;width:300px;">
-                        <div class="form-group col-md-10" align="left">
-                            <label style="font-size:18px;color:#696969">{{filterName}}</label>
-                            {{#value}}
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="filterOption[]" id="exampleRadios1" value="{{#value}}{{value}}{{/value}}">
-                                    <label style="color:#696969;" class="form-check-label" for="exampleRadios1">
-                                        {{#value}}{{value}}{{/value}}
-                                    </label>
-                                </div>
-                            {{/value}}
-                        </div>
+        <div style="background-color:white;margin-top:15px;margin-right:20px;box-shadow: 0 3px 3px 0 rgba(0,0,0,0.2), 0 3px 3px 0 rgba(0,0,0,0.19);">
+            <div style="margin:20px;padding-top:20px;">
+                <form action="/viewStatistic" method="get">
+                    <div style="display:inline-block;vertical-align:top;width:200px;color:#7b7b7f;" class="form-group">
+                        <label style="" for="inputDate">Виберіть початкову дату:</label>
+                        <input type="date" class="form-control" name="startData">
                     </div>
-                {{/filters}}
-                <button class="apply" onclick="check();">Застосувати</button>
-            </form>
+                    <div style="display:inline-block;vertical-align:top;width:200px;color:#7b7b7f;" class="form-group">
+                        <label style="" for="inputDate">Виберіть кінцеву дату:</label>
+                        <input type="date" class="form-control" name="endData">
+                    </div>
+                    <div style="display:inline-block;vertical-align:top;margin-top:12px;">
+                        <button type="submit" class="apply">Показати</button>
+                    </div>
+                </form>
             </div>
         </div>
-        <div style="margin-top:5px; background-color:white;margin-right:20px;box-shadow: 0 1px 1px 0 rgba(0,0,0,0.2), 0 1px 1px 0 rgba(0,0,0,0.19);">
+
+        <div style="display:inline-block;vertical-align:top;width:400px;min-height:600px;background-color:white;margin-top:10px;margin-right:20px;box-shadow: 0 3px 3px 0 rgba(0,0,0,0.2), 0 3px 3px 0 rgba(0,0,0,0.19);">
+            <div style="margin:20px;padding-top:20px;">
+                <pre><label style="font-size:16px;color:#7b7b7f;">Всього продано:  {{totalQuantity}} товарів/товари</label></pre>
+                <hr>
+                {{#categoryQuantity}}
+                    <pre><label style="font-size:16px;color:#7b7b7f;">{{name}}:      {{quantity}} товарів/товари</label></pre>
+                {{/categoryQuantity}}
+                {{^categoryQuantity}}
+                    <label style="font-size:16px;color:#7b7b7f;">---------------------------------------------</label>
+                {{/categoryQuantity}}
+                <hr>
+                <pre><label style="font-size:16px;color:#7b7b7f;"><b>Дохід:        ₴{{totalSum}}</b></label></pre>
+            </div>
+        </div>
+
+        <div style="display:inline-block;vertical-align:top;min-height:600px;width:605px;background-color:white;margin-top:10px;margin-right:20px;box-shadow: 0 3px 3px 0 rgba(0,0,0,0.2), 0 3px 3px 0 rgba(0,0,0,0.19);">
             <div style="text-align:center;">
-            {{^items}}
-                <label style="margin-top:20px;font-size:20px;color:#696969;align:center;">Нічого не знайдено</label>
-            {{/items}}
+                <label style="font-size:20px;color:#696969;">Найпопулярніші товари</label>
             </div>
-                <div style="margin:30px;margin-top:5px;;padding-top:20px;">
-                            {{#items}}
-                                <div class="item">
-                                    <div class="imgItem" style="margin:15px;text-align:center;overflow:hidden;height:230px;width:210px;">
-                                        <img {{^size}}class="img-fluid"{{/size}}  {{#size}}style="height:100%;" {{/size}} src="/uploads/{{fileName}}"/>
-                                    </div>
-                                    <div class="detailItem" style="text-align:center;">
-                                        <label style="font-size:12px;color:#b6b4b6;">{{#user}}{{#company}}{{name}}{{/company}}{{/user}}</label><br>
-                                        <label>{{itemname}}</label><br>
-                                        <label style="color:#737df5;">₴{{price}}</label>
-                                        <label id="inStock"><b>В наявності {{count}}</b></label>
-                                        <form action="/viewProduct" method="get">
-                                            <input type="hidden" name="itemID" value="{{id}}">
-                                        <button type="submit" class="detail">Детальніше</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            {{/items}}
-                </div>
+            <div style="margin-left:20px;margin-right:20px;">
+                <table style="width:100%;color:#7b7b7f;">
+                <thead style="background-color:#f1f3fa;font-size:14px;">
+                <tr style="height:50px;text-align:center">
+                    <th>Товар</th>
+                    <th>Назва</th>
+                    <th>Категорія</th>
+                    <th>Кількість</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{^topItems}}
+                    <tr style="height:50px;text-align:center;">
+                        <td style="border:1px solid white;">-</td>
+                        <td style="border:1px solid white;">-</td>
+                        <td style="border:1px solid white;">-</td>
+                        <td style="border:1px solid white;">-</td>
+                    </tr>
+                {{/topItems}}
+                {{#topItems}}
+                    <tr style="text-align:center;">
+                        <td style="width:40px;"><img style="width:100%;margin-top:5px;" src="/uploads/{{#item}}{{fileName}}{{/item}}"></td>
+                        <td style="vertical-align:middle;">{{#item}}{{itemname}}{{/item}}</td>
+                        <td style="vertical-align:middle;">{{name}}</td>
+                        <td style="vertical-align:middle;">{{quantity}}</td>
+                    </tr>
+                {{/topItems}}
+                </tbody>
+            </table>
+            </div>
         </div>
+
     </div>
     <!--Footer-->
     <footer style="margin-left:280px;box-shadow: 1px 1px 3px rgba(0,0,0,0.4);background:#f9fafd;height:60px;margin-top:30px;">
@@ -414,56 +375,7 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
-<!--Change icons-->
-<script>
-function showPopover(el){
-el.data-toggle="popover";
-el.data-trigger="hover";
-el.data-content="Натисніть щоб додати новий фільтер товару";
-}
-function cartNotHover(el){
-el.src="/image/shopping_cart.png";
-}
-function cartHover(el){
-el.src="/image/shopping_cart_full.png";
-}
-</script>
-<script>
-    function check(){
-  var rarr=document.getElementsByName("filterOption[]");
-  var j=0;
-  for(var i=0;i<rarr.length;++i)
-  {
-    if(rarr[i].checked){
-    ++j;
-    }
-  }
-  if(j==0){
-  rarr[0].value="";
-  rarr[0].checked=true;
-  }
-  document.forms["filterForm"].submit();
- }
-</script>
-<!--Item card fix layout-->
-<script>
-$(document).ready(function () {
-        var elements = document.getElementsByClassName("item");
-        for (var i = 0; i < elements.length; i++) {
-        var imgItem=elements[i].querySelector(".imgItem");
-        var detailItem=elements[i].querySelector(".detailItem");
-        var padding=390-imgItem.offsetHeight-detailItem.offsetHeight-20;
-        console.log(padding)
-        elements[i].querySelector(".detailItem").style.marginTop=padding+"px";
-            }
-        });
-</script>
-<script>
-    function updateTextInput(val) {
-          $("#textInput").text(val);
-        }
-</script>
-<!--Setting toast-->
+
 <script>
    $(document).ready(function () {
             $('.toast').toast({
@@ -471,6 +383,13 @@ $(document).ready(function () {
             });
             $('.toast').toast('show');
         });
+</script>
+<!--View modal and popover-->
+<script>
+    $('.addItem').click(function () {
+     $('#selectCategory-modal').modal('show');
+     $('[data-toggle="popover"]').popover('hide');
+});
 </script>
 <!--View popover-->
 <script>

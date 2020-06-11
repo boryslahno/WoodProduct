@@ -342,20 +342,21 @@
         Фільтри</button>
         <div class="collapse" id="filterList">
             <div style="background-color:white;margin-right:20px;margin-top:10px;box-shadow: 0 1px 1px 0 rgba(0,0,0,0.2), 0 1px 1px 0 rgba(0,0,0,0.19);">
-            <form action="/applyFilter" method="get">
+            <form id="filterForm"action="/applyFilter" method="get">
                 <div class="form-group col-md-10" align="left">
                     <label style="margin-top:20px;color:#696969;font-size:18px;" for="customRange3">Ціна</label><br>
-                    <input style="width:400px;" type="range" value="15000" class="custom-range" min="0" max="50000" step="1000" name="price" id="customRange3" onchange="updateTextInput(this.value);">
-                    <label style="margin-left:10px;margin-top:-10px;color:#696969;font-size:16px;" id="textInput"> 15000</label>
+                    <input style="width:400px;" type="range" value="{{max}}" class="custom-range" min="0" max="{{max}}" step="{{step}}" name="price" id="customRange3" onchange="updateTextInput(this.value);">
+                    <label style="margin-left:10px;margin-top:-10px;color:#696969;font-size:16px;" id="textInput"> {{max}}</label>
                 </div>
                 <input type="hidden" name="categoryName" value="{{NameCategory}}">
+                <input style="display:none" class="form-check-input" type="checkbox" name="filterOption[]" id="exampleRadios1">
                 {{#filters}}
                     <div style="display:inline-block;vertical-align:top;margin-right:20px;width:300px;">
                         <div class="form-group col-md-10" align="left">
                             <label style="font-size:18px;color:#696969">{{filterName}}</label>
                             {{#value}}
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="filterOption" id="exampleRadios1" value="{{#value}}{{value}}{{/value}}">
+                                    <input class="form-check-input" type="checkbox" name="filterOption[]" id="exampleRadios1" value="{{#value}}{{value}}{{/value}}">
                                     <label style="color:#696969;" class="form-check-label" for="exampleRadios1">
                                         {{#value}}{{value}}{{/value}}
                                     </label>
@@ -364,11 +365,16 @@
                         </div>
                     </div>
                 {{/filters}}
-                <button class="apply" type="submit">Застосувати</button>
+                <button class="apply" onclick="check();">Застосувати</button>
             </form>
             </div>
         </div>
         <div style="margin-top:5px; background-color:white;margin-right:20px;box-shadow: 0 1px 1px 0 rgba(0,0,0,0.2), 0 1px 1px 0 rgba(0,0,0,0.19);">
+            <div style="text-align:center;">
+            {{^items}}
+                <label style="margin-top:20px;font-size:20px;color:#696969;align:center;">Нічого не знайдено</label>
+            {{/items}}
+            </div>
                 <div style="margin:30px;margin-top:5px;;padding-top:20px;">
                             {{#items}}
                                 <div class="item">
@@ -421,6 +427,23 @@ el.src="/image/shopping_cart.png";
 function cartHover(el){
 el.src="/image/shopping_cart_full.png";
 }
+</script>
+<script>
+    function check(){
+  var rarr=document.getElementsByName("filterOption[]");
+  var j=0;
+  for(var i=0;i<rarr.length;++i)
+  {
+    if(rarr[i].checked){
+    ++j;
+    }
+  }
+  if(j==0){
+  rarr[0].value="";
+  rarr[0].checked=true;
+  }
+  document.forms["filterForm"].submit();
+ }
 </script>
 <!--Item card fix layout-->
 <script>

@@ -12,6 +12,7 @@ import java.util.Map;
 public interface FilterOptionsRepository extends JpaRepository<FilterOptions,Long> {
     @Query("SELECT DISTINCT value FROM filter_options WHERE filter=:filter AND filter.category.name=:name")
     List<String> findByFilterAndCategory(Filters filter,String name);
+
     @Query("SELECT id FROM filter_options WHERE  value IN(:options) GROUP BY item.id HAVING (COUNT(*)=:count)")
     Iterable<Long> findByFilter(String options,Long count);
 }
