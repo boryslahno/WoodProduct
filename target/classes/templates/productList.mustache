@@ -365,7 +365,9 @@
                         </div>
                     </div>
                 {{/filters}}
-                <button class="apply" onclick="check();">Застосувати</button>
+                <div>
+                    <button class="apply" onclick="check();">Застосувати</button>
+                </div>
             </form>
             </div>
         </div>
@@ -386,7 +388,7 @@
                                         <label>{{itemname}}</label><br>
                                         <label style="color:#737df5;">₴{{price}}</label>
                                         <label id="inStock"><b>В наявності {{count}}</b></label>
-                                        <form action="/viewProduct" method="get">
+                                        <form action="/showProduct" method="get">
                                             <input type="hidden" name="itemID" value="{{id}}">
                                         <button type="submit" class="detail">Детальніше</button>
                                         </form>

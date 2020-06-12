@@ -50,6 +50,8 @@ public class SellerController {
     private FilterRepository filterRepository;
     @Autowired
     private ShoppingRepository shoppingRepository;
+    @Autowired
+    private CommentsRepository commentsRepository;
 
     private Long IDitem;
 
@@ -238,9 +240,15 @@ public class SellerController {
         return "redirect:/sellerProductInStock";
     }
 
+    @GetMapping("/sellerShowProduct")
+    public String showProduct(@RequestParam Long itemID){
+        IDitem=itemID;
+        return "redirect:/sellerViewProduct";
+    }
+
     @GetMapping("/sellerViewProduct")
-    public String viewProduct(Model model,@RequestParam Long itemID){
-        Items item=itemRepository.findById(itemID).get();
+    public String viewProduct(Model model){
+        Items item=itemRepository.findById(IDitem).get();
         model.addAttribute("item",item);
         model.addAttribute("nameUser", userService.GetUserName());
         Image image=new ImageIcon(uploadPath+item.getFileName()).getImage();
@@ -249,6 +257,7 @@ public class SellerController {
         }else{
             model.addAttribute("widthSize",100);
         }
+        model.addAttribute("comments",commentsRepository.findByItem(itemRepository.findById(IDitem).get()));
         return "sellerViewProduct";
     }
 

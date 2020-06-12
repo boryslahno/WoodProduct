@@ -179,6 +179,44 @@
     color:#0acf97;
     background:#d3f6ec;
     }
+
+    .comment{
+    color:#6c757d;
+    margin-left:40px;
+    margin-right:20px;
+    margin-bottom:5px;
+    min-width:315px;
+    border-radius:5px;
+    border: 1px solid #dee2e6;
+    }
+
+    hr{
+    border: none;
+    background-color: #dee2e6;
+    color: #dee2e6;
+    height: 0.5px;
+    }
+
+    .deleteComment{
+    margin-left:40px;
+    margin-bottom:15px;
+    color:white;
+    border-radius:5%;
+    border:none;
+    background:#fa5c7d;
+    width:200px;
+    height:40px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 3px 10px 0 rgba(0,0,0,0.19);
+    }
+    .deleteComment:hover{
+    background:#f9345e;
+    }
+    .deleteComment:active,{
+    outline-color:#fa5c7d;
+    }
+    .deleteComment:focus{
+    outline-color:#fa5c7d;
+    }
     </style>
 </head>
 <body>
@@ -314,6 +352,27 @@
                         </tbody>
                     </table>
                 </div>
+                <label style="margin-left:20px;font-size:22px;color:#6c757d;">Коментарі</label><br>
+                {{^comments}}
+                    <label style="margin-left:40px;font-size:16px;color:#6c757d;">Немає коментарів</label>
+                {{/comments}}
+                {{#comments}}
+                    <div class="comment">
+                        <div style="margin:10px;">
+                            <label style="margin-bottom:-10px;"><b>{{#user}}{{#personalInformation}}{{name}} {{surname}}{{/personalInformation}}{{/user}}</b></label><br>
+                            <label style="margin-bottom:-10px;font-size:12px;color:#0acf97;">{{addDate}}</label>
+                            <hr>
+                            <label>{{comment}}</label>
+                        </div>
+                    </div>
+                    <div>
+                        <form action="/deleteComments" method="post">
+                            <button type="submit" class="deleteComment">Видалити коментар</button>
+                            <input type="hidden" name="commentId" value="{{id}}">
+                            <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
+                        </form>
+                    </div>
+                {{/comments}}
             </div>
         {{/item}}
     </div>

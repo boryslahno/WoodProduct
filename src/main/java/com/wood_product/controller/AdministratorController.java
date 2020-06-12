@@ -54,6 +54,8 @@ public class AdministratorController {
     private  FilterOptionsRepository filterOptionsRepository;
     @Autowired
     private ShoppingRepository shoppingRepository;
+    @Autowired
+    private CommentsRepository commentsRepository;
     //User management
     private Long IDUser;
 
@@ -541,9 +543,15 @@ public class AdministratorController {
         return "redirect:/adminItemList";
     }
 
+    @GetMapping("/adminShowProduct")
+    public String showProduct(@RequestParam Long itemID){
+        IDitem=itemID;
+        return "redirect:/adminViewProduct";
+    }
+
     @GetMapping("/adminViewProduct")
-    public String viewProduct(Model model,@RequestParam Long itemID){
-        Items item=itemRepository.findById(itemID).get();
+    public String viewProduct(Model model){
+        Items item=itemRepository.findById(IDitem).get();
         model.addAttribute("item",item);
         model.addAttribute("nameUser", userService.GetUserName());
         Image image=new ImageIcon(uploadPath+item.getFileName()).getImage();
@@ -552,6 +560,7 @@ public class AdministratorController {
         }else{
             model.addAttribute("widthSize",100);
         }
+        model.addAttribute("comments",commentsRepository.findByItem(itemRepository.findById(IDitem).get()));
         return "adminViewProduct";
     }
 
@@ -560,6 +569,12 @@ public class AdministratorController {
         model.addAttribute("nameUser", userService.GetUserName());
         model.addAttribute("soldItems",shoppingRepository.findAll());
         return "adminSoldProducts";
+    }
+
+    @PostMapping("/deleteComments")
+    public String deleteComments(@RequestParam Long commentId){
+        commentsRepository.deleteById(commentId);
+        return "redirect:/adminViewProduct";
     }
 }
 

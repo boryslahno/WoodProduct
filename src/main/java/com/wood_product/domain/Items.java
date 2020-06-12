@@ -37,6 +37,8 @@ public class Items {
     private ShoppingCart shoppingCart;
     @OneToMany(mappedBy = "item",fetch = FetchType.EAGER,cascade = CascadeType.REMOVE)
     private Set<Shopping> shoppings;
+    @OneToMany(mappedBy = "item",fetch = FetchType.EAGER,cascade = CascadeType.REMOVE)
+    private Set<Comments> comments;
     @NotNull
     private String fileName;
     @Transient
@@ -144,5 +146,13 @@ public class Items {
 
     public void setShoppings(Set<Shopping> shoppings) {
         this.shoppings = shoppings;
+    }
+
+    public Set<Comments> getComments() {
+        return comments;
+    }
+
+    public void setComments(Set<Comments> comments) {
+        this.comments = comments;
     }
 }

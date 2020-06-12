@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.jws.Oneway;
 import javax.jws.soap.SOAPBinding;
 import javax.persistence.GeneratedValue;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -47,7 +48,10 @@ public class ShopperController {
     private FilterRepository filterRepository;
     @Autowired
     private FilterOptionsRepository filterOptionsRepository;
+    @Autowired
+    private CommentsRepository commentsRepository;
 
+    private Long IDitem;
     //Product management
     @GetMapping("/productList")
     public String productList(Model model, @RequestParam String categoryName) {
@@ -103,13 +107,10 @@ public class ShopperController {
         if (filterOption.length<1) {
             items = itemRepository.findByPriceRange(categoryName, Integer.valueOf(price));
         } else {
-            List<Items> removeItems=new ArrayList<>();
             items = itemRepository.findByFilter(filterOption[0], categoryName, Integer.valueOf(price));
             boolean find;
             for (int i = 1; i < filterOption.length; i++) {
-                for (Items item:removeItems) {
-                    removeItems=null;
-                }
+                List<Items> removeItems=new ArrayList<>();
                 for (Items item:items) {
                     find=false;
                     for (FilterOptions filterOptions:item.getFilterOptions()) {
@@ -157,9 +158,15 @@ public class ShopperController {
         return "productList";
     }
 
+    @GetMapping("/showProduct")
+    public String showProduct(@RequestParam Long itemID){
+        IDitem=itemID;
+        return "redirect:/viewProduct";
+    }
+
     @GetMapping("/viewProduct")
-    public String viewProduct(Model model, @RequestParam Long itemID) {
-        Items item = itemRepository.findById(itemID).get();
+    public String viewProduct(Model model) {
+        Items item = itemRepository.findById(IDitem).get();
         model.addAttribute("item", item);
         model.addAttribute("nameUser", userService.GetUserName());
         Image image = new ImageIcon(uploadPath + item.getFileName()).getImage();
@@ -176,6 +183,7 @@ public class ShopperController {
         } else {
             model.addAttribute("numberProduct", "Є товари");
         }
+        model.addAttribute("comments",commentsRepository.findByItem(itemRepository.findById(IDitem).get()));
         return "viewProduct";
     }
 
@@ -245,6 +253,18 @@ public class ShopperController {
         }
         shoppingCartRepository.deleteAll(shoppingCarts);
         return "redirect:/shoppingCart";
+    }
+
+    @PostMapping("/addComment")
+    public String addComment(Model model,@RequestParam String comment,@RequestParam Long itemId){
+        Comments comments=new Comments();
+        comments.setComment(comment);
+        Date curentDate=new Date();
+        comments.setAddDate(curentDate);
+        comments.setItem(itemRepository.findById(itemId).get());
+        comments.setUser(userService.currentUser());
+        commentsRepository.save(comments);
+        return "redirect:/viewProduct";
     }
 
     //Personal information management
@@ -329,6 +349,7 @@ public class ShopperController {
     }
 
 
+    //Shop history
     @GetMapping("/shopperShopHistory")
     public String viewShopHistory(Model model) {
         model.addAttribute("nameUser", userService.GetUserName());
